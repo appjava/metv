@@ -113,6 +113,6 @@
     "id": "ch22",
     "name": "Caracol",
     "link": "https://mdstrm.com/live-stream-playlist/574463697b9817cf0886fc17.m3u8"
-  },
+  }
   
 ]

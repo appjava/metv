@@ -58,7 +58,7 @@
     "id": "ch11",
     "name": "2012",
     "link": "https://ia801408.us.archive.org/31/items/el-infierno/2012.ia.mp4"
-  },
+  }
 
 ]
 
