@@ -59,7 +59,7 @@ function downCHs() {
 
 function upMovs(){
     document.getElementById('labelTop').innerHTML = "Movies Added";
-    fetch("https://appjava.github.io/signal/meTV/movs.txt")
+    fetch("https://appjava.github.io/metv/movs.txt")
     .then((res) => res.text())
     .then((text) => {
         localStorage.setItem('localCHs', text);
@@ -72,7 +72,7 @@ function upMovs(){
 
 function upChs(){
     document.getElementById('labelTop').innerHTML = "Channels Added";
-    fetch("https://appjava.github.io/signal/meTV/chs.txt")
+    fetch("https://appjava.github.io/metv/chs.txt")
     .then((res) => res.text())
     .then((text) => {
         localStorage.setItem('localCHs', text);
@@ -203,7 +203,10 @@ function playCH(ch){
 
 
 // Show TIME
-document.getElementById("time").innerHTML = showTime();
+//document.getElementById("time").innerHTML = showTime();
+document.getElementById("time").innerHTML = `
+<h6>2025 - Desarrollado por {appjavadev}</h6>
+`;
 
 function showTime() {
     var d = new Date(),
