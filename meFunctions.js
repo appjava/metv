@@ -203,7 +203,7 @@ function playCH(ch){
 
 
 // Show TIME
-document.getElementById("time").innerHTML = showTime();
+//document.getElementById("time").innerHTML = showTime();
 
 function showTime() {
     var d = new Date(),

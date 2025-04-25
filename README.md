@@ -2,7 +2,7 @@
 
 **meTV** es un reproductor web ligero y funcional diseñado para reproducir archivos **.M3U** y **.MP4** directamente desde tu navegador. Ideal para usuarios que desean una herramienta simple y eficiente para visualizar contenido multimedia sin complicaciones.
 
-🌐 [Usar ahora en línea](https://metv.pages.dev)
+🌐 [Usar ahora en línea](https://appjava.github.io/metv/)
 
 ---
 
@@ -19,7 +19,7 @@
 
 ## 📸 Capturas de pantalla
 
-![alt text](meTV/meTV.png "meTV Player")
+![alt text](meTV.png "meTV Player")
 
 ---
 
