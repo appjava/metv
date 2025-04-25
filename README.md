@@ -46,7 +46,7 @@ cd signal
 ## 📂 Estructura del proyecto
 
 ```
-signal/
+metv/
 ├── src/            # Archivos fuente principales
 ├── index.html      # Punto de entrada de la app
 ├── README.md       # Documentación del proyecto
