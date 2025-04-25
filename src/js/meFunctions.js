@@ -59,7 +59,7 @@ function downCHs() {
 
 function upMovs(){
     document.getElementById('labelTop').innerHTML = "Movies Added";
-    fetch("https://appjava.github.io/metv/movs.txt")
+    fetch("https://appjava.github.io/metv/src/movs.txt")
     .then((res) => res.text())
     .then((text) => {
         localStorage.setItem('localCHs', text);
@@ -72,7 +72,7 @@ function upMovs(){
 
 function upChs(){
     document.getElementById('labelTop').innerHTML = "Channels Added";
-    fetch("https://appjava.github.io/metv/chs.txt")
+    fetch("https://appjava.github.io/metv/src/chs.txt")
     .then((res) => res.text())
     .then((text) => {
         localStorage.setItem('localCHs', text);

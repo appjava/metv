@@ -4,16 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Access-Control-Allow-Origin" content="*" />
-  <!--<link rel="shortcut icon" href="favicon.ico">-->
   
-	<link rel="stylesheet" href="meDesign.css" >
+	<link rel="stylesheet" href="src/css/meDesign.css" >
 	<title>meTV</title>
 
   <!-------------PWA-------------->
-	<link rel="manifest" href="pwa/manifest.json">
-	<link rel="icon" type="image/png" href="pwa/icons/favicon-96x96.png" sizes="96x96" />
-	<link rel="shortcut icon" href="pwa/icons/favicon.ico" />
-	<link rel="apple-touch-icon" sizes="180x180" href="pwa/icons/apple-touch-icon.png" />
+	<link rel="manifest" href="src/pwa/manifest.json">
+	<link rel="icon" type="image/png" href="src/pwa/icons/favicon-96x96.png" sizes="96x96" />
+	<link rel="shortcut icon" href="src/pwa/icons/favicon.ico" />
+	<link rel="apple-touch-icon" sizes="180x180" href="src/pwa/icons/apple-touch-icon.png" />
 	
 	<meta name="apple-mobile-web-app-title" content="meTV" />
   
@@ -21,7 +20,7 @@
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function() {
       navigator.serviceWorker
-        .register("pwa/serviceWorker.js")
+        .register("src/pwa/serviceWorker.js")
         .then(res => console.log("service worker registered"))
         .catch(err => console.log("service worker not registered", err))
       })
@@ -36,7 +35,7 @@
     <div id="app"></div>
 
     <!-- Incluir el script de autenticación -->
-    <script src="auth.js"></script>
+    <script src="src/js/auth.js"></script>
   
     <script>
       // Obtener el contenedor principal
@@ -74,11 +73,6 @@
       <input class="input" id="nameCh" type="text" placeholder="Input Name" value=""/>
       <button id="btnAdd" class="btn" onclick="addCH()">Add</button>
     </section>
-  
-    <!--<a href="plus.html"><section class="testArea">
-      <div id="time" class="input"></div>
-      <button class="btn">plus</button>
-    </section></a>-->
 
     <span id="labelTest" class="label"></span>
   </div>
@@ -93,7 +87,7 @@
 
   
 
-  <script src="meFunctions.js"></script>
+  <script src="src/js/meFunctions.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <script type="module" src="https://cdn.jsdelivr.net/npm/media-chrome@4/+esm"></script>
 

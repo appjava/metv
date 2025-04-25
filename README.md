@@ -12,7 +12,7 @@
 - 🔎 Explorador visual del contenido.
 - 🖥️ Compatible con móviles y escritorio.
 - ⚡ Rápido, ligero y sin instalaciones.
-- 🌙 Interfaz limpia y personalizable (Próximamente).
+- 🌙 Interfaz limpia y minimalista.
 - 🧩 Uso 100% en el navegador, sin extensiones adicionales.
 
 ---
@@ -47,9 +47,7 @@ cd signal
 
 ```
 signal/
-├── meTV/           # Archivos fuente principales
-├── meiptv/         # Funcionalidades específicas de IPTV
-├── .vscode/        # Configuración del entorno de desarrollo
+├── src/            # Archivos fuente principales
 ├── index.html      # Punto de entrada de la app
 ├── README.md       # Documentación del proyecto
 └── LICENSE.md      # Licencia MIT
