@@ -19,7 +19,7 @@
 
 ## 📸 Capturas de pantalla
 
-![alt text](meTV.png "meTV Player")
+![alt text](src/img/meTV.png "meTV Player")
 
 ---
 
