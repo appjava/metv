@@ -63,7 +63,7 @@ Este proyecto está disponible bajo la licencia [MIT](LICENSE.md), lo cual permi
 
 ## ❗ Descargo de responsabilidad legal
 
-> **Signal** es únicamente una herramienta para la reproducción de archivos multimedia compatibles con el navegador.  
+> **meTV** es únicamente una herramienta para la reproducción de archivos multimedia compatibles con el navegador.  
 >  
 > El autor **no se hace responsable** del uso indebido que puedan dar terceros al reproducir contenido de origen no autorizado o protegido por derechos de autor.  
 >  
