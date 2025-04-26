@@ -107,7 +107,7 @@ video{
 	text-decoration: none;
 	color: white;
 }
-#btnDel, #btnUpChs, #btnUpMovs, #btnUp, #btnDown{
+#btnDel, #btnUpChs, #btnUpMovs, #btnUp, #btnDown, #btnRm{
 	width: 90px;
 	height: auto;
 	padding: unset;
@@ -197,7 +197,7 @@ video{
 		background: gray;
 		border: none;
 	}
-	#btnDel, #btnUpChs, #btnUpMovs, #btnUp, #btnDown {
+	#btnDel, #btnUpChs, #btnUpMovs, #btnUp, #btnDown, #btnRm {
 		width: 100%;
 		height: 30px;
 		margin-left: 0px;
@@ -227,7 +227,7 @@ video{
 		background: gray;
 		border: none;
 	}
-	#btnDel, #btnUpChs, #btnUpMovs, #btnUp, #btnDown {
+	#btnDel, #btnUpChs, #btnUpMovs, #btnUp, #btnDown, #btnRm {
 		width: 100%;
 		height: 30px;
 		margin-left: 0px;
