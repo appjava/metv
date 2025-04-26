@@ -68,6 +68,7 @@ function upMovs(){
         document.getElementById('btnDown').style.display = "block";
         document.getElementById('labelTest').innerHTML = "";
     }).catch((e) => console.error(e));
+    document.getElementById('btnDel').innerHTML = "Del Mov";
 }
 
 function upChs(){
@@ -81,6 +82,7 @@ function upChs(){
         document.getElementById('btnDown').style.display = "block";
         document.getElementById('labelTest').innerHTML = "";
     }).catch((e) => console.error(e));
+    document.getElementById('btnDel').innerHTML = "Del Ch";
 }
 
 function upSomething(){
@@ -141,34 +143,45 @@ function delCH(){
 }
 
 function addCH(){
-    var lonChannels = channels.length;
-    let chAdd = "ch" + (lonChannels);
     let chName = document.getElementById("nameCh").value;
     let linkCH = document.getElementById("inCh").value;
-    var chToAdd = {
-        id:     chAdd,
-        name:   chName,
-        link:   linkCH,
-    };
-    channels.push(chToAdd);
-    document.getElementById("nameCh").value = "";
-    document.getElementById('inCh').value = "";
-    
-    document.getElementById('btnDown').style.display = "block";
-    selectCH(channels);
-    ch = "";
-    //playCH(ch);
-    document.getElementById('labelTest').innerHTML = chName + " " + "Added";
-    document.getElementById('labelTop').innerHTML = "";
-    localStorage.setItem('localCHs', JSON.stringify(channels));
+
+    if (linkCH.includes("http") && chName != ""){
+        var lonChannels = channels.length;
+        let chAdd = "ch" + (lonChannels);
+        //let chName = document.getElementById("nameCh").value;
+        //let linkCH = document.getElementById("inCh").value;
+        var chToAdd = {
+            id:     chAdd,
+            name:   chName,
+            link:   linkCH,
+        };
+        channels.push(chToAdd);
+        document.getElementById("nameCh").value = "";
+        document.getElementById('inCh').value = "";
+        
+        document.getElementById('btnDown').style.display = "block";
+        selectCH(channels);
+        ch = "";
+        document.getElementById('labelTest').innerHTML = chName + " " + "Added to list";
+        document.getElementById('labelTop').innerHTML = "";
+        localStorage.setItem('localCHs', JSON.stringify(channels));
+    } else {
+        document.getElementById('labelTest').innerHTML = "Please enter a Name and Valid Url";
+    }
 }
 
 function testCH(){
-    document.getElementById('labelTest').innerHTML = "Testing ...";
     document.getElementById('labelTop').innerHTML = "";
     ch = document.getElementById('inCh').value;
-    playCH(ch);
-    selectCH(channels);
+    if (ch.includes("http")){
+        document.getElementById('labelTest').innerHTML = "Testing ...";
+        playCH(ch);
+        selectCH(channels); 
+    } else {
+        document.getElementById('labelTest').innerHTML = "Please enter a valid url";
+    }
+    
 }
 
 function changeCH(){
