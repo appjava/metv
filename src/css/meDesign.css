@@ -127,8 +127,8 @@ video{
 
 span {
     display: inline-block;
-    max-width: auto; /* O el ancho que desees */
-    overflow: scroll; 
+    max-width: 100%; /* O el ancho que desees */
+    overflow: hidden; 
     text-overflow: ellipsis;
     white-space: nowrap;
 }
