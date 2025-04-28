@@ -108,7 +108,7 @@ video{
 	color: white;
 }
 #btnDel, #btnUpChs, #btnUpMovs, #btnUp, #btnDown, #btnRm{
-	width: 90px;
+	width: 75px;
 	height: auto;
 	padding: unset;
 	margin-left: 0px;
@@ -146,7 +146,7 @@ video{
 		max-width: 1800px;
 	}
 	#btnDel, #btnUpChs, #btnUpMovs, #btnUp, #btnDown{
-		width: 150px;
+		width: 120px;
 	}
 }
 @media screen and (max-width: 1900px){
@@ -155,6 +155,7 @@ video{
 		width: 100%;
 		max-width: 1100px;
 	}
+	
 
 }
 @media screen and (max-width: 1200px){
@@ -165,6 +166,7 @@ video{
 	.selection select{
 		width: 600px;
 	}
+	
 }
 @media screen and (max-width: 900px){
 
@@ -176,6 +178,10 @@ video{
 	.selection select{
 		width: 300px;
 	}
+	#btnDel, #btnUpChs, #btnUpMovs, #btnUp, #btnDown, #btnRm {
+		width: 70px;
+	}
+	
 }
 @media screen and (max-width: 600px){
 

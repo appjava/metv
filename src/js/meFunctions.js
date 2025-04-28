@@ -9,12 +9,26 @@ var localCHs = JSON.parse(localStorage.getItem('localCHs')) || [{
     link:   ""
 }];
 
+var savedList = JSON.parse(localStorage.getItem('savedList')) || [{
+    id:     "ch0",
+    name:   "Saved List",
+    link:   ""
+}];
+console.log(savedList);
+
+
 function checkLocal(){
 
 if(localCHs.length < 2){
     document.getElementById('btnUpMovs').style.display = "block";
     document.getElementById('btnUpChs').style.display = "block";
-    document.getElementById('btnUp').style.display = "none";
+    
+    if (savedList.length < 2){
+        document.getElementById('btnUp').style.display = "none";
+    } else {
+        document.getElementById('btnUp').style.display = "block";
+    }
+    
     document.getElementById('btnDown').style.display = "none";
     document.getElementById('btnRm').style.display = "none";
 
@@ -25,12 +39,33 @@ if(localCHs.length < 2){
     document.getElementById('btnRm').style.display = "block";
     document.getElementById('btnUpMovs').style.display = "block";
     document.getElementById('btnUpChs').style.display = "block";
-    document.getElementById('btnUp').style.display = "none";
+    document.getElementById('btnUp').style.display = "block";
     
  }
 }
 
 checkLocal();
+
+function saveList(){
+    localStorage.setItem('savedList', JSON.stringify(channels));
+    savedList = JSON.parse(localStorage.getItem('savedList'));
+    console.log("Local Save List");
+    document.getElementById('labelTest').innerHTML = "";
+    document.getElementById('btnUp').style.display = "block";
+    
+}
+function upSomething(){
+    console.log("Loading Something ....");
+    channels = savedList;
+    selectCH(channels);
+    document.getElementById('btnDown').style.display = "block";
+    document.getElementById('btnRm').style.display = "block";
+    document.getElementById('labelTest').innerHTML = "";
+    document.getElementById('btnDel').innerHTML = "Del";
+
+    document.getElementById('labelTest').innerHTML = "";
+    document.getElementById('labelTop').innerHTML = "Local List Added";
+}
 
 function downCHs() {
     
@@ -56,7 +91,7 @@ function downCHs() {
     a.click();
     document.body.removeChild(a);
     console.log("List Downloaded");
-    document.getElementById('labelTest').innerHTML = "";
+    
 }
 
 function upMovs(){
@@ -87,10 +122,6 @@ function upChs(){
         document.getElementById('labelTest').innerHTML = "";
     }).catch((e) => console.error(e));
     document.getElementById('btnDel').innerHTML = "Del Ch";
-}
-
-function upSomething(){
-    console.log("Loading Something ....");
 }
 
 let select = document.getElementById("channel-select");
