@@ -47,37 +47,36 @@
         // Mostrar el reproductor
         app.innerHTML = `
         <div class="video">
-    <span id="labelTop" class="label"></span>
-    <div class="selection">
-      <span class="carga">
-      <button id="btnUpMovs" class="btn" onclick="upMovs()">Load Movs</button>
-      <button id="btnUpChs" class="btn" onclick="upChs()">Load Chs</button>
-      <button id="btnUp" class="btn" onclick="upSomething()">List Saved</button>
-      </span>
-      <select name="channels" id="channel-select" onchange="played()"></select>
-      <span class="descarga">
-      <button id="btnDel" class="btn" onclick="delCH()">Del Ch</button>
-      <button id="btnDown" class="btn" onclick="saveList()">Save List</button>
-      <button id="btnRm" class="btn" onclick="clearList()">Clear List</button>
-      </span>
-    </div>
-    <fieldset>
-      
-        <video id="video" poster="src/img/meSignal.png" playsinline controls loop allow="encrypted-media; allow-same-origin"></video>
-    
-    </fieldset>
-    <section class="testArea">
-      <input class="input" id="inCh" type="text" placeholder="https:// .m3u or .mp4" value=""/>
-      <button id="btnTest" class="btn" onclick="testCH()">Test</button>
-    </section>
-    <section class="testArea">
-      <input class="input" id="nameCh" type="text" placeholder="Input name to add at list" value=""/>
-      <button id="btnAdd" class="btn" onclick="addCH()">Add</button>
-    </section>
+          <span id="labelTop" class="label"></span>
+          <div class="selection">
+            <span class="carga">
+            <button id="btnUpMovs" class="btn" onclick="upMovs()">Load Movs</button>
+            <button id="btnUpChs" class="btn" onclick="upChs()">Load Chs</button>
+            <button id="btnUp" class="btn" onclick="upSomething()">List Saved</button>
+            </span>
+            <select name="channels" id="channel-select" onchange="played()"></select>
+            <span class="descarga">
+            <button id="btnDel" class="btn" onclick="delCH()">Del Ch</button>
+            <button id="btnDown" class="btn" onclick="saveList()">Save List</button>
+            <button id="btnRm" class="btn" onclick="clearList()">Clear List</button>
+            </span>
+          </div>
+          <fieldset>
+            
+              <video id="video" poster="src/img/meSignal.png" playsinline controls loop allow="encrypted-media; allow-same-origin"></video>
+          
+          </fieldset>
+          <section class="testArea">
+            <input class="input" id="inCh" type="text" placeholder="https:// .m3u or .mp4" value=""/>
+            <button id="btnTest" class="btn" onclick="testCH()">Test</button>
+          </section>
+          <section class="testArea">
+            <input class="input" id="nameCh" type="text" placeholder="Input name to add at list" value=""/>
+            <button id="btnAdd" class="btn" onclick="addCH()">Add</button>
+          </section>
 
-    <span id="labelTest" class="label"></span>
-  </div>
-
+          <span id="labelTest" class="label"></span>
+        </div>
         `;
       } else {
         // Mostrar el formulario de autenticación

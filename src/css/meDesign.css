@@ -122,7 +122,17 @@ video{
 }
 #labelTest{
 	margin-top: 6px;
+	padding: 0 24px;
 }
+
+span {
+    display: inline-block;
+    max-width: auto; /* O el ancho que desees */
+    overflow: auto; 
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .carga, .descarga{
 	display: flex;
 	width: auto;
@@ -242,6 +252,7 @@ video{
 	.carga, .descarga{
 		width: 100%;
 	}
+	
 }
 
 /* CSS to PLUS */ 

@@ -51,6 +51,7 @@ function saveList(){
     savedList = JSON.parse(localStorage.getItem('savedList'));
     console.log("Local Save List");
     document.getElementById('labelTest').innerHTML = "";
+    document.getElementById('labelTop').innerHTML = "List saved";
     document.getElementById('btnUp').style.display = "block";
     
 }
@@ -234,7 +235,7 @@ function addCH(){
 }
 
 function testCH(){
-    
+    document.getElementById('labelTest').style.color = "yellow";
     document.getElementById('labelTop').innerHTML = "";
     ch = document.getElementById('inCh').value;
     if (ch.includes("http")){
@@ -254,6 +255,8 @@ function changeCH(){
     ch = document.getElementById('channel-select').value;
     let search = channels.find((x) => x.id === ch)
     playCH(search.link);
+    document.getElementById('labelTest').innerHTML = search.link;
+    document.getElementById('labelTest').style.color = "gray";
 }
 
 function playCH(ch){
