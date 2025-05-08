@@ -48,17 +48,23 @@
         app.innerHTML = `
         <div class="video">
           <span id="labelTop" class="label"></span>
+          
           <div class="selection">
+            
             <span class="carga">
-            <button id="btnUpMovs" class="btn" onclick="upMovs()">Load Movs</button>
-            <button id="btnUpChs" class="btn" onclick="upChs()">Load Chs</button>
-            <button id="btnUp" class="btn" onclick="upSomething()">List Saved</button>
+            <!--<button id="btnUpMovs" class="btn" onclick="upMovs()">Load Movs </button>-->
+            <label id="btnUpList" class="btn" ><input type="file" id="fileInput" accept=".txt" onchange="upList()"/>Load List</label>
+            
+            <!--<button id="btnUpChs" class="btn" onclick="upChs()">Load Chs</button>-->
+            <button id="btnUpChs" class="btn" onclick="upChs()">Defaults</button>
+            <button id="btnUp" class="btn" onclick="upSaved()">List Saved</button>
             </span>
             <select name="channels" id="channel-select" onchange="played()"></select>
             <span class="descarga">
             <button id="btnDel" class="btn" onclick="delCH()">Del Ch</button>
-            <button id="btnDown" class="btn" onclick="saveList()">Save List</button>
-            <button id="btnRm" class="btn" onclick="clearList()">Clear List</button>
+            <button id="btnDown" class="btn" onclick="saveList()">Save</button>
+            <button id="btnRm" class="btn" onclick="clearList()">Clear</button>
+            <button id="btnExp" class="btn" onclick="downCHs()">Export</button>
             </span>
           </div>
           <fieldset>

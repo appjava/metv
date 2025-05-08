@@ -20,8 +20,9 @@ console.log(savedList);
 function checkLocal(){
 
 if(localCHs.length < 2){
-    document.getElementById('btnUpMovs').style.display = "block";
+    //document.getElementById('btnUpMovs').style.display = "block";
     document.getElementById('btnUpChs').style.display = "block";
+    document.getElementById('btnUpList').style.display = "block";
     
     if (savedList.length < 2){
         document.getElementById('btnUp').style.display = "none";
@@ -31,13 +32,16 @@ if(localCHs.length < 2){
     
     document.getElementById('btnDown').style.display = "none";
     document.getElementById('btnRm').style.display = "none";
+    document.getElementById('btnExp').style.display = "none";
 
     channels = localCHs;
  }else{
     channels = JSON.parse(localStorage.getItem('localCHs'));
     document.getElementById('btnDown').style.display = "block";
     document.getElementById('btnRm').style.display = "block";
-    document.getElementById('btnUpMovs').style.display = "block";
+    document.getElementById('btnExp').style.display = "block";
+    //document.getElementById('btnUpMovs').style.display = "block";
+    document.getElementById('btnUpList').style.display = "block";
     document.getElementById('btnUpChs').style.display = "block";
     document.getElementById('btnUp').style.display = "block";
     
@@ -55,12 +59,13 @@ function saveList(){
     document.getElementById('btnUp').style.display = "block";
     
 }
-function upSomething(){
-    console.log("Loading Something ....");
+function upSaved(){
+    console.log("Loading saved list ....");
     channels = savedList;
     selectCH(channels);
     document.getElementById('btnDown').style.display = "block";
     document.getElementById('btnRm').style.display = "block";
+    document.getElementById('btnExp').style.display = "block";
     document.getElementById('labelTest').innerHTML = "";
     document.getElementById('btnDel').innerHTML = "Del";
 
@@ -76,7 +81,7 @@ function downCHs() {
     a.href = URL.createObjectURL(new Blob([JSON.stringify(originalData, null, 2)], {
         type: "text/plain"
     }));
-    
+    /*
     if (channels[0].name == "Select Channel"){
         console.log("Saving Channels List");
         a.setAttribute("download", "chs.txt");
@@ -87,6 +92,15 @@ function downCHs() {
         console.log("Saving File List")
         a.setAttribute("download", "list_metv.txt");
     }
+    */
+
+    let nameList = prompt('Name List?');
+    let nameListSaved = nameList + ".txt"
+    if (nameList === ""){
+        a.setAttribute("download", "SavedList");
+    } else {
+        a.setAttribute("download", nameListSaved);
+    }
 
     document.body.appendChild(a);
     a.click();
@@ -94,7 +108,37 @@ function downCHs() {
     console.log("List Downloaded");
     
 }
+function upList() {
+    
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
 
+    if (!file) {
+        alert("Por favor, selecciona un archivo.");
+        return;
+    }
+
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+        const text = e.target.result;
+        localStorage.setItem('localCHs', text);
+        const channels = JSON.parse(localStorage.getItem('localCHs'));
+        selectCH(channels);
+        
+        document.getElementById('labelTop').innerHTML = "List Loaded";
+        document.getElementById('btnDown').style.display = "block";
+        document.getElementById('btnRm').style.display = "block";
+        document.getElementById('btnExp').style.display = "block";
+        document.getElementById('labelTest').innerHTML = "";
+    };
+
+    reader.onerror = function(e) {
+        console.error("Error al leer el archivo", e);
+    };
+    reader.readAsText(file);
+    
+}
 function upMovs(){
     document.getElementById('labelTop').innerHTML = "Movies Added";
     fetch("https://appjava.github.io/metv/src/movs.txt")
@@ -105,6 +149,7 @@ function upMovs(){
         selectCH(channels);
         document.getElementById('btnDown').style.display = "block";
         document.getElementById('btnRm').style.display = "block";
+        document.getElementById('btnExp').style.display = "block";
         document.getElementById('labelTest').innerHTML = "";
     }).catch((e) => console.error(e));
     document.getElementById('btnDel').innerHTML = "Del Mov";
@@ -120,6 +165,7 @@ function upChs(){
         selectCH(channels);
         document.getElementById('btnDown').style.display = "block";
         document.getElementById('btnRm').style.display = "block";
+        document.getElementById('btnExp').style.display = "block";
         document.getElementById('labelTest').innerHTML = "";
     }).catch((e) => console.error(e));
     document.getElementById('btnDel').innerHTML = "Del Ch";
@@ -165,6 +211,7 @@ function clearList(){
     if (localCurrent.length < 2){
         document.getElementById('btnDown').style.display = "none";
         document.getElementById('btnRm').style.display = "none";
+        document.getElementById('btnExp').style.display = "none";
         localCHs = [{
             id:     "ch0",
             name:   "Load or Test Something",
