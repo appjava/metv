@@ -70,7 +70,7 @@ function upSaved(){
     document.getElementById('btnDel').innerHTML = "Del";
 
     document.getElementById('labelTest').innerHTML = "";
-    document.getElementById('labelTop').innerHTML = "Local List Added";
+    document.getElementById('labelTop').innerHTML = "Saved List Added";
 }
 
 function downCHs() {
@@ -123,10 +123,10 @@ function upList() {
     reader.onload = function(e) {
         const text = e.target.result;
         localStorage.setItem('localCHs', text);
-        const channels = JSON.parse(localStorage.getItem('localCHs'));
+        channels = JSON.parse(localStorage.getItem('localCHs'));
         selectCH(channels);
         
-        document.getElementById('labelTop').innerHTML = "List Loaded";
+        document.getElementById('labelTop').innerHTML = "List Loaded Added";
         document.getElementById('btnDown').style.display = "block";
         document.getElementById('btnRm').style.display = "block";
         document.getElementById('btnExp').style.display = "block";
@@ -156,7 +156,7 @@ function upMovs(){
 }
 
 function upChs(){
-    document.getElementById('labelTop').innerHTML = "Channels Added";
+    document.getElementById('labelTop').innerHTML = "Default Channels Added";
     fetch("https://appjava.github.io/metv/src/chs.txt")
     .then((res) => res.text())
     .then((text) => {
@@ -301,6 +301,7 @@ function changeCH(){
     document.getElementById('labelTop').innerHTML = "";
     ch = document.getElementById('channel-select').value;
     let search = channels.find((x) => x.id === ch)
+    console.log(search.link);
     playCH(search.link);
     document.getElementById('labelTest').innerHTML = search.link;
     document.getElementById('labelTest').style.color = "gray";
