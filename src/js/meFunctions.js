@@ -14,7 +14,7 @@ var savedList = JSON.parse(localStorage.getItem('savedList')) || [{
     name:   "Saved List",
     link:   ""
 }];
-console.log(savedList);
+//console.log(savedList);
 
 
 function checkLocal(){
@@ -23,12 +23,6 @@ if(localCHs.length < 2){
     //document.getElementById('btnUpMovs').style.display = "block";
     document.getElementById('btnUpChs').style.display = "block";
     document.getElementById('btnUpList').style.display = "block";
-    
-    if (savedList.length < 2){
-        document.getElementById('btnUp').style.display = "none";
-    } else {
-        document.getElementById('btnUp').style.display = "block";
-    }
     
     document.getElementById('btnDown').style.display = "none";
     document.getElementById('btnRm').style.display = "none";
@@ -46,6 +40,12 @@ if(localCHs.length < 2){
     document.getElementById('btnUp').style.display = "block";
     
  }
+
+ if (savedList.length < 2){
+    document.getElementById('btnUp').style.display = "none";
+    } else {
+    document.getElementById('btnUp').style.display = "block";
+}
 }
 
 checkLocal();
@@ -61,13 +61,13 @@ function saveList(){
 }
 function upSaved(){
     console.log("Loading saved list ....");
-    channels = savedList;
+    channels = JSON.parse(localStorage.getItem('savedList'));
     selectCH(channels);
     document.getElementById('btnDown').style.display = "block";
     document.getElementById('btnRm').style.display = "block";
     document.getElementById('btnExp').style.display = "block";
     document.getElementById('labelTest').innerHTML = "";
-    document.getElementById('btnDel').innerHTML = "Del";
+    document.getElementById('btnDel').innerHTML = "Del Item";
 
     document.getElementById('labelTest').innerHTML = "";
     document.getElementById('labelTop').innerHTML = "Saved List Added";
@@ -131,6 +131,7 @@ function upList() {
         document.getElementById('btnRm').style.display = "block";
         document.getElementById('btnExp').style.display = "block";
         document.getElementById('labelTest').innerHTML = "";
+        document.getElementById('btnDel').innerHTML = "Del Canal";
     };
 
     reader.onerror = function(e) {
@@ -235,6 +236,7 @@ function delCH(){
     if (localCurrent.length < 2){
         document.getElementById('btnDown').style.display = "none";
         document.getElementById('btnRm').style.display = "none";
+        document.getElementById('btnExp').style.display = "none";
         localCHs = [{
             id:     "ch0",
             name:   "Load or Test Something",
@@ -250,7 +252,7 @@ function delCH(){
 function addCH(){
     if (channels[0].name == "Load or Test Something"){
         console.log("Change Channel 0");
-        channels[0].name = "Select One";
+        channels[0].name = "Select Something";
     }
 
     let chName = document.getElementById("nameCh").value;
