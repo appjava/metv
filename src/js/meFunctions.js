@@ -372,7 +372,7 @@ function playCH(ch) {
     }
 
     // --- 2. Configurar la URL final y determinar el tipo de stream ---
-    const proxyBaseUrl = "https://localhost:8080/proxy?url=";
+    const proxyBaseUrl = "https://192.168.0.103:8080/proxy?url=";
     let finalUrl = ch;
     let isHttpStream = ch.startsWith("http://");
 
