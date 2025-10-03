@@ -349,24 +349,91 @@ function changeCH(){
     document.getElementById('labelTest').style.color = "gray";
 }
 
-function playCH(ch){
-    if (ch.includes("mp4")){
-        video.src = ch;
-        video.play();
-    }else {
-        if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = ch;
-            video.play();
-          } else if (Hls.isSupported()) {
-            var hls = new Hls();
-            hls.loadSource(ch);
-            hls.attachMedia(video);
-            hls.on(Hls.Events.MANIFEST_PARSED,function() {
-                video.play();
-            });
-          }
+// Guarda las instancias de los reproductores globalmente para poder destruirlas
+window.hlsPlayer = null;
+window.mpegtsPlayer = null;
+
+function playCH(ch) {
+    // --- 1. Limpiar reproductores y video anteriores ---
+    console.log("Limpiando reproductor anterior...");
+    if (window.hlsPlayer) {
+        window.hlsPlayer.destroy();
+        window.hlsPlayer = null;
+    }
+    if (window.mpegtsPlayer) {
+        window.mpegtsPlayer.destroy();
+        window.mpegtsPlayer = null;
+    }
+    video.src = ""; // Detiene y limpia la fuente del video
+
+    // Si no hay canal, no hacemos nada más
+    if (!ch) {
+        return;
     }
 
+    // --- 2. Configurar la URL final y determinar el tipo de stream ---
+    const proxyBaseUrl = "https://localhost:8080/proxy?url=";
+    let finalUrl = ch;
+    let isHttpStream = ch.startsWith("http://");
+
+    if (isHttpStream) {
+        finalUrl = proxyBaseUrl + encodeURIComponent(ch);
+    }
+
+    // --- 3. Lógica de selección de reproductor ---
+
+    // CASO 1: Es un archivo MP4 (tiene prioridad)
+    if (ch.includes(".mp4")) {
+        console.log("Tipo detectado: MP4. Reproduciendo directamente.");
+        video.src = finalUrl;
+        video.play().catch(e => console.error("Error al reproducir MP4:", e));
+        return;
+    }
+
+    // CASO 2: Es un stream HTTP (no .mp4), usamos mpegts.js
+    if (isHttpStream) {
+        console.log("Tipo detectado: HTTP Stream. Usando mpegts.js.");
+        if (mpegts.isSupported()) {
+            const player = mpegts.createPlayer({
+                type: 'mse',
+                isLive: true,
+                url: finalUrl
+            });
+            window.mpegtsPlayer = player;
+            player.attachMediaElement(video);
+            player.load();
+            player.play().catch(e => console.error("Error al reproducir con mpegts.js:", e));
+        } else {
+            console.error("mpegts.js no es soportado en este navegador.");
+        }
+        return;
+    }
+    
+    // CASO 3: Es un stream HTTPS (no .mp4), usamos hls.js
+    if (!isHttpStream) {
+        console.log("Tipo detectado: HTTPS Stream. Usando hls.js.");
+        if (Hls.isSupported()) {
+            const hls = new Hls();
+            window.hlsPlayer = hls;
+            hls.loadSource(finalUrl);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                video.play().catch(e => console.error("Error al reproducir con hls.js:", e));
+            });
+            hls.on(Hls.Events.ERROR, function (event, data) {
+                if (data.fatal) {
+                    console.error('Error fatal de HLS:', data.type, data.details);
+                }
+            });
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            // Soporte HLS nativo para Safari
+            video.src = finalUrl;
+            video.addEventListener('loadedmetadata', () => video.play());
+        } else {
+             console.error("HLS no es soportado en este navegador.");
+        }
+        return;
+    }
 }
 
 
