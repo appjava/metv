@@ -377,8 +377,8 @@ function playCH(ch) {
     let isHttpStream = ch.startsWith("http://");
 
     if (isHttpStream) {
-        finalUrl = proxyBaseUrl + encodeURIComponent(ch);
-        //finalUrl = ch;
+        //finalUrl = proxyBaseUrl + encodeURIComponent(ch);
+        finalUrl = ch;
     }
 
     // --- 3. Lógica de selección de reproductor ---
