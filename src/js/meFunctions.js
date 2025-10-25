@@ -276,6 +276,9 @@ function updateAndRenderChannels() {
         document.getElementById('btnExp').style.display = "block";
         document.getElementById('btnDel').style.display = "block"; // Permite eliminar si hay más de 1
         document.getElementById('btnUp').style.display = "block";
+
+        document.getElementById('btnUpList').style.display = "block";
+        document.getElementById('btnUpChs').style.display = "block";
     }
 
     // Asegúrate de que el primer elemento (si existe y es el placeholder) no se pueda seleccionar para eliminar
