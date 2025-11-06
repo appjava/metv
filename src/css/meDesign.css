@@ -9,7 +9,7 @@ a{
 body {
 	text-align: center;
 	justify-content: center;
-	margin-bottom: 9px;
+	margin-bottom: 60px;
 	margin-top: 12px;
 	background: #000000;
 	color: white;
@@ -383,3 +383,8 @@ select{
 	}
 }
 
+.kofi-button {
+    width: 50px; /* Adjust width */
+    height: 20px; /* Adjust height */
+    font-size: 16px; /* Adjust font size */
+}
