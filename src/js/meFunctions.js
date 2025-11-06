@@ -382,6 +382,8 @@ function playCH(ch) {
 
     if (isHttpStream) {
         finalUrl = proxyBaseUrl + encodeURIComponent(ch);
+        console.log("finallUrl: ");
+        console.log(finalUrl);
         //finalUrl = ch;
     }
     if (ch.includes("pluto.tv")){
