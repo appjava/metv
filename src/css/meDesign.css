@@ -159,7 +159,7 @@ label{
 
 	.video{
 		width: 100%;
-		max-width: 1800px;
+		max-width: 2000px;
 	}
 	#btnDel, #btnUpChs, #btnUpMovs, #btnUp, #btnDown, #btnUpList, #btnExp{
 		width: 120px;

@@ -375,6 +375,7 @@ function playCH(ch) {
     }
 
     // --- 2. Configurar la URL final y determinar el tipo de stream ---
+    const proxyCORSUrl = "https://cors-proxy.cooks.fyi/";
     const proxyBaseUrl = "https://meprox.onrender.com/proxy?url=";
     let finalUrl = ch;
     let isHttpStream = ch.startsWith("http://");
@@ -382,6 +383,11 @@ function playCH(ch) {
     if (isHttpStream) {
         finalUrl = proxyBaseUrl + encodeURIComponent(ch);
         //finalUrl = ch;
+    }
+    if (ch.includes("pluto.tv")){
+        finalUrl = proxyCORSUrl + ch;
+        console.log("finallUrl: ");
+        console.log(finalUrl);
     }
 
     // --- 3. Lógica de selección de reproductor ---
