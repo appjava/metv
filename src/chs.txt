@@ -11,8 +11,8 @@
   },
   {
     "id": "ch2",
-    "name": "Smithsonian",
-    "link": "https://cfd-v4-service-channel-stitcher-use1-1.prd.pluto.tv/stitch/hls/channel/63a084934734f30007457b2c/master.m3u8?advertisingId=&appName=web&appVersion=unknown&appStoreUrl=&architecture=&buildVersion=&clientTime=0&deviceDNT=0&deviceId=0a5bc850-66f7-11ef-990f-c236ff993484&deviceMake=Chrome&deviceModel=web&deviceType=web&deviceVersion=unknown&includeExtendedEvents=false&sid=dadb5ed1-9bf3-46f6-a2b7-01e9b9abb5c4&userId=&serverSideAds=true"
+    "name": "BACKTRACK",
+    "link": "https://s19.fastream.to/hls2/05/00010/fevmelr545cp_l/index-v1-a1.m3u8?t=c9XcWJaohMTOHrJC_0f0wMi7FEfhRFppfF2W_b0uwqU&s=1763852481&e=43200&v=3531356&i=0.3&sp=0"
   },
   {
     "id": "ch3",
