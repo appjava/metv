@@ -11,8 +11,8 @@
   },
   {
     "id": "ch2",
-    "name": "backtrack,
-    "link": "https://s19.fastream.to/hls2/04/00010/ki3ri9xnbcu9_l/master.m3u8?t=lf8E87oY7g8kHEyekiiYeppH-dbgWlCv7WtBlEXiTrU&s=1763853157&e=43200&v=3531314&i=0.3&sp=0"
+    "name": "DW Español",
+    "link": "https://dwamdstream104.akamaized.net/hls/live/2015530/dwstream104/index.m3u8"
   },
   {
     "id": "ch3",
