@@ -1,0 +1,40 @@
+name: 'publish-linux-appimage'
+on:
+  workflow_dispatch: # Permite ejecutar la compilación de forma manual con un botón en GitHub
+  push:
+    tags:
+      - 'v*' # Se ejecuta automáticamente cuando creas un tag de versión como v1.0.0
+
+jobs:
+  publish-tauri:
+    permissions:
+      contents: write
+    runs-on: ubuntu-22.04
+    steps:
+      - class: "Checkout repository"
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      <!-- Instalación de herramientas nativas de compilación de Linux -->
+      <script is:inline>
+        sudo apt-get update
+        sudo apt-get install -y libwebkit2gtk-4.0-dev build-essential curl wget file libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
+      </script>
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install Frontend Dependencies
+        # Si usas yarn o pnpm, cámbialo por 'yarn install' o 'pnpm install'
+        run: npm install 
+
+      - name: Build Tauri AppImage
+        uses: tauri-apps/tauri-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: v__VERSION__ # El action reemplazará esto con la versión definida en tu src-tauri/tauri.conf.json
