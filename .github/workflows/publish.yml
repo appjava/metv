@@ -32,6 +32,6 @@ jobs:
         run: npm install 
 
       - name: Build Tauri AppImage
-        uses: tauri-apps/tauri-action@v2
+        uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
