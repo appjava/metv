@@ -1,4 +1,5 @@
 name: 'publish-linux-appimage'
+
 on:
   workflow_dispatch: # Permite ejecutar la compilación de forma manual con un botón en GitHub
   push:
@@ -11,7 +12,7 @@ jobs:
       contents: write
     runs-on: ubuntu-22.04
     steps:
-      - class: "Checkout repository"
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -19,17 +20,16 @@ jobs:
         with:
           node-version: 20
 
-      <!-- Instalación de herramientas nativas de compilación de Linux -->
-      <script is:inline>
-        sudo apt-get update
-        sudo apt-get install -y libwebkit2gtk-4.0-dev build-essential curl wget file libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
-      </script>
-
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
 
+      - name: Install dependencies (Ubuntu only)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.0-dev build-essential curl wget file libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
+
       - name: Install Frontend Dependencies
-        # Si usas yarn o pnpm, cámbialo por 'yarn install' o 'pnpm install'
+        # Si usas yarn o pnpm en meTV, reemplázalo por 'yarn install' o 'pnpm install'
         run: npm install 
 
       - name: Build Tauri AppImage
@@ -37,4 +37,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: v__VERSION__ # El action reemplazará esto con la versión definida en tu src-tauri/tauri.conf.json
+          tagName: v__VERSION__ # El action reemplazará esto con la versión de tu tauri.conf.json
