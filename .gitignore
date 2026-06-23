@@ -1,0 +1,21 @@
+# 1. Dependencias de Node (El mayor devorador de espacio)
+# GitHub no necesita esto; lo descarga solo al correr 'npm install'
+node_modules/
+
+# 2. Archivos temporales de compilación de Tauri/Rust
+# ¡CRÍTICO! Rust guarda aquí gigabytes de archivos de compilación. JAMÁS debe subirse.
+src-tauri/target/
+
+# 3. Carpeta de empaquetado web al vuelo
+# La nube la creará automáticamente gracias a nuestro script.
+dist/
+
+# 4. Basura del sistema operativo macOS
+# Tu Mac crea estos archivos invisibles en cada carpeta que abres. Son molestos en GitHub.
+.DS_Store
+**/.DS_Store
+
+# 5. Logs de errores
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
