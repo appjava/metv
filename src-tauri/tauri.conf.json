@@ -4,10 +4,8 @@
   "version": "0.1.0",
   "identifier": "dev.appjava.metv",
   "build": {
-    "frontendDist": "../dist",
-    "devUrl": "../dist",
-    "beforeDevCommand": "npm run build",
-    "beforeBuildCommand": "npm run build"
+    "devUrl": "https://metv.pages.dev",
+    "frontendDist": "https://metv.pages.dev"
   },
   "app": {
     "windows": [
