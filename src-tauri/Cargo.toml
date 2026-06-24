@@ -1,9 +1,9 @@
 [package]
 name = "app"
-version = "0.1.0"
+version = "0.1.2"
 description = "A Tauri App"
-authors = ["you"]
-license = ""
+authors = ["appjava.dev"]
+license = "MIT"
 repository = ""
 edition = "2021"
 rust-version = "1.77.2"
@@ -23,3 +23,10 @@ serde = { version = "1.0", features = ["derive"] }
 log = "0.4"
 tauri = { version = "2.11.3" }
 tauri-plugin-log = "2"
+
+[profile.release]
+opt-level = "z"     # Optimiza el compilador estrictamente para tamaño del binario
+lto = true          # Link Time Optimization (Optimización cruzada ultra-agresiva)
+codegen-units = 1   # Reduce el paralelismo para maximizar la calidad de optimización
+panic = "abort"     # Elimina código de rastreo pesado (unwinding) de pánicos de Rust
+strip = true        # ¡EL MILAGRO! Remueve de golpe todos los símbolos de depuración del binario
