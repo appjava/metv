@@ -10,18 +10,26 @@ jobs:
   publish-tauri:
     permissions:
       contents: write
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest # El host moderno y disponible de GitHub
+    container:
+      image: ubuntu:20.04 # El entorno aislado con GLIBC 2.31
     steps:
+      # 1. Instalar herramientas de sistema dentro del contenedor
+      - name: Install system package dependencies
+        run: |
+          apt-get update
+          apt-get install -y curl git build-essential wget file libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev libwebkit2gtk-4.0-dev
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 1. Instalar pnpm en la máquina virtual
+      # 2. Instalar pnpm en el contenedor
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
           version: 9
 
-      # 2. Instalar Node y decirle que use el caché de pnpm
+      # 3. Instalar Node y decirle que use el caché de pnpm
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -31,12 +39,6 @@ jobs:
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
 
-      # 3. Instalación de librerías para Ubuntu 20.04 (Con Webkit 4.0)
-      - name: Install dependencies (Ubuntu only)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.0-dev build-essential curl wget file libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
-
       - name: Install Frontend Dependencies
         run: pnpm install 
 
@@ -45,7 +47,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # El Escudo de Artefactos para descarga manual
+      # El Escudo de Artefactos para descarga manual directa
       - name: Upload AppImage Artifact (Safety Net)
         uses: actions/upload-artifact@v4
         with:
