@@ -1,38 +1,35 @@
 {
-  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "meTV",
-  "version": "0.1.2",
-  "identifier": "dev.appjava.metv",
-  "build": {
-    "devUrl": "https://metv.pages.dev",
-    "frontendDist": "https://metv.pages.dev"
+  "package": {
+    "productName": "meTV",
+    "version": "0.1.2"
   },
-  "app": {
+  "build": {
+    "devPath": "https://metv.pages.dev",
+    "distDir": "https://metv.pages.dev"
+  },
+  "tauri": {
+    "bundle": {
+      "active": true,
+      "targets": "all",
+      "identifier": "dev.appjava.metv",
+      "icon": [
+        "icons/32x32.png",
+        "icons/128x128.png",
+        "icons/128x128@2x.png",
+        "icons/icon.icns",
+        "icons/icon.ico"
+      ]
+                },
+    "allowlist": {
+      "all": true
+    },
     "windows": [
       {
         "title": "meTV+",
-        "width": 800,
-        "height": 600,
-        "resizable": true,
-        "fullscreen": false
+        "width": 360,
+        "height": 480,
+        "resizable": true
       }
-    ],
-    "security": {
-      "csp": null
-    }
-  },
-  "bundle": {
-    "active": true,
-    "targets": "all",
-    "icon": [
-      "icons/32x32.png",
-      "icons/128x128.png",
-      "icons/128x128@2x.png",
-      "icons/icon.icns",
-      "icons/icon.ico"
-    ],
-    "android": {
-      "debugApplicationIdSuffix": ".debug"
-    }
+    ]
   }
 }
