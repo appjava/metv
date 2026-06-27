@@ -142,6 +142,10 @@ async function downCHs() {
             console.error("Error guardando en Tauri:", error);
             alert("Error al guardar el archivo. Verifica los permisos de Tauri.");
         }
+    }
+    // 2. Caso Android (Nuevo)
+    else if (window.AndroidBridge) {
+        window.AndroidBridge.guardarArchivo(m3uContent, filename);
     } 
     // ----------------------------------------------------
     // COMPORTAMIENTO WEB NORMAL (Navegador)
