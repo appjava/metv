@@ -97,34 +97,69 @@ function upSaved() {
 }
 
 // ==========================================
-// 5. EXPORTACIÓN A M3U CON AUTO-NOMBRE
+// 5. EXPORTACIÓN A M3U (Híbrida: Web + Tauri)
 // ==========================================
-function downCHs() {
+async function downCHs() {
     let m3uContent = "#EXTM3U\n";
     
     // Convertimos el array JSON a texto M3U estándar
     channels.forEach(canal => {
-        // Opcional: Podrías ignorar el canal "ch0" si no quieres exportar el placeholder
         m3uContent += `#EXTINF:-1 tvg-id="${canal.id}", ${canal.name}\n${canal.link}\n`;
     });
 
-    const blob = new Blob([m3uContent], { type: "audio/x-mpegurl" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-
-    // Generar nombre automático basado en la hora (Ej: List_Saved_10-40-55.m3u)
+    // Generar nombre automático basado en la hora
     const now = new Date();
     const pad = (n) => n.toString().padStart(2, '0');
     const timeString = `${pad(now.getHours())}-${pad(now.getMinutes())}-${pad(now.getSeconds())}`;
     const filename = `List_Saved_${timeString}.m3u`;
 
-    a.setAttribute("download", filename);
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(a.href); // Libera memoria
-    
-    console.log(`List Downloaded: ${filename}`);
+    // ----------------------------------------------------
+    // DETECCIÓN DE TAURI
+    // ----------------------------------------------------
+    if (window.__TAURI__) {
+        try {
+            // Importamos las APIs globales de Tauri
+            const { save } = window.__TAURI__.dialog;
+            const { writeTextFile } = window.__TAURI__.fs;
+
+            // 1. Abrimos la ventana nativa de guardar archivo
+            const filePath = await save({
+                defaultPath: filename,
+                filters: [{
+                    name: 'M3U Playlist',
+                    extensions: ['m3u']
+                }]
+            });
+
+            // 2. Si el usuario elige una ruta y no cancela, guardamos
+            if (filePath) {
+                await writeTextFile(filePath, m3uContent);
+                console.log(`List Downloaded via Tauri in: ${filePath}`);
+                
+                if (DOM.labelTop) DOM.labelTop.textContent = "List Downloaded!";
+            }
+        } catch (error) {
+            console.error("Error guardando en Tauri:", error);
+            alert("Error al guardar el archivo. Verifica los permisos de Tauri.");
+        }
+    } 
+    // ----------------------------------------------------
+    // COMPORTAMIENTO WEB NORMAL (Navegador)
+    // ----------------------------------------------------
+    else {
+        const blob = new Blob([m3uContent], { type: "audio/x-mpegurl" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.setAttribute("download", filename);
+        
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href); 
+        
+        console.log(`List Downloaded via Web: ${filename}`);
+        if (DOM.labelTop) DOM.labelTop.textContent = "List Downloaded!";
+    }
 }
 
 
