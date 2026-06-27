@@ -1,110 +1,163 @@
-
 console.log("Welcome You!!");
 
-var video = document.getElementById('video');
-var channels = [];
-var localCHs = JSON.parse(localStorage.getItem('localCHs')) || [{
-    id:     "ch0",
-    name:   "Load or Test Something",
-    link:   ""
-}];
+// ==========================================
+// 1. CACHÉ DEL DOM (Optimización de Rendimiento)
+// ==========================================
+const DOM = {
+    video: document.getElementById('video'),
+    labelTop: document.getElementById('labelTop'),
+    labelTest: document.getElementById('labelTest'),
+    btnDown: document.getElementById('btnDown'),
+    btnRm: document.getElementById('btnRm'),
+    btnExp: document.getElementById('btnExp'),
+    btnDel: document.getElementById('btnDel'),
+    btnUp: document.getElementById('btnUp'),
+    btnUpList: document.getElementById('btnUpList'),
+    btnUpChs: document.getElementById('btnUpChs'),
+    select: document.getElementById('channel-select'),
+    inCh: document.getElementById('inCh'),
+    nameCh: document.getElementById('nameCh'),
+    fileInput: document.getElementById('fileInput')
+};
 
-var savedList = JSON.parse(localStorage.getItem('savedList')) || [{
-    id:     "ch0",
-    name:   "Saved List",
-    link:   ""
-}];
-//console.log(savedList);
+// ==========================================
+// 2. HELPERS (Funciones de ayuda para LocalStorage)
+// ==========================================
+function getLocalChannels() {
+    try {
+        const local = JSON.parse(localStorage.getItem('localCHs'));
+        return (Array.isArray(local) && local.length > 0) ? local : getDefaultChannel();
+    } catch {
+        return getDefaultChannel();
+    }
+}
 
-// Inicializa channels con localCHs o el valor por defecto
-var channels = JSON.parse(localStorage.getItem('localCHs')) || [{
-    id: "ch0",
-    name: "Load or Test Something",
-    link: ""
-}];
+function getSavedList() {
+    try {
+        const saved = JSON.parse(localStorage.getItem('savedList'));
+        return (Array.isArray(saved) && saved.length > 0) ? saved : getDefaultSavedList();
+    } catch {
+        return getDefaultSavedList();
+    }
+}
 
-// Llama a la función para inicializar IDs, guardar y renderizar la lista
+function saveLocalChannels(data) {
+    localStorage.setItem('localCHs', JSON.stringify(data));
+}
+
+function getDefaultChannel() {
+    return [{ id: "ch0", name: "Load or Test Something", link: "" }];
+}
+
+function getDefaultSavedList() {
+    return [{ id: "ch0", name: "Saved List", link: "" }];
+}
+
+// ==========================================
+// 3. ESTADO GLOBAL
+// ==========================================
+let channels = getLocalChannels();
+let savedList = getSavedList();
+let ch = '';
+
+// Guarda las instancias de los reproductores globalmente
+window.hlsPlayer = null;
+window.mpegtsPlayer = null;
+
+// Inicializamos la UI
 updateAndRenderChannels();
 
 
-/*function checkLocal(){
-
-if(localCHs.length < 2){
-    //document.getElementById('btnUpMovs').style.display = "block";
-    document.getElementById('btnUpChs').style.display = "block";
-    document.getElementById('btnUpList').style.display = "block";
-    
-    document.getElementById('btnDown').style.display = "none";
-    document.getElementById('btnRm').style.display = "none";
-    document.getElementById('btnExp').style.display = "none";
-
-    channels = localCHs;
- }else{
-    channels = JSON.parse(localStorage.getItem('localCHs'));
-    document.getElementById('btnDown').style.display = "block";
-    document.getElementById('btnRm').style.display = "block";
-    document.getElementById('btnExp').style.display = "block";
-    //document.getElementById('btnUpMovs').style.display = "block";
-    document.getElementById('btnUpList').style.display = "block";
-    document.getElementById('btnUpChs').style.display = "block";
-    document.getElementById('btnUp').style.display = "block";
-    
- }
-
- if (savedList.length < 2){
-    document.getElementById('btnUp').style.display = "none";
-    } else {
-    document.getElementById('btnUp').style.display = "block";
-}
-}*/
-
-//checkLocal();
-
-function saveList(){
+// ==========================================
+// 4. LÓGICA DE LISTAS GUARDADAS (Saved List)
+// ==========================================
+function saveList() {
     localStorage.setItem('savedList', JSON.stringify(channels));
-    savedList = JSON.parse(localStorage.getItem('savedList'));
+    savedList = getSavedList();
     console.log("Local Save List");
-    document.getElementById('labelTest').innerHTML = "";
-    document.getElementById('labelTop').innerHTML = "List saved";
-    document.getElementById('btnUp').style.display = "block";
     
+    // Uso de textContent para prevenir XSS
+    if(DOM.labelTest) DOM.labelTest.textContent = "";
+    if(DOM.labelTop) DOM.labelTop.textContent = "List saved";
+    if(DOM.btnUp) DOM.btnUp.style.display = "block";
 }
-function upSaved(){
+
+function upSaved() {
     console.log("Loading saved list ....");
-    channels = JSON.parse(localStorage.getItem('savedList'));
-    selectCH(channels);
-    document.getElementById('btnDown').style.display = "block";
-    document.getElementById('btnRm').style.display = "block";
-    document.getElementById('btnExp').style.display = "block";
-    document.getElementById('labelTest').innerHTML = "";
-    document.getElementById('btnDel').innerHTML = "Del Item";
-
-    document.getElementById('labelTest').innerHTML = "";
-    document.getElementById('labelTop').innerHTML = "Saved List Added";
+    channels = getSavedList();
+    updateAndRenderChannels();
+    
+    if(DOM.btnDown) DOM.btnDown.style.display = "block";
+    if(DOM.btnRm) DOM.btnRm.style.display = "block";
+    if(DOM.btnExp) DOM.btnExp.style.display = "block";
+    
+    if(DOM.btnDel) DOM.btnDel.textContent = "Del Item";
+    if(DOM.labelTest) DOM.labelTest.textContent = "";
+    if(DOM.labelTop) DOM.labelTop.textContent = "Saved List Added";
 }
 
+// ==========================================
+// 5. EXPORTACIÓN A M3U CON AUTO-NOMBRE
+// ==========================================
 function downCHs() {
-    const originalData = channels; // channels ya tiene los IDs reasignados y está limpia
+    let m3uContent = "#EXTM3U\n";
+    
+    // Convertimos el array JSON a texto M3U estándar
+    channels.forEach(canal => {
+        // Opcional: Podrías ignorar el canal "ch0" si no quieres exportar el placeholder
+        m3uContent += `#EXTINF:-1 tvg-id="${canal.id}", ${canal.name}\n${canal.link}\n`;
+    });
 
+    const blob = new Blob([m3uContent], { type: "audio/x-mpegurl" });
     const a = document.createElement("a");
-    a.href = URL.createObjectURL(new Blob([JSON.stringify(originalData, null, 2)], {
-        type: "text/plain"
-    }));
+    a.href = URL.createObjectURL(blob);
 
-    let nameList = prompt('Nombre del archivo para la lista (ej: MiLista)?');
-    let nameListSaved = nameList ? nameList + ".txt" : "list_metv.txt"; // Nombre por defecto si no se ingresa nada
+    // Generar nombre automático basado en la hora (Ej: List_Saved_10-40-55.m3u)
+    const now = new Date();
+    const pad = (n) => n.toString().padStart(2, '0');
+    const timeString = `${pad(now.getHours())}-${pad(now.getMinutes())}-${pad(now.getSeconds())}`;
+    const filename = `List_Saved_${timeString}.m3u`;
 
-    a.setAttribute("download", nameListSaved);
-
+    a.setAttribute("download", filename);
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    console.log("List Downloaded");
+    URL.revokeObjectURL(a.href); // Libera memoria
+    
+    console.log(`List Downloaded: ${filename}`);
 }
-function upList() {
-    const fileInput = document.getElementById('fileInput');
-    const file = fileInput.files[0];
 
+
+// ==========================================
+// 6. LECTURA Y CARGA DE ARCHIVOS (M3U / JSON)
+// ==========================================
+function parseM3U(text) {
+    const lines = text.split('\n');
+    const parsedChannels = [
+        { id: "ch0", name: "Select Channel", link: "#" }
+    ];
+    let currentName = null;
+
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+
+        if (line.startsWith('#EXTINF:')) {
+            const parts = line.split(',');
+            currentName = parts[parts.length - 1].trim();
+        } else if (!line.startsWith('#') && currentName) {
+            parsedChannels.push({
+                name: currentName,
+                link: line
+            });
+            currentName = null;
+        }
+    }
+    return parsedChannels;
+}
+
+function upList() {
+    const file = DOM.fileInput.files[0];
     if (!file) {
         alert("Por favor, selecciona un archivo.");
         return;
@@ -114,21 +167,29 @@ function upList() {
     reader.onload = function(e) {
         try {
             const text = e.target.result;
-            let loadedChannels = JSON.parse(text);
+            let loadedChannels = [];
 
-            // Asegúrate de que los canales cargados sean un array
-            if (Array.isArray(loadedChannels)) {
-                channels = loadedChannels;
-                updateAndRenderChannels(); // Reasigna IDs, guarda y renderiza
-                document.getElementById('labelTop').innerHTML = "List Loaded Added";
-                document.getElementById('labelTest').innerHTML = ""; // Limpiar mensaje de prueba
-                document.getElementById('labelTest').style.color = "gray";
+            if (text.includes('#EXTM3U') || text.includes('#EXTINF:')) {
+                loadedChannels = parseM3U(text);
             } else {
-                alert("El archivo cargado no tiene un formato JSON de lista de canales válido.");
+                loadedChannels = JSON.parse(text);
+            }
+
+            if (Array.isArray(loadedChannels) && loadedChannels.length > 0) {
+                channels = loadedChannels;
+                updateAndRenderChannels();
+                
+                if(DOM.labelTop) DOM.labelTop.textContent = "List Loaded Added";
+                if(DOM.labelTest) {
+                    DOM.labelTest.textContent = "";
+                    DOM.labelTest.style.color = "gray";
+                }
+            } else {
+                alert("El archivo cargado está vacío o no tiene el formato correcto.");
             }
         } catch (error) {
-            console.error("Error al parsear el archivo JSON:", error);
-            alert("Error al cargar la lista. Asegúrate de que el archivo sea un JSON válido.");
+            console.error("Error al parsear el archivo:", error);
+            alert("Error al cargar la lista. Asegúrate de que sea un JSON o M3U válido.");
         }
     };
 
@@ -139,226 +200,209 @@ function upList() {
 
     reader.readAsText(file);
 }
-function upMovs() {
-    document.getElementById('labelTop').innerHTML = "Movies Added";
-    fetch("https://appjava.github.io/metv/src/movs.txt")
-        .then((res) => res.text())
-        .then((text) => {
-            localStorage.setItem('localCHs', text);
-            channels = JSON.parse(localStorage.getItem('localCHs'));
-            updateAndRenderChannels(); // Llama aquí
-        })
-        .catch((e) => console.error(e));
-    document.getElementById('btnDel').innerHTML = "Del Mov"; // Esto parece ser un texto estático, ¿quizás debería ser dinámico?
+
+// ==========================================
+// 7. CARGA DE LISTAS REMOTAS (Async/Await)
+// ==========================================
+async function upMovs() {
+    if(DOM.labelTop) DOM.labelTop.textContent = "Movies Added";
+    try {
+        const res = await fetch("https://appjava.github.io/metv/src/movs.txt");
+        const text = await res.text();
+        channels = JSON.parse(text);
+        updateAndRenderChannels();
+    } catch (e) {
+        console.error("Error al cargar películas:", e);
+    }
+    if(DOM.btnDel) DOM.btnDel.textContent = "Del Mov";
 }
 
-function upChs() {
-    document.getElementById('labelTop').innerHTML = "Default Channels Added";
-    fetch("https://appjava.github.io/metv/src/chs.txt")
-        .then((res) => res.text())
-        .then((text) => {
-            localStorage.setItem('localCHs', text);
-            channels = JSON.parse(localStorage.getItem('localCHs'));
-            updateAndRenderChannels(); // Llama aquí
-        })
-        .catch((e) => console.error(e));
-    document.getElementById('btnDel').innerHTML = "Del Ch"; // Esto también
+async function upChs() {
+    if(DOM.labelTop) DOM.labelTop.textContent = "Default Channels Added";
+    try {
+        const res = await fetch("https://appjava.github.io/metv/src/chs.txt");
+        const text = await res.text();
+        channels = JSON.parse(text);
+        updateAndRenderChannels();
+    } catch (e) {
+        console.error("Error al cargar canales por defecto:", e);
+    }
+    if(DOM.btnDel) DOM.btnDel.textContent = "Del Ch";
 }
 
-let select = document.getElementById("channel-select");
-var ch = '';
 
-let selectCH = (channelsToDisplay) => {
-    // Si la función updateAndRenderChannels se encarga de todo el rendering,
-    // esta función selectCH podría simplemente llamar a updateAndRenderChannels
-    // o ser más ligera si solo necesitas actualizar el <select> en ciertos casos.
-    // Para simplificar, haremos que selectCH solo renderice, y updateAndRenderChannels
-    // se encargue de la lógica de IDs y guardado.
+// ==========================================
+// 8. RENDERIZADO Y CONTROL DEL DOM (UI)
+// ==========================================
+function updateAndRenderChannels() {
+    // 1. Reasignar IDs secuencialmente
+    channels = channels.map((canal, index) => {
+        return { ...canal, id: "ch" + index };
+    });
 
-    // La lógica de display "none" para btnDel la moveremos a updateAndRenderChannels
-    // para que sea consistente después de cualquier cambio en la lista.
-    // document.getElementById('btnDel').style.display = "none";
+    // 2. Guardar la lista actualizada
+    saveLocalChannels(channels);
 
-    if (select) {
-        select.innerHTML = channelsToDisplay
-            .map((x) => `<option value="${x.id}">${x.name}</option>`)
-            .join("");
+    // 3. Crear opciones de forma segura (Previene XSS)
+    if (DOM.select) {
+        // Guardamos el canal seleccionado actualmente para no perderlo
+        const currentSelectedId = DOM.select.value;
+        
+        DOM.select.innerHTML = ""; // Limpiamos opciones
+        
+        channels.forEach(x => {
+            const option = document.createElement("option");
+            option.value = x.id;
+            option.textContent = x.name; // SEGURO: Evita inyección HTML
+            DOM.select.appendChild(option);
+        });
+
+        // Intentamos restaurar la selección
+        if (currentSelectedId && DOM.select.querySelector(`option[value="${currentSelectedId}"]`)) {
+            DOM.select.value = currentSelectedId;
+        }
     }
 
-    // Si hay un canal seleccionado, asegúrate de que se mantenga seleccionado
-    if (ch && select.querySelector(`option[value="${ch}"]`)) {
-        select.value = ch;
-    } else if (channelsToDisplay.length > 0) {
-        select.value = channelsToDisplay[0].id; // Selecciona el primero por defecto
-        ch = channelsToDisplay[0].id; // Actualiza la variable 'ch'
+    // 4. Actualizar botones según la longitud
+    const localCurrent = getLocalChannels();
+    if (localCurrent.length < 2) {
+        if(DOM.btnDown) DOM.btnDown.style.display = "none";
+        if(DOM.btnRm) DOM.btnRm.style.display = "none";
+        if(DOM.btnExp) DOM.btnExp.style.display = "none";
+        if(DOM.btnDel) DOM.btnDel.style.display = "none";
+        if(DOM.btnUpChs) DOM.btnUpChs.style.display = "block";
+        if(DOM.btnUpList) DOM.btnUpList.style.display = "block";
     } else {
-        ch = ""; // No hay canales
+        if(DOM.btnDown) DOM.btnDown.style.display = "block";
+        if(DOM.btnRm) DOM.btnRm.style.display = "block";
+        if(DOM.btnExp) DOM.btnExp.style.display = "block";
+        if(DOM.btnDel) DOM.btnDel.style.display = "block";
+        if(DOM.btnUp) DOM.btnUp.style.display = "block";
+        if(DOM.btnUpList) DOM.btnUpList.style.display = "block";
+        if(DOM.btnUpChs) DOM.btnUpChs.style.display = "block";
     }
-};
 
-function played(){
-    const channelSelected = document.getElementById('channel-select').value;
-    const ch = channelSelected;
-    
-    if (channelSelected != "ch0"){
-        changeCH(ch);
-        document.getElementById('btnDel').style.display = "block";
-    }else{
-        changeCH(ch);
-        document.getElementById('btnDel').style.display = "none";
+    // Protecciones de Placeholders y SavedList
+    if (channels.length > 0 && channels[0].id === "ch0" && channels[0].name === "Load or Test Something") {
+        if(DOM.btnDel) DOM.btnDel.style.display = "none";
+    }
+    if (savedList.length < 2){
+        if(DOM.btnUp) DOM.btnUp.style.display = "none";
+    } else {
+        if(DOM.btnUp) DOM.btnUp.style.display = "block";
     }
 }
 
-selectCH(channels);
+// ==========================================
+// 9. CONTROLADORES DE EVENTOS DE CANALES
+// ==========================================
+function played() {
+    if (!DOM.select) return;
+    const channelSelected = DOM.select.value;
+    ch = channelSelected;
+
+    if (channelSelected !== "ch0"){
+        changeCH();
+        if(DOM.btnDel) DOM.btnDel.style.display = "block";
+    } else {
+        changeCH();
+        if(DOM.btnDel) DOM.btnDel.style.display = "none";
+    }
+}
 
 function clearList() {
-    channels = [{
-        id: "ch0",
-        name: "Load or Test Something",
-        link: ""
-    }]; // Deja el placeholder inicial si lo usas
+    channels = getDefaultChannel();
     ch = "";
-    updateAndRenderChannels(); // Reasigna IDs (solo ch0), guarda y renderiza
-    document.getElementById('labelTop').innerHTML = "List Cleared";
+    updateAndRenderChannels();
+    
+    if(DOM.labelTop) DOM.labelTop.textContent = "List Cleared";
     playCH(""); // Detiene la reproducción
 }
 
 function delCH() {
-    let search = channels.find((x) => x.id === ch); // Encuentra el canal a eliminar
+    let search = channels.find((x) => x.id === ch);
     if (search) {
-        // Filtra la lista para eliminar el canal
         channels = channels.filter((item) => item.id !== ch);
-
-        // Opcional: Mostrar el nombre del canal eliminado
-        document.getElementById('labelTop').innerHTML = search.name.toUpperCase() + " " + "Deleted";
-
-        // Vuelve a generar los IDs y actualiza el almacenamiento local y la interfaz
+        if(DOM.labelTop) DOM.labelTop.textContent = search.name.toUpperCase() + " Deleted";
+        
         updateAndRenderChannels();
-        ch = ""; // Resetea la selección actual
-        playCH(""); // Detiene la reproducción o reproduce un canal por defecto si es necesario
-    }
-}
-function updateAndRenderChannels() {
-    // 1. Reasignar IDs secuencialmente
-    channels = channels.map((channel, index) => {
-        return {
-            ...channel,
-            id: "ch" + index // Reasigna IDs desde "ch0", "ch1", etc.
-        };
-    });
-
-    // 2. Guardar la lista actualizada en localStorage
-    localStorage.setItem('localCHs', JSON.stringify(channels));
-
-    // 3. Actualizar el selector de canales en la interfaz de usuario
-    let select = document.getElementById("channel-select");
-    if (select) {
-        select.innerHTML = channels
-            .map((x) => `<option value="${x.id}">${x.name}</option>`)
-            .join("");
-    }
-
-    // 4. Actualizar el estado de los botones (Down, Rm, Exp) basado en la longitud de la lista
-    // (Asegúrate de tener esta lógica también en clearList y addCH)
-    const localCurrent = JSON.parse(localStorage.getItem('localCHs'));
-    if (localCurrent.length < 2) { // Si solo hay un elemento (o menos, como "Load or Test Something")
-        document.getElementById('btnDown').style.display = "none";
-        document.getElementById('btnRm').style.display = "none";
-        document.getElementById('btnExp').style.display = "none";
-        // Si tienes un canal por defecto como "Load or Test Something", asegúrate de que no se pueda eliminar si es el único.
-        document.getElementById('btnDel').style.display = "none";
-
-        document.getElementById('btnUpChs').style.display = "block";
-        document.getElementById('btnUpList').style.display = "block";
-    } else {
-        document.getElementById('btnDown').style.display = "block";
-        document.getElementById('btnRm').style.display = "block";
-        document.getElementById('btnExp').style.display = "block";
-        document.getElementById('btnDel').style.display = "block"; // Permite eliminar si hay más de 1
-        document.getElementById('btnUp').style.display = "block";
-
-        document.getElementById('btnUpList').style.display = "block";
-        document.getElementById('btnUpChs').style.display = "block";
-    }
-
-    // Asegúrate de que el primer elemento (si existe y es el placeholder) no se pueda seleccionar para eliminar
-    if (channels.length > 0 && channels[0].id === "ch0" && channels[0].name === "Load or Test Something") {
-        document.getElementById('btnDel').style.display = "none";
-    }
-    if (savedList.length < 2){
-        document.getElementById('btnUp').style.display = "none";
-        } else {
-        document.getElementById('btnUp').style.display = "block";
+        ch = "";
+        playCH(""); 
     }
 }
 
 function addCH() {
-    if (channels[0].name == "Load or Test Something") {
-        console.log("Change Channel 0");
-        channels[0].name = "Select Something"; // O simplemente eliminar este placeholder si ya no es necesario
+    if (channels[0].name === "Load or Test Something") {
+        channels[0].name = "Select Something"; 
     }
 
-    let chName = document.getElementById("nameCh").value;
-    let linkCH = document.getElementById("inCh").value;
+    let chName = DOM.nameCh.value;
+    let linkCH = DOM.inCh.value;
 
-    if (linkCH.includes("http") && chName !== "") {
-        // No necesitas lonChannels ni chAdd aquí porque updateAndRenderChannels los reasignará.
+    if (linkCH.includes("http") && chName.trim() !== "") {
         let chToAdd = {
-            id: "temp_id", // Un ID temporal, será reasignado
+            id: "temp_id",
             name: chName,
             link: linkCH,
         };
         channels.push(chToAdd);
 
-        document.getElementById("nameCh").value = "";
-        document.getElementById('inCh').value = "";
+        DOM.nameCh.value = "";
+        DOM.inCh.value = "";
 
-        // Llama a la nueva función para reasignar IDs, guardar y renderizar
         updateAndRenderChannels();
 
-        // Muestra mensaje de éxito
-        document.getElementById('labelTest').innerHTML = chName + " " + "Added to list";
-        document.getElementById('labelTop').innerHTML = "";
-        document.getElementById('labelTest').style.color = "gray"; // Restablece color si se cambió
+        if(DOM.labelTest) {
+            DOM.labelTest.textContent = chName + " Added to list";
+            DOM.labelTest.style.color = "gray";
+        }
+        if(DOM.labelTop) DOM.labelTop.textContent = "";
     } else {
-        document.getElementById('labelTest').innerHTML = "Please enter a Name and Valid Url";
-        document.getElementById('labelTest').style.color = "red";
+        if(DOM.labelTest) {
+            DOM.labelTest.textContent = "Please enter a Name and Valid Url";
+            DOM.labelTest.style.color = "red";
+        }
     }
 }
 
-function testCH(){
-    document.getElementById('labelTest').style.color = "yellow";
-    document.getElementById('labelTop').innerHTML = "";
-    ch = document.getElementById('inCh').value;
-    if (ch.includes("http")){
-        document.getElementById('labelTest').innerHTML = "Testing ...";
-        playCH(ch);
-        selectCH(channels); 
-    } else {
-        document.getElementById('labelTest').innerHTML = "Please enter a valid url";
-    }
+function testCH() {
+    if(DOM.labelTest) DOM.labelTest.style.color = "yellow";
+    if(DOM.labelTop) DOM.labelTop.textContent = "";
     
+    ch = DOM.inCh.value;
+    
+    if (ch.includes("http")){
+        if(DOM.labelTest) DOM.labelTest.textContent = "Testing...";
+        playCH(ch);
+    } else {
+        if(DOM.labelTest) DOM.labelTest.textContent = "Please enter a valid url";
+    }
 }
 
-function changeCH(){
-    document.getElementById('inCh').value = "";
-    document.getElementById('labelTest').innerHTML = "";
-    document.getElementById('labelTop').innerHTML = "";
-    ch = document.getElementById('channel-select').value;
-    let search = channels.find((x) => x.id === ch)
-    console.log(search.link);
-    playCH(search.link);
-    document.getElementById('labelTest').innerHTML = search.link;
-    document.getElementById('labelTest').style.color = "gray";
+function changeCH() {
+    DOM.inCh.value = "";
+    if(DOM.labelTest) DOM.labelTest.textContent = "";
+    if(DOM.labelTop) DOM.labelTop.textContent = "";
+    
+    ch = DOM.select.value;
+    let search = channels.find((x) => x.id === ch);
+    
+    if(search) {
+        console.log("Playing:", search.link);
+        playCH(search.link);
+        if(DOM.labelTest) {
+            DOM.labelTest.textContent = search.link;
+            DOM.labelTest.style.color = "gray";
+        }
+    }
 }
 
-// Guarda las instancias de los reproductores globalmente para poder destruirlas
-window.hlsPlayer = null;
-window.mpegtsPlayer = null;
-
-function playCH(ch) {
-    // --- 1. Limpiar reproductores y video anteriores ---
+// ==========================================
+// 10. LÓGICA DE REPRODUCCIÓN (Video Player)
+// ==========================================
+function playCH(channelLink) {
     console.log("Limpiando reproductor anterior...");
+    
     if (window.hlsPlayer) {
         window.hlsPlayer.destroy();
         window.hlsPlayer = null;
@@ -367,86 +411,72 @@ function playCH(ch) {
         window.mpegtsPlayer.destroy();
         window.mpegtsPlayer = null;
     }
-    video.src = ""; // Detiene y limpia la fuente del video
+    DOM.video.src = ""; 
 
-    // Si no hay canal, no hacemos nada más
-    if (!ch) {
-        return;
-    }
+    if (!channelLink) return;
 
-    // --- 2. Configurar la URL final y determinar el tipo de stream ---
+    // Uso de proxies
     const proxyCORSUrl = "https://cors-proxy.cooks.fyi/";
     const proxyBaseUrl = "https://meprox.onrender.com/proxy?url=";
-    let finalUrl = ch;
-    let isHttpStream = ch.startsWith("http://");
+    let finalUrl = channelLink;
+    let isHttpStream = channelLink.startsWith("http://");
 
     if (isHttpStream) {
-        finalUrl = proxyBaseUrl + encodeURIComponent(ch);
-        console.log("finallUrl: ");
-        console.log(finalUrl);
-        //finalUrl = ch;
+        finalUrl = proxyBaseUrl + encodeURIComponent(channelLink);
     }
-    if (ch.includes("pluto.tv")){
-        finalUrl = proxyCORSUrl + ch;
-        console.log("finallUrl: ");
-        console.log(finalUrl);
+    if (channelLink.includes("pluto.tv")){
+        finalUrl = proxyCORSUrl + channelLink;
     }
 
-    // --- 3. Lógica de selección de reproductor ---
-
-    // CASO 1: Es un archivo MP4 (tiene prioridad)
-    if (ch.includes(".mp4")) {
+    // CASO 1: MP4
+    if (channelLink.includes(".mp4")) {
         console.log("Tipo detectado: MP4. Reproduciendo directamente.");
-        video.src = finalUrl;
-        video.play().catch(e => console.error("Error al reproducir MP4:", e));
+        DOM.video.src = finalUrl;
+        DOM.video.play().catch(e => console.error("Error al reproducir MP4:", e));
         return;
     }
 
-    // CASO 2: Es un stream HTTP (no .mp4), usamos mpegts.js
+    // CASO 2: HTTP Stream -> mpegts.js
     if (isHttpStream) {
         console.log("Tipo detectado: HTTP Stream. Usando mpegts.js.");
-        if (mpegts.isSupported()) {
+        if (typeof mpegts !== 'undefined' && mpegts.isSupported()) {
             const player = mpegts.createPlayer({
                 type: 'mse',
                 isLive: true,
                 url: finalUrl
             });
             window.mpegtsPlayer = player;
-            player.attachMediaElement(video);
+            player.attachMediaElement(DOM.video);
             player.load();
-            player.play().catch(e => console.error("Error al reproducir con mpegts.js:", e));
+            player.play().catch(e => console.error("Error mpegts.js:", e));
         } else {
-            console.error("mpegts.js no es soportado en este navegador.");
+            console.error("mpegts.js no está definido o soportado.");
         }
         return;
     }
-    
-    // CASO 3: Es un stream HTTPS (no .mp4), usamos hls.js
+
+    // CASO 3: HTTPS Stream -> hls.js
     if (!isHttpStream) {
         console.log("Tipo detectado: HTTPS Stream. Usando hls.js.");
-        if (Hls.isSupported()) {
+        if (typeof Hls !== 'undefined' && Hls.isSupported()) {
             const hls = new Hls();
             window.hlsPlayer = hls;
             hls.loadSource(finalUrl);
-            hls.attachMedia(video);
+            hls.attachMedia(DOM.video);
             hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                video.play().catch(e => console.error("Error al reproducir con hls.js:", e));
+                DOM.video.play().catch(e => console.error("Error hls.js:", e));
             });
             hls.on(Hls.Events.ERROR, function (event, data) {
                 if (data.fatal) {
                     console.error('Error fatal de HLS:', data.type, data.details);
                 }
             });
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            // Soporte HLS nativo para Safari
-            video.src = finalUrl;
-            video.addEventListener('loadedmetadata', () => video.play());
+        } else if (DOM.video.canPlayType('application/vnd.apple.mpegurl')) {
+            // Soporte HLS nativo para Safari (macOS/iOS)
+            DOM.video.src = finalUrl;
+            DOM.video.addEventListener('loadedmetadata', () => DOM.video.play());
         } else {
-             console.error("HLS no es soportado en este navegador.");
+            console.error("HLS no es soportado en este navegador.");
         }
-        return;
     }
 }
-
-
-
