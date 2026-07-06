@@ -241,6 +241,68 @@ function upList() {
 }
 
 // ==========================================
+// 6.5 CARGA DE LISTA REMOTA POR URL
+// ==========================================
+async function loadRemoteList(url) {
+    if(DOM.labelTop) DOM.labelTop.textContent = "Downloading remote list...";
+    if(DOM.labelTest) DOM.labelTest.textContent = "";
+
+    try {
+        const fetchText = async (targetUrl) => {
+            const response = await fetch(targetUrl);
+            if (!response.ok) throw new Error("Network error");
+            return await response.text();
+        };
+
+        let text = "";
+        try {
+            // 1. Intento directo (Funciona perfecto en Tauri y Android)
+            text = await fetchText(url);
+        } catch (err) {
+            // 2. Intento con Proxy (Necesario para navegadores Web por restricciones CORS)
+            console.log("Fallo de descarga directa (CORS). Intentando con proxy...");
+            const proxyCORSUrl = "https://cors-proxy.cooks.fyi/";
+            text = await fetchText(proxyCORSUrl + url);
+        }
+
+        let loadedChannels = [];
+        // Detectamos si es M3U o JSON
+        if (text.includes('#EXTM3U') || text.includes('#EXTINF:')) {
+            loadedChannels = parseM3U(text);
+        } else {
+            loadedChannels = JSON.parse(text);
+        }
+
+        // Validamos que se hayan extraído canales
+        if (Array.isArray(loadedChannels) && loadedChannels.length > 0) {
+            channels = loadedChannels; // Reemplazamos la lista actual
+            updateAndRenderChannels();
+            
+            if(DOM.labelTop) DOM.labelTop.textContent = "Remote List Loaded!";
+            if(DOM.labelTest) {
+                // Restamos 1 para no contar el placeholder "Select Channel"
+                DOM.labelTest.textContent = `${loadedChannels.length - 1} channels added.`;
+                DOM.labelTest.style.color = "gray";
+            }
+            
+            // Limpiamos los inputs
+            DOM.inCh.value = ""; 
+            DOM.nameCh.value = "";
+        } else {
+            throw new Error("Formato inválido o lista vacía.");
+        }
+
+    } catch (error) {
+        console.error("Error al cargar la lista remota:", error);
+        if(DOM.labelTest) {
+            DOM.labelTest.textContent = "Error loading list. Check URL format.";
+            DOM.labelTest.style.color = "red";
+        }
+        if(DOM.labelTop) DOM.labelTop.textContent = "";
+    }
+}
+
+// ==========================================
 // 7. CARGA DE LISTAS REMOTAS (Async/Await)
 // ==========================================
 async function upMovs() {
@@ -371,14 +433,22 @@ function delCH() {
 }
 
 function addCH() {
-    if (channels[0].name === "Load or Test Something") {
+    // Protección para modificar el placeholder inicial
+    if (channels.length > 0 && channels[0].name === "Load or Test Something") {
         channels[0].name = "Select Something"; 
     }
 
-    let chName = DOM.nameCh.value;
-    let linkCH = DOM.inCh.value;
+    let chName = DOM.nameCh.value.trim();
+    let linkCH = DOM.inCh.value.trim();
 
-    if (linkCH.includes("http") && chName.trim() !== "") {
+    // ESCENARIO 1: Solo hay URL (El usuario quiere cargar una LISTA REMOTA)
+    if (linkCH.includes("http") && chName === "") {
+        loadRemoteList(linkCH);
+        return; // Detenemos la función aquí
+    }
+
+    // ESCENARIO 2: Hay Nombre y URL (El usuario quiere agregar un CANAL INDIVIDUAL)
+    if (linkCH.includes("http") && chName !== "") {
         let chToAdd = {
             id: "temp_id",
             name: chName,
@@ -396,9 +466,11 @@ function addCH() {
             DOM.labelTest.style.color = "gray";
         }
         if(DOM.labelTop) DOM.labelTop.textContent = "";
-    } else {
+    } 
+    // ESCENARIO 3: Input inválido
+    else {
         if(DOM.labelTest) {
-            DOM.labelTest.textContent = "Please enter a Name and Valid Url";
+            DOM.labelTest.textContent = "Enter Name & URL to add 1 channel, or just URL to load a List.";
             DOM.labelTest.style.color = "red";
         }
     }
