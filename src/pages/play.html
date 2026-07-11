@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>meTV PLAY - Your Channels. Your Grid. Zero Noise</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #09090b; }
+        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body :class="theme === 'dark' ? 'bg-zinc-950 text-zinc-100' : 'bg-zinc-50 text-zinc-900'" class="min-h-screen font-sans antialiased flex flex-col justify-between animate-fade-in" x-data="officialPlayApp()">
+
+    <div>
+        <!-- Header y Panel de Control Sticky Unificado (Minimalista) -->
+        <header :class="theme === 'dark' ? 'border-zinc-900 bg-zinc-950/80' : 'border-zinc-200 bg-white/85 shadow-sm'" class="border-b sticky top-0 z-40 backdrop-blur transition-all">
+            
+            <div class="max-w-7xl mx-auto px-4 py-3 sm:py-0 sm:h-16 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+                
+                <!-- Logo -->
+                <div class="flex items-center justify-between w-full sm:w-auto">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 bg-red-600 rounded-full animate-pulse"></span>
+                        <h1 class="text-lg sm:text-xl font-bold tracking-wider" :class="theme === 'dark' ? 'text-zinc-50' : 'text-zinc-900'">meTV <span class="text-red-500">PLAY</span></h1>
+                    </div>
+                    
+                    <!-- Controles rápidos móviles -->
+                    <div class="flex items-center gap-2.5 sm:hidden">
+                        <button @click="changeLanguage(locale === 'es' ? 'en' : 'es')" 
+                                :class="theme === 'dark' ? 'text-zinc-400 hover:text-white border-zinc-800' : 'text-zinc-500 hover:text-zinc-950 border-zinc-300'"
+                                class="text-[10px] font-bold px-2 py-0.5 rounded transition-colors uppercase border">
+                            <span x-text="locale"></span>
+                        </button>
+                        <button @click="theme = (theme === 'dark' ? 'light' : 'dark'); localStorage.setItem('yt_theme', theme);" 
+                                :class="theme === 'dark' ? 'text-zinc-400 hover:text-white' : 'text-zinc-500 hover:text-zinc-950'" class="p-1 text-xs">
+                            <span x-text="theme === 'dark' ? '🌙' : '☀️'"></span>
+                        </button>
+                        <button @click="refreshAllChannels()" :disabled="isLoading"
+                                :class="theme === 'dark' ? 'text-zinc-400 hover:text-white' : 'text-zinc-500 hover:text-zinc-950'" class="p-1 transition-colors text-xs flex items-center justify-center">
+                            <span :class="isLoading ? 'animate-spin' : ''" class="inline-block">🔄</span>
+                        </button>
+                        <button @click="showSettingsModal = true" :class="theme === 'dark' ? 'bg-zinc-900 border-zinc-800 text-zinc-400' : 'bg-zinc-200 border-zinc-300 text-zinc-600'" class="p-2 rounded-full border text-xs">
+                            ⚙️
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Entrada de Sincronización y Controles PC -->
+                <div class="flex items-center gap-3 w-full sm:w-auto sm:max-w-xl sm:justify-end" x-show="apiKey">
+                    <div class="flex gap-2 w-full sm:w-80">
+                        <input type="text" x-model="autoInput" :placeholder="t('syncPlaceholder')" @keydown.enter="autoSyncChannel()"
+                               :class="theme === 'dark' ? 'bg-zinc-900 border-zinc-800 text-zinc-300 placeholder-zinc-500' : 'bg-zinc-100 border-zinc-300 text-zinc-800 placeholder-zinc-400'"
+                               class="w-full text-xs rounded-full py-2.5 px-4 border focus:outline-none">
+                        <button @click="autoSyncChannel()" :disabled="isLoading" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2.5 rounded-full transition-colors whitespace-nowrap flex items-center gap-1 shadow-md">
+                            <span x-text="t('syncButton')"></span>
+                            <span x-show="isLoading" class="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                        </button>
+                    </div>
+                    
+                    <div class="hidden sm:flex items-center gap-3.5 shrink-0">
+                        <button @click="changeLanguage(locale === 'es' ? 'en' : 'es')" 
+                                :class="theme === 'dark' ? 'text-zinc-400 hover:text-white border-zinc-800' : 'text-zinc-500 hover:text-zinc-950 border-zinc-300'"
+                                class="text-xs font-bold px-2 py-0.5 rounded transition-colors uppercase border">
+                            <span x-text="locale"></span>
+                        </button>
+                        <button @click="theme = (theme === 'dark' ? 'light' : 'dark'); localStorage.setItem('yt_theme', theme);" 
+                                :class="theme === 'dark' ? 'text-zinc-400 hover:text-white' : 'text-zinc-500 hover:text-zinc-950'"
+                                class="p-1 hover:scale-110 transition-transform">
+                            <span x-text="theme === 'dark' ? '🌙' : '☀️'"></span>
+                        </button>
+                        <button @click="refreshAllChannels()" :disabled="isLoading"
+                                :class="theme === 'dark' ? 'text-zinc-400 hover:text-white' : 'text-zinc-500 hover:text-zinc-950'"
+                                class="p-1 hover:scale-110 transition-transform text-xs flex items-center justify-center" :title="t('refreshTooltip')">
+                            <span :class="isLoading ? 'animate-spin' : ''" class="inline-block">🔄</span>
+                        </button>
+                        <button @click="showSettingsModal = true" :class="theme === 'dark' ? 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white' : 'bg-zinc-200 border-zinc-300 text-zinc-600 hover:text-zinc-900'" class="p-2 rounded-full border transition-all" :title="t('settingsTitle')">
+                            ⚙️
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fila Inferior: Panel de Filtros -->
+            <div :class="theme === 'dark' ? 'border-zinc-900 bg-zinc-950/40' : 'border-zinc-200 bg-zinc-50/50'" class="border-t py-2 px-4 transition-colors" x-show="apiKey && (channels.length > 0 || videos.length > 0)">
+                <div class="max-w-7xl mx-auto flex items-center justify-between gap-4 overflow-x-auto no-scrollbar">
+                    
+                    <div class="flex items-center gap-2 shrink-0">
+                        <!-- Selector de Colecciones Manuales -->
+                        <div class="relative flex items-center">
+                            <select x-model="selectedCategory" @change="selectedChannel = ''"
+                                    :class="theme === 'dark' ? 'bg-zinc-900 border-zinc-800 text-zinc-300' : 'bg-white border-zinc-300 text-zinc-700 shadow-sm'"
+                                    class="text-xs rounded-full pl-3 pr-7 py-1.5 border appearance-none focus:outline-none cursor-pointer font-semibold transition-colors">
+                                <option value="all" x-text="t('allCategories')"></option>
+                                <template x-for="cat in activeCategories" :key="cat">
+                                    <option :value="cat" x-text="'📂 ' + t(cat.toLowerCase())"></option>
+                                </template>
+                            </select>
+                            <span :class="theme === 'dark' ? 'text-zinc-500' : 'text-zinc-400'" class="absolute right-2.5 pointer-events-none text-[8px]">▼</span>
+                        </div>
+
+                        <!-- Selector Desplegable de Canal -->
+                        <div class="relative flex items-center" x-show="filteredChannels.length > 0">
+                            <select x-model="selectedChannel"
+                                    :class="theme === 'dark' ? 'bg-zinc-900 border-zinc-800 text-zinc-300' : 'bg-white border-zinc-300 text-zinc-700 shadow-sm'"
+                                    class="text-xs rounded-full pl-3 pr-7 py-1.5 border appearance-none focus:outline-none cursor-pointer font-semibold max-w-[140px] truncate transition-colors">
+                                <option value="" x-text="t('allChannels')"></option>
+                                <template x-for="channel in filteredChannels" :key="channel.id">
+                                    <option :value="channel.name" x-text="channel.name"></option>
+                                </template>
+                            </select>
+                            <span :class="theme === 'dark' ? 'text-zinc-500' : 'text-zinc-400'" class="absolute right-2.5 pointer-events-none text-[8px]">▼</span>
+                        </div>
+
+                        <!-- Selector Desplegable de Formato -->
+                        <div class="relative flex items-center">
+                            <select x-model="selectedFormat"
+                                    :class="theme === 'dark' ? 'bg-zinc-900 border-zinc-800 text-zinc-300' : 'bg-white border-zinc-300 text-zinc-700 shadow-sm'"
+                                    class="text-xs rounded-full pl-3 pr-7 py-1.5 border appearance-none focus:outline-none cursor-pointer font-semibold transition-colors">
+                                <option value="all" x-text="t('allFormats')"></option>
+                                <option value="video" x-text="'🎬 ' + t('videosShortLabel')"></option>
+                                <option value="short" x-text="'⚡ ' + t('shorts')"></option>
+                                <option value="new" x-text="'✨ ' + t('newFormatLabel')"></option>
+                            </select>
+                            <span :class="theme === 'dark' ? 'text-zinc-500' : 'text-zinc-400'" class="absolute right-2.5 pointer-events-none text-[8px]">▼</span>
+                        </div>
+
+                        <!-- Selector Desplegable de Ordenación -->
+                        <div class="relative flex items-center">
+                            <select x-model="sortBy"
+                                    :class="theme === 'dark' ? 'bg-zinc-900 border-zinc-800 text-zinc-300' : 'bg-white border-zinc-300 text-zinc-700 shadow-sm'"
+                                    class="text-xs rounded-full pl-3 pr-7 py-1.5 border appearance-none focus:outline-none cursor-pointer font-semibold transition-colors">
+                                <option value="date" x-text="t('sortDate')"></option>
+                                <option value="views" x-text="'🔥 ' + t('sortViews')"></option>
+                            </select>
+                            <span :class="theme === 'dark' ? 'text-zinc-500' : 'text-zinc-400'" class="absolute right-2.5 pointer-events-none text-[8px]">▼</span>
+                        </div>
+                    </div>
+
+                    <!-- Botón de Favoritos Compacto -->
+                    <button @click="showOnlyFavorites = !showOnlyFavorites"
+                            :class="showOnlyFavorites ? 'bg-amber-500 text-black border-amber-600 font-bold' : (theme === 'dark' ? 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white' : 'bg-zinc-100 border-zinc-300 text-zinc-600 hover:bg-zinc-200')"
+                            class="p-2 rounded-full border transition-all text-xs flex items-center justify-center shadow-sm shrink-0"
+                            :title="showOnlyFavorites ? t('onlyFavs') : t('showFavs')">
+                        ★
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Alerta de errores de sincronización -->
+        <div x-show="errorMessage" class="bg-red-950/40 border-b border-red-900/50 p-2 text-center text-xs text-red-400 animate-pulse flex justify-between px-8" style="display: none;" x-transition>
+            <span x-text="errorMessage"></span>
+            <button @click="errorMessage = ''" class="font-bold text-zinc-400 hover:text-white">✕</button>
+        </div>
+
+        <!-- Contenido Principal -->
+        <main class="max-w-7xl mx-auto px-4 py-6 sm:py-8 animate-fade-in">
+            
+            <!-- Alerta si falta configurar la API Key -->
+            <div x-show="!apiKey" class="bg-red-950/20 border border-red-900/50 p-4 sm:p-6 rounded-xl mb-6 text-sm text-red-200">
+                <p class="font-bold mb-1 text-base" x-text="t('apiKeyWarningTitle')"></p>
+                <p class="mb-4 text-zinc-400 text-xs sm:text-sm" x-text="t('apiKeyWarningDesc')"></p>
+                <div class="flex flex-col sm:flex-row gap-2 mb-3">
+                    <input type="password" x-model="tempApiKey" placeholder="AIzaSy..." 
+                           class="bg-zinc-900 border border-zinc-800 px-4 py-2.5 rounded-lg text-sm w-full sm:w-80 focus:outline-none focus:border-red-500 text-white font-mono">
+                    <button @click="saveApiKey()" class="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2.5 rounded-lg text-sm transition-colors w-full sm:w-auto" x-text="t('saveButton')"></button>
+                </div>
+                <button @click="showTutorialModal = true" class="text-xs text-red-400 hover:text-red-300 hover:underline flex items-center gap-1 transition-colors">
+                    ℹ️ <span x-text="t('tutorialLink')"></span>
+                </button>
+            </div>
+
+            <!-- Estado de carga de red -->
+            <div x-show="isLoading" class="text-center py-4 text-xs text-zinc-500" x-text="t('loading')"></div>
+
+            <!-- Dashboard Activo -->
+            <div x-show="apiKey">
+                <div x-show="channels.length === 0 && videos.length === 0" class="text-center py-20 max-w-xl mx-auto">
+                    <div class="text-4xl mb-4 justify-center flex "><img src="../img/meSignal.png" height="300" width="300"></div>
+                    <h2 class="text-lg font-bold text-zinc-300 mb-2" x-text="t('emptyTitle')"></h2>
+                    <p class="text-sm text-zinc-500 mb-6 leading-relaxed" x-text="t('emptyDesc')"></p>
+                </div>
+
+                <!-- Rejilla de Videos -->
+                <div class="grid grid-cols-1 min-[480px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                    <template x-for="video in filteredVideos" :key="video.id">
+                        <div :class="theme === 'dark' ? 'bg-zinc-900/40 border-zinc-900 hover:border-zinc-800' : 'bg-white border-zinc-200 hover:border-zinc-300 shadow-sm'"
+                             class="group cursor-pointer border rounded-xl overflow-hidden transition-all flex flex-col relative"
+                             @click="playVideo(video.id)">
+                            
+                            <!-- Miniatura -->
+                            <div class="relative aspect-video bg-zinc-950 overflow-hidden">
+                                <img :src="video.thumbnail" class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300" loading="lazy">
+                                
+                                <div x-show="isWatched(video.id)" class="absolute inset-0 bg-black/75 flex items-center justify-center pointer-events-none transition-all">
+                                    <span class="text-xs bg-zinc-950/90 text-zinc-400 px-3 py-1.5 rounded-full border border-zinc-800 font-semibold flex items-center gap-1 shadow-lg" x-text="t('visto')"></span>
+                                </div>
+
+                                <div x-show="isNew(video.id)" class="absolute top-2 left-2 px-2 py-0.5 rounded text-[10px] font-bold shadow-md bg-green-600 text-white animate-pulse">
+                                    <span x-text="t('new')"></span>
+                                </div>
+
+                                <div class="absolute top-2 right-2 px-2 py-0.5 rounded text-[10px] font-bold shadow-md bg-black/75 text-zinc-300">
+                                    <span x-text="video.isShort ? t('shorts') : video.durationLabel"></span>
+                                </div>
+
+                                <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                                    <span class="text-white font-bold text-2xl">▶</span>
+                                </div>
+                            </div>
+
+                            <!-- Info del Video -->
+                            <div class="p-3 sm:p-4 flex-1 flex flex-col justify-between">
+                                <div>
+                                    <h3 :class="theme === 'dark' ? 'text-zinc-200' : 'text-zinc-800'" class="text-xs sm:text-sm font-medium line-clamp-2 group-hover:text-red-500 transition-colors" x-text="video.title"></h3>
+                                    
+                                    <div class="flex items-center gap-1.5 mt-1.5">
+                                        <template x-if="getChannelLogo(video.channelName)">
+                                            <img :src="getChannelLogo(video.channelName)" class="w-4 h-4 rounded-full object-cover border border-zinc-800/40">
+                                        </template>
+                                        <p class="text-[11px] sm:text-xs text-red-500 font-semibold truncate" x-text="video.channelName"></p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Fila Inferior -->
+                                <div :class="theme === 'dark' ? 'border-zinc-900/50' : 'border-zinc-200/50'" class="flex items-center justify-between mt-3 pt-2 border-t">
+                                    <div class="flex flex-col text-[10px] text-zinc-500 leading-tight">
+                                        <span x-text="formatDate(video)"></span>
+                                        <span class="mt-0.5" x-text="(video.viewsLabel || '0') + ' ' + t('vistasLabel')"></span>
+                                    </div>
+                                    
+                                    <div class="flex gap-1.5">
+                                        <button @click.stop="toggleWatched(video.id)" 
+                                                :class="theme === 'dark' ? 'bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white' : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-500 hover:text-zinc-900'"
+                                                class="p-2 sm:p-1.5 rounded-full transition-colors text-xs flex items-center justify-center shadow-sm"
+                                                :title="isWatched(video.id) ? 'Marcar como no visto' : 'Marcar como visto'">
+                                            <span x-text="isWatched(video.id) ? '👁️‍🗨️' : '👁️'"></span>
+                                        </button>
+                                        <button @click.stop="toggleFavoriteVideo(video.id)" 
+                                                :class="theme === 'dark' ? 'bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white' : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-500 hover:text-zinc-900'"
+                                                class="p-2 sm:p-1.5 rounded-full transition-colors text-xs flex items-center justify-center shadow-sm"
+                                                :title="isFavorite(video.id) ? 'Quitar de favoritos' : 'Agregar a favoritos'">
+                                            <span x-text="isFavorite(video.id) ? '★' : '☆'" :class="isFavorite(video.id) ? 'text-amber-400 font-bold' : ''"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                
+                <div x-show="filteredVideos.length === 0" class="text-center py-20 text-zinc-500" x-text="t('notFound')"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Responsivo Legal -->
+    <footer :class="theme === 'dark' ? 'border-zinc-900 bg-zinc-950 text-zinc-500' : 'border-zinc-200 bg-white text-zinc-400 shadow-sm'" class="border-t py-8 text-center text-xs shrink-0 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p>© 2026 <a href="https://appjava.dev" target="_blank" class="hover:text-red-500 font-semibold transition-colors">appjava.dev</a>. All rights reserved.</p>
+            <div class="flex flex-wrap justify-center gap-x-6 gap-y-2">
+                <button @click="openLegalTab('terms')" class="hover:text-red-500 underline transition-colors" x-text="t('legalTerms')"></button>
+                <button @click="openLegalModal('privacy')" class="hover:text-red-500 underline transition-colors" x-text="t('legalPrivacy')"></button>
+                <button @click="openLegalModal('disclaimer')" class="hover:text-red-500 underline transition-colors" x-text="t('legalDisclaimer')"></button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal Unificado: Ajustes, Copias e Información Legal -->
+    <div x-show="showSettingsModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4" style="display: none;" x-transition>
+        <div :class="theme === 'dark' ? 'bg-zinc-900 border-zinc-800' : 'bg-white border-zinc-200 text-zinc-800 shadow-2xl'" class="border w-full max-w-3xl rounded-xl shadow-2xl flex flex-col sm:flex-row min-h-[500px] max-h-[85vh] overflow-hidden" @click.away="showSettingsModal = false">
+            
+            <div :class="theme === 'dark' ? 'border-zinc-800 bg-zinc-950/20' : 'border-zinc-200 bg-zinc-100/50'" class="border-b sm:border-b-0 sm:border-r p-4 sm:w-48 shrink-0 flex sm:flex-col gap-1 overflow-x-auto sm:overflow-x-visible no-scrollbar">
+                <button @click="settingsTab = 'pref'" :class="settingsTab === 'pref' ? 'bg-red-600 text-white font-bold' : 'text-zinc-500 hover:text-zinc-300'" class="px-4 py-2.5 rounded-lg text-xs text-left whitespace-nowrap transition-colors flex items-center gap-1.5">
+                    ⚙️ <span x-text="t('settingsMenuTitle')"></span>
+                </button>
+                <button @click="settingsTab = 'legal'" :class="settingsTab === 'legal' ? 'bg-red-600 text-white font-bold' : 'text-zinc-500 hover:text-zinc-300'" class="px-4 py-2.5 rounded-lg text-xs text-left whitespace-nowrap transition-colors flex items-center gap-1.5">
+                    📄 <span x-text="t('legalLabel')"></span>
+                </button>
+            </div>
+            
+            <div class="p-6 flex-1 overflow-y-auto flex flex-col justify-between max-h-[55vh] sm:max-h-none">
+                <div>
+                    <!-- PANEL DE PREFERENCIAS -->
+                    <div x-show="settingsTab === 'pref'" class="space-y-6 animate-fade-in">
+                        <h2 class="text-base sm:text-lg font-bold" x-text="t('settingsMenuTitle')"></h2>
+
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block" x-text="t('apiKeyLabel')"></label>
+                            <div class="flex gap-2">
+                                <input type="password" x-model="tempApiKey" placeholder="AIzaSy..." 
+                                       :class="theme === 'dark' ? 'bg-zinc-950 border-zinc-800 text-zinc-300' : 'bg-zinc-100 border-zinc-300 text-zinc-805'"
+                                       class="flex-1 text-sm rounded-lg p-2.5 border focus:outline-none text-white font-mono">
+                                <button @click="saveApiKey()" class="bg-red-600 hover:bg-red-700 text-white font-bold px-4 rounded-lg text-xs transition-colors" x-text="t('saveButton')"></button>
+                            </div>
+                            <button @click="showTutorialModal = true" class="mt-2 text-[11px] text-red-400 hover:text-red-300 hover:underline flex items-center gap-1 transition-colors">
+                                ℹ️ <span x-text="t('tutorialLink')"></span>
+                            </button>
+                        </div>
+                        <button @click="deleteWatchedVideos()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-bold py-2.5 px-3 rounded-lg border border-zinc-700 mt-4 transition-colors">
+                            <span x-text="locale === 'es' ? '🧹 Limpiar videos vistos (Liberar RAM)' : '🧹 Clear watched videos (Free RAM)'"></span>
+                        </button>
+                        <!-- Administrador de Canales -->
+                        <div class="space-y-2 border-t border-zinc-800/60 pt-4" x-show="channels.length > 0">
+                            <label class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block" x-text="t('manageChannels')"></label>
+                            <div class="space-y-2 max-h-40 overflow-y-auto pr-1 no-scrollbar">
+                                <template x-for="ch in channels" :key="ch.id">
+                                    <div :class="theme === 'dark' ? 'bg-zinc-950/50 border-zinc-800' : 'bg-zinc-100/50 border-zinc-200'" class="flex items-center justify-between p-2 rounded-lg border text-xs">
+                                        <div class="flex items-center gap-1.5 truncate max-w-[150px]">
+                                            <template x-if="ch.logo">
+                                                <img :src="ch.logo" class="w-4 h-4 rounded-full object-cover border border-zinc-800/40">
+                                            </template>
+                                            <span class="font-semibold" x-text="ch.name"></span>
+                                        </div>
+                                        
+                                        <div class="flex items-center gap-2">
+                                            <select x-model="ch.category" @change="saveChannels()" :class="theme === 'dark' ? 'bg-zinc-900 border-zinc-800 text-zinc-300' : 'bg-white border-zinc-300 text-zinc-700'" class="text-[10px] rounded p-1 border focus:outline-none">
+                                                <template x-for="cat in categories" :key="cat">
+                                                    <option :value="cat" x-text="t(cat.toLowerCase())"></option>
+                                                </template>
+                                            </select>
+                                            <button @click="removeChannel(ch.id)" class="text-red-500 hover:text-red-400 p-1 font-bold">✕</button>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Copias de Seguridad y Google Takeout -->
+                        <div class="space-y-2 border-t border-zinc-800/60 pt-4">
+                            <div class="flex justify-between items-center">
+                                <label class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block" x-text="t('backupLabel')"></label>
+                                <button @click="showTakeoutModal = true" class="text-[10px] text-red-400 hover:underline">ℹ️ Google Takeout</button>
+                            </div>
+                            <p class="text-[11px] text-zinc-500 mb-3 leading-relaxed" x-text="t('backupDesc')"></p>
+                            <div class="flex flex-col sm:flex-row gap-2">
+                                <button @click="exportData()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-bold py-2.5 px-3 rounded-lg transition-colors flex items-center justify-center gap-1" x-text="t('downloadCopia')"></button>
+                                <button @click="document.getElementById('backup-file-input').click()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-bold py-2.5 px-3 rounded-lg transition-colors flex items-center justify-center gap-1" x-text="t('cargarCopia')"></button>
+                                <input type="file" id="backup-file-input" class="hidden" accept=".json,.csv,.xml" @change="importData($event)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PANEL LEGAL INTEGRADO -->
+                    <div x-show="settingsTab === 'legal'" class="space-y-4 animate-fade-in flex flex-col h-full">
+                        <h2 class="text-base sm:text-lg font-bold" x-text="t('legalLabel')"></h2>
+                        <div class="flex border-b border-zinc-800/80 mb-2 shrink-0 gap-2">
+                            <button @click="activeLegalTab = 'terms'" :class="activeLegalTab === 'terms' ? 'border-b-2 border-red-500 text-red-500 font-bold' : 'text-zinc-500'" class="pb-2 px-3 text-xs font-semibold" x-text="t('legalTerms')"></button>
+                            <button @click="activeLegalTab = 'privacy'" :class="activeLegalTab === 'privacy' ? 'border-b-2 border-red-500 text-red-500 font-bold' : 'text-zinc-500'" class="pb-2 px-3 text-xs font-semibold" x-text="t('legalPrivacy')"></button>
+                            <button @click="activeLegalTab = 'disclaimer'" :class="activeLegalTab === 'disclaimer' ? 'border-b-2 border-red-500 text-red-500 font-bold' : 'text-zinc-500'" class="pb-2 px-3 text-xs font-semibold" x-text="t('legalDisclaimer')"></button>
+                        </div>
+
+                        <div class="overflow-y-auto text-xs text-zinc-400 leading-relaxed space-y-4 max-h-[300px] pr-1 select-text">
+                            <div x-show="activeLegalTab === 'terms'" class="space-y-3">
+                                <h3 class="text-sm font-bold" :class="theme === 'dark' ? 'text-zinc-100' : 'text-zinc-900'" x-text="t('legalTermsTitle')"></h3>
+                                <div class="space-y-3 whitespace-pre-line" x-html="t('termsText')"></div>
+                            </div>
+                            <div x-show="activeLegalTab === 'privacy'" class="space-y-3">
+                                <h3 class="text-sm font-bold" :class="theme === 'dark' ? 'text-zinc-100' : 'text-zinc-900'" x-text="t('legalPrivacyTitle')"></h3>
+                                <div class="space-y-3 whitespace-pre-line" x-html="t('privacyText')"></div>
+                            </div>
+                            <div x-show="activeLegalTab === 'disclaimer'" class="space-y-3">
+                                <h3 class="text-sm font-bold" :class="theme === 'dark' ? 'text-zinc-100' : 'text-zinc-900'" x-text="t('legalDisclaimerTitle')"></h3>
+                                <div class="space-y-3 whitespace-pre-line" x-html="t('disclaimerText')"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-zinc-800/80 mt-6 pt-4 flex justify-between items-center text-xs shrink-0">
+                    <button @click="resetApp()" class="text-red-500 hover:text-red-400 hover:underline font-semibold" x-text="t('resetApp')"></button>
+                    <button @click="showSettingsModal = false" class="px-4 py-2 text-zinc-400 font-bold hover:text-white" x-text="t('close')"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE ASISTENCIA API KEY -->
+    <div x-show="showTutorialModal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/95 p-4" style="display: none;" x-transition>
+        <div :class="theme === 'dark' ? 'bg-zinc-900 border-zinc-800' : 'bg-white border-zinc-200 text-zinc-800 shadow-2xl'" class="border w-full max-w-2xl rounded-xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden" @click.away="showTutorialModal = false">
+            <div class="p-5 sm:p-6 border-b border-zinc-800/60 shrink-0 flex justify-between items-center">
+                <h2 class="text-base sm:text-lg font-bold" x-text="t('tutorialTitle')"></h2>
+                <button @click="showTutorialModal = false" class="text-zinc-500 hover:text-red-500 font-bold px-2">✕</button>
+            </div>
+            <div class="p-5 sm:p-6 overflow-y-auto space-y-6 text-sm text-zinc-400 leading-relaxed">
+                <p x-text="t('tutorialIntro')"></p>
+                <div class="space-y-4">
+                    <div class="bg-zinc-950/30 p-4 rounded-lg border border-zinc-800/50">
+                        <h4 class="font-bold text-zinc-200 mb-2" x-text="t('step1Title')"></h4>
+                        <p x-html="t('step1Body')"></p>
+                    </div>
+                    <div class="bg-zinc-950/30 p-4 rounded-lg border border-zinc-800/50">
+                        <h4 class="font-bold text-zinc-200 mb-2" x-text="t('step2Title')"></h4>
+                        <p x-html="t('step2Body')"></p>
+                    </div>
+                    <div class="bg-zinc-950/30 p-4 rounded-lg border border-zinc-800/50">
+                        <h4 class="font-bold text-zinc-200 mb-2" x-text="t('step3Title')"></h4>
+                        <p x-html="t('step3Body')"></p>
+                    </div>
+                    <div class="bg-zinc-950/30 p-4 rounded-lg border border-zinc-800/50">
+                        <h4 class="font-bold text-zinc-200 mb-2" x-text="t('step4Title')"></h4>
+                        <p x-html="t('step4Body')"></p>
+                    </div>
+                    <div class="bg-amber-950/20 p-4 rounded-lg border border-amber-900/30 text-amber-500">
+                        <h4 class="font-bold text-amber-400 mb-2" x-text="t('tutorialSecurityTitle')"></h4>
+                        <p class="text-xs text-amber-200" x-html="t('tutorialSecurityBody')"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-zinc-800/60 shrink-0 flex justify-end">
+                <button @click="showTutorialModal = false" class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg transition-colors" x-text="t('close')"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE ASISTENCIA TAKEOUT -->
+    <div x-show="showTakeoutModal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/95 p-4" style="display: none;" x-transition>
+        <div :class="theme === 'dark' ? 'bg-zinc-900 border-zinc-800' : 'bg-white border-zinc-200 text-zinc-800 shadow-2xl'" class="border w-full max-w-2xl rounded-xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden" @click.away="showTakeoutModal = false">
+            <div class="p-5 sm:p-6 border-b border-zinc-800/60 shrink-0 flex justify-between items-center">
+                <h2 class="text-base sm:text-lg font-bold" x-text="t('takeoutTitle')"></h2>
+                <button @click="showTakeoutModal = false" class="text-zinc-500 hover:text-red-500 font-bold px-2">✕</button>
+            </div>
+            <div class="p-5 sm:p-6 overflow-y-auto space-y-6 text-sm text-zinc-400 leading-relaxed">
+                <p x-text="t('takeoutIntro')"></p>
+                <div class="space-y-4">
+                    <div class="bg-zinc-950/30 p-4 rounded-lg border border-zinc-800/50">
+                        <p x-html="t('takeoutStep1')"></p>
+                    </div>
+                    <div class="bg-zinc-950/30 p-4 rounded-lg border border-zinc-800/50">
+                        <p x-html="t('takeoutStep2')"></p>
+                    </div>
+                    <div class="bg-zinc-950/30 p-4 rounded-lg border border-zinc-800/50">
+                        <p x-html="t('takeoutStep3')"></p>
+                    </div>
+                    <div class="bg-zinc-950/30 p-4 rounded-lg border border-zinc-800/50">
+                        <p x-html="t('takeoutStep4')"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-zinc-800/60 shrink-0 flex justify-end">
+                <button @click="showTakeoutModal = false" class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg transition-colors" x-text="t('close')"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Teatro (Reproductor) -->
+    <div x-show="activeVideoId" class="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-2 sm:p-4" style="display: none;" x-transition>
+        <div class="relative w-full max-w-5xl aspect-video bg-black rounded-lg overflow-hidden border border-zinc-800" @click.away="closeVideo()">
+            <button @click="closeVideo()" class="absolute top-3 right-3 z-50 bg-black/85 text-white p-2 rounded-full text-xs">✕</button>
+            <iframe id="main-player" class="w-full h-full" src="" frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <script>
+        function officialPlayApp() {
+            let savedChannels = [];
+            try { savedChannels = JSON.parse(localStorage.getItem('yt_channels_v3')) || []; } catch(e) { savedChannels = []; }
+
+            let savedVideos = [];
+            try { savedVideos = JSON.parse(localStorage.getItem('yt_videos_v3')) || []; } catch(e) { savedVideos = []; }
+
+            return {
+                searchQuery: '',
+                selectedChannel: '',
+                selectedFormat: 'all', 
+                selectedCategory: 'all', 
+                showOnlyFavorites: false,
+                sortBy: 'date', 
+                activeVideoId: null,
+                showSettingsModal: false,
+                showLegalModal: false,
+                showTutorialModal: false, 
+                showTakeoutModal: false,
+                activeLegalTab: 'terms',
+                settingsTab: 'pref',
+                autoInput: '',
+                errorMessage: '',
+                tempApiKey: '',
+                isLoading: false,
+                apiKey: localStorage.getItem('yt_api_key_v3') || '',
+                theme: localStorage.getItem('yt_theme') || 'dark',
+                locale: localStorage.getItem('yt_locale') || 'es',
+                channels: savedChannels,
+                videos: savedVideos,
+                categories: ['General', 'Documentales', 'Ciencia', 'Relax'],
+                watchedVideoIds: JSON.parse(localStorage.getItem('yt_watched_v3')) || [],
+                favoriteVideoIds: JSON.parse(localStorage.getItem('yt_favorites_v3')) || [],
+                newVideoIds: JSON.parse(localStorage.getItem('yt_new_v3')) || [], 
+
+                translations: {
+                    es: {
+                        syncPlaceholder: "Agregar Canal (ej: @InsiderEspanol)",
+                        syncButton: "Sincronizar",
+                        settingsTitle: "Ajustes y Copias de Seguridad",
+                        apiKeyWarningTitle: "⚠️ Configuración Requerida",
+                        apiKeyWarningDesc: "Pega tu clave de API (API Key) para sincronizar canales de forma oficial y clasificar videos y Shorts automáticamente.",
+                        saveButton: "Guardar",
+                        loading: "Sincronizando canales y clasificando videos y Shorts...",
+                        emptyTitle: "Tu parrilla está vacía",
+                        emptyDesc: "Escribe el usuario de un canal arriba (ej: @InsiderEspanol) y presiona \"Sincronizar\" para comenzar.",
+                        channelLabel: "Canal:",
+                        formatLabel: "Formato:",
+                        collectionLabel: "Colección:",
+                        manageChannels: "Administrar Canales",
+                        general: "General",
+                        documentales: "Documentales",
+                        ciencia: "Ciencia",
+                        relax: "Relax",
+                        all: "Todos",
+                        videos: "🎬 Videos Largos",
+                        shorts: "⚡ Shorts",
+                        showFavs: "☆ Mostrar Favoritos",
+                        onlyFavs: "★ Solo Videos Favoritos",
+                        visto: "✓ Visto",
+                        notFound: "No hay videos disponibles que coincidan con los filtros activos.",
+                        settingsMenuTitle: "Preferencias",
+                        apiKeyLabel: "Clave de API de YouTube",
+                        backupLabel: "Importar / Exportar",
+                        backupDesc: "Sube un archivo de meTVPlay (.json), Google Takeout (subscriptions.csv) o RSS (.xml) para importar tus canales. Descarga tu copia aquí también.",
+                        downloadCopia: "Descargar JSON",
+                        cargarCopia: "Importar Archivo",
+                        deleteApiKey: "Eliminar API Key",
+                        close: "Cerrar",
+                        resetApp: "Restablecer Aplicación",
+                        resetConfirm: "Esto borrará tus canales, historial y favoritos de tu dispositivo de forma permanente. ¿Estás seguro?",
+                        appResetAlert: "¡La aplicación ha sido restablecida por completo!",
+                        themeLabel: "Tema de la Interfaz",
+                        dark: "Modo Oscuro 🌙",
+                        light: "Modo Claro ☀️",
+                        langLabel: "Idioma",
+                        legalLabel: "Información Legal",
+                        legalTerms: "Términos de Uso",
+                        legalPrivacy: "Privacidad",
+                        legalDisclaimer: "Aviso Legal",
+                        legalTermsTitle: "Términos de Servicio",
+                        legalPrivacyTitle: "Política de Privacidad y Manejo de Datos",
+                        legalDisclaimerTitle: "Descargo de Responsabilidad y Copyright",
+                        allCategories: "📂 Colección: Todas",
+                        allChannels: "📺 Canal: Todos",
+                        allFormats: "⚡ Formato: Todos",
+                        videosShortLabel: "Videos Largos",
+                        new: "Nuevo",
+                        newFormatLabel: "✨ Nuevos",
+                        refreshTooltip: "Actualizar toda la parrilla",
+                        vistasLabel: "vistas",
+                        sortDate: "⏱️ Recientes",
+                        sortViews: "🔥 Más Vistos",
+                        tutorialLink: "¿Cómo obtener tu clave API gratis?",
+                        tutorialTitle: "🔑 Cómo obtener tu Clave API en 2 minutos",
+                        tutorialIntro: "Google te regala 10,000 unidades de consumo diario, ¡suficiente para sincronizar canales ilimitados gratis! Sigue estos pasos:",
+                        step1Title: "Paso 1: Crea tu proyecto",
+                        step1Body: "1. Entra a <a href='https://console.cloud.google.com/' target='_blank' class='text-red-500 hover:text-red-400 underline transition-colors'>Google Cloud Console</a>.<br>2. Haz clic en 'Seleccionar un proyecto' (arriba) y luego en 'Proyecto Nuevo'.<br>3. Ponle un nombre (ej: meTV Play) y haz clic en 'Crear'.",
+                        step2Title: "Paso 2: Activa la API de YouTube",
+                        step2Body: "1. Ve al menú lateral ☰ > 'APIs y servicios' > 'Biblioteca'.<br>2. Busca <strong>YouTube Data API v3</strong>.<br>3. Selecciónala y haz clic en el botón azul <strong>Habilitar</strong>.",
+                        step3Title: "Paso 3: Genera tu Clave",
+                        step3Body: "1. En el menú izquierdo, ve a <strong>Credenciales</strong>.<br>2. Haz clic en '+ Crear Credenciales' (arriba) y elige <strong>Clave de API</strong>.<br>3. Copia el texto que empieza por <code>AIzaSy...</code>",
+                        step4Title: "Paso 4: ¡Pégala en la App!",
+                        step4Body: "Vuelve a meTV Play, pega tu clave en el cuadro de configuración y haz clic en Guardar. ¡Listo!",
+                        tutorialSecurityTitle: "🛡️ (Opcional) Protege tu clave",
+                        tutorialSecurityBody: "Para que nadie más la use, haz clic en 'Editar clave de API', baja a 'Restricciones de API', selecciona 'Restringir clave' y elige 'YouTube Data API v3'. Guarda los cambios.",
+                        takeoutTitle: "📥 Importar desde Google Takeout",
+                        takeoutIntro: "Puedes transferir todos tus canales suscritos de YouTube de forma masiva siguiendo estos pasos oficiales:",
+                        takeoutStep1: "1. Ve a <a href='https://takeout.google.com/' target='_blank' class='text-red-500 hover:text-red-400 underline transition-colors'>Google Takeout</a> y haz clic en <strong>Deseleccionar todo</strong>.",
+                        takeoutStep2: "2. Baja casi hasta el final, busca <strong>YouTube y YouTube Music</strong> y marca la casilla. Luego, haz clic en el botón inferior que dice 'Se incluyeron todos los datos de YouTube', selecciona únicamente <strong>suscripciones (subscriptions)</strong> y acepta.",
+                        takeoutStep3: "3. Presiona 'Paso Siguiente' > 'Exportar una vez' > 'Crear exportación'. En breve recibirás un correo con el archivo ZIP descargable.",
+                        takeoutStep4: "4. Descomprime el ZIP, busca el archivo <code>subscriptions.csv</code> y súbelo aquí en el botón <strong>Importar Archivo</strong>.",
+                        termsText: "Bienvenido a meTV Play, una aplicación web estática desarrollada por <strong>appjava.dev</strong>.<br><br><strong>1. Uso de YouTube API Services:</strong> Esta aplicación hace uso de los servicios oficiales de la API de YouTube. Al utilizar esta herramienta, declaras conocer y estar sujeto de forma vinculante a los <a href=\"https://www.youtube.com/t/terms\" target=\"_blank\" class=\"text-red-500 underline font-semibold\">Términos de Servicio oficiales de YouTube</a>.<br><br><strong>2. Clave de API del Usuario:</strong> Para garantizar un servicio libre, descentralizado y gratuito, la herramienta requiere que el usuario provea su propia clave de API personal (API Key) de Google Cloud. El usuario es el único responsable de la seguridad y límites de consumo de dicha clave.",
+                        privacyText: "En <strong>appjava.dev</strong> nos tomamos muy en serio tu privacidad. <br><br><strong>1. Privacidad 100% Local:</strong> meTV Play está diseñada de forma nativa como una aplicación del lado del cliente. Esto significa que **ningún dato personal, clave de API, historial de reproducción, marcas de favoritos o lista de canales se almacena o envía a servidores de appjava.dev ni de terceros**.<br><br>Toda tu información reside en el espacio de almacenamiento local de tu propio navegador web (LocalStorage). Puedes borrarla o migrarla en cualquier momento descargando tu copia de seguridad.<br><br><strong>2. Privacidad de Terceros:</strong> Al utilizar los servicios oficiales de Google, consientes que el servicio se rige por la <a href=\"http://www.google.com/policies/privacy\" target=\"_blank\" class=\"text-red-500 underline font-semibold\">Política de Privacidad oficial de Google</a>.",
+                        disclaimerText: "<strong>1. No Afiliación Oficial:</strong> meTV Play y el equipo de desarrollo de <strong>appjava.dev</strong> declaran no tener ningún tipo de afiliación, patrocinio o respaldo oficial de Google LLC, de la marca registrada YouTube, o de cualquiera de las corporaciones de medios de comunicación e industrias creativas (como DW Documental, National Geographic, History Channel o Veritasium) que se visualicen en la plataforma.<br><br><strong>2. Derechos de Autor (Copyright):</strong> Todos los logotipos, videos, portadas, miniaturas y metadatos de los canales son propiedad exclusiva de sus creadores y de la plataforma YouTube. meTV Play únicamente actúa como un visor web especializado que utiliza el reproductor de incrustación segura youtube-nocookie.com oficial de Google, sin alojar ni retransmitir contenidos de forma no autorizada."
+                    },
+                    en: {
+                        syncPlaceholder: "Add Channel (e.g.: @Insider)",
+                        syncButton: "Sync",
+                        settingsTitle: "Settings & Backups",
+                        apiKeyWarningTitle: "⚠️ Configuration Required",
+                        apiKeyWarningDesc: "Paste your API Key to sync channels officially and classify videos and Shorts automatically.",
+                        saveButton: "Save API Key",
+                        loading: "Syncing channels and classifying videos and Shorts...",
+                        emptyTitle: "Your grid is empty",
+                        emptyDesc: "Type a channel username above (e.g.: @Insider) and click \"Sync\" to start.",
+                        channelLabel: "Channel:",
+                        formatLabel: "Format:",
+                        collectionLabel: "Collection:",
+                        manageChannels: "Manage Channels",
+                        general: "General",
+                        documentales: "Documentaries",
+                        ciencia: "Science",
+                        relax: "Relax",
+                        all: "All",
+                        videos: "🎬 Long Videos",
+                        shorts: "⚡ Shorts",
+                        showFavs: "☆ Show Favorites",
+                        onlyFavs: "★ Favorite Videos Only",
+                        visto: "✓ Watched",
+                        notFound: "No videos available matching the active filters.",
+                        settingsMenuTitle: "Preferences",
+                        apiKeyLabel: "YouTube API Key",
+                        backupLabel: "Import / Export",
+                        backupDesc: "Upload a meTVPlay .json file, a Google Takeout subscriptions.csv, or an OPML .xml to import your channels automatically. Download your backup here as well.",
+                        downloadCopia: "Download JSON",
+                        cargarCopia: "Import File",
+                        deleteApiKey: "Delete API Key",
+                        close: "Close",
+                        resetApp: "Reset Application",
+                        resetConfirm: "This will permanently erase your channels, history, and favorites from your device. Are you sure?",
+                        appResetAlert: "The application has been completely reset!",
+                        themeLabel: "Interface Theme",
+                        dark: "Dark Mode 🌙",
+                        light: "Light Mode ☀️",
+                        langLabel: "Language",
+                        legalLabel: "Legal Info",
+                        legalTerms: "Terms of Use",
+                        legalPrivacy: "Privacy Policy",
+                        legalDisclaimer: "Disclaimer",
+                        legalTermsTitle: "Terms of Service",
+                        legalPrivacyTitle: "Privacy Policy & Data Handling",
+                        legalDisclaimerTitle: "Disclaimer & Copyright",
+                        allCategories: "📂 Collection: All",
+                        allChannels: "📺 Channel: All",
+                        allFormats: "⚡ Format: All",
+                        videosShortLabel: "Long Videos",
+                        new: "New",
+                        newFormatLabel: "✨ New Videos",
+                        refreshTooltip: "Refresh all grid",
+                        vistasLabel: "views",
+                        sortDate: "⏱️ Recent",
+                        sortViews: "🔥 Most Viewed",
+                        tutorialLink: "How to get your free API key?",
+                        tutorialTitle: "🔑 How to get your API Key in 2 minutes",
+                        tutorialIntro: "Google gives you 10,000 daily quota units, enough to sync unlimited channels for free! Follow these steps:",
+                        step1Title: "Step 1: Create a project",
+                        step1Body: "1. Go to <a href='https://console.cloud.google.com/' target='_blank' class='text-red-500 hover:text-red-400 underline transition-colors'>Google Cloud Console</a>.<br>2. Click 'Select a project' (top) and then 'New Project'.<br>3. Name it (e.g., meTV Play) and click 'Create'.",
+                        step2Title: "Step 2: Enable the YouTube API",
+                        step2Body: "1. Go to the sidebar menu ☰ > 'APIs & Services' > 'Library'.<br>2. Search for <strong>YouTube Data API v3</strong>.<br>3. Select it and click the blue <strong>Enable</strong> button.",
+                        step3Title: "Step 3: Generate your Key",
+                        step3Body: "1. In the left menu, go to <strong>Credentials</strong>.<br>2. Click '+ Create Credentials' (top) and choose <strong>API Key</strong>.<br>3. Copy the text starting with <code>AIzaSy...</code>",
+                        step4Title: "Step 4: Paste it in the App!",
+                        step4Body: "Go back to meTV Play, paste your key and click Save. That's it!",
+                        tutorialSecurityTitle: "🛡️ (Optional) Protect your key",
+                        tutorialSecurityBody: "To prevent others from using it, click 'Edit API key', scroll to 'API restrictions', select 'Restrict key' and choose 'YouTube Data API v3'. Save the changes.",
+                        takeoutTitle: "📥 Import from Google Takeout",
+                        takeoutIntro: "You can mass transfer all your subscribed YouTube channels officially by following these steps:",
+                        takeoutStep1: "1. Go to <a href='https://takeout.google.com/' target='_blank' class='text-red-500 hover:text-red-400 underline transition-colors'>Google Takeout</a> and click <strong>Deselect all</strong>.",
+                        takeoutStep2: "2. Scroll down to <strong>YouTube and YouTube Music</strong> and check the box. Click the bottom button 'All YouTube data included', select only <strong>subscriptions</strong>, and accept.",
+                        takeoutStep3: "3. Click 'Next step' > 'Export once' > 'Create export'. You will receive an email shortly with the ZIP file.",
+                        takeoutStep4: "4. Extract the ZIP, find the <code>subscriptions.csv</code> file, and upload it here using the <strong>Import File</strong> button.",
+                        termsText: "Welcome to meTV Play, a static web application developed by <strong>appjava.dev</strong>.<br><br><strong>1. Use of YouTube API Services:</strong> This application makes use of YouTube API Services. By using this tool, you acknowledge and agree to be bound by the <a href=\"https://www.youtube.com/t/terms\" target=\"_blank\" class=\"text-red-500 underline font-semibold\">official YouTube Terms of Service</a>.<br><br><strong>2. User's API Key:</strong> To ensure a free, decentralized, and open service, the tool requires the user to provide their own personal API Key from Google Cloud. The user is solely responsible for the security and usage limits of this key.",
+                        privacyText: "At <strong>appjava.dev</strong>, we take your privacy very seriously.<br><br><strong>1. 100% Local Privacy:</strong> meTV Play is designed natively as a client-side application. This means that **no personal data, API Key, watch history, favorites, or channel lists are stored or sent to appjava.dev or third-party servers**.<br><br>All your information resides in your web browser's local storage (LocalStorage). You can erase or migrate it at any time by downloading your backup.\n\n<strong>2. Third-Party Privacy:</strong> By using official Google services, you agree that your use is governed by the <a href=\"http://www.google.com/policies/privacy\" target=\"_blank\" class=\"text-red-500 underline font-semibold\">official Google Privacy Policy</a>.",
+                        disclaimerText: "<strong>1. No Official Affiliation:</strong> meTV Play and the development team at <strong>appjava.dev</strong> declare no affiliation, sponsorship, or official endorsement by Google LLC, the registered trademark YouTube, or any of the media corporations and industries displayed on the platform.<br><br><strong>2. Copyrights:</strong> All logos, videos, thumbnails, and channel metadata are the exclusive property of their respective creators and YouTube. meTV Play only acts as a specialized web viewer utilizing Google's official youtube-nocookie.com secure embed player, without hosting or retransmitting unauthorized content."
+                    }
+                },
+
+                t(key) {
+                    return this.translations[this.locale][key] || key;
+                },
+
+                init() {
+                    this.sanitizeChannels(); 
+                    if (this.apiKey) {
+                        this.tempApiKey = this.apiKey;
+                        if (this.channels.length > 0) {
+                            this.refreshAllChannels();
+                        }
+                    }
+                },
+
+                sanitizeChannels() {
+                    this.channels.forEach(ch => {
+                        // Saneamiento dual: si no tiene category O si tiene categoryId de la versión de prueba anterior, lo limpiamos y forzamos 'General'
+                        if (!ch.category || ch.categoryId) {
+                            ch.category = ch.category || 'General';
+                            delete ch.categoryId;
+                        }
+                    });
+                },
+
+                getChannelLogo(channelName) {
+                    const ch = this.channels.find(c => c.name === channelName);
+                    return ch ? ch.logo : '';
+                },
+
+                saveApiKey() {
+                    if (this.tempApiKey.trim()) {
+                        this.apiKey = this.tempApiKey.trim();
+                        localStorage.setItem('yt_api_key_v3', this.apiKey);
+                        this.showSettingsModal = false;
+                        this.refreshAllChannels();
+                    }
+                },
+
+                saveChannels() {
+                    localStorage.setItem('yt_channels_v3', JSON.stringify(this.channels));
+                },
+
+                resetApiKey() {
+                    if (confirm("Are you sure? / ¿Estás seguro?")) {
+                        this.apiKey = '';
+                        this.tempApiKey = '';
+                        localStorage.removeItem('yt_api_key_v3');
+                        this.showSettingsModal = false;
+                    }
+                },
+
+                resetApp() {
+                    if (confirm(this.t('resetConfirm'))) {
+                        this.channels = [];
+                        this.videos = [];
+                        this.watchedVideoIds = [];
+                        this.favoriteVideoIds = [];
+                        this.newVideoIds = [];
+                        this.selectedChannel = '';
+                        this.selectedFormat = 'all';
+                        this.selectedCategory = 'all';
+                        this.showOnlyFavorites = false;
+                        this.searchQuery = '';
+
+                        localStorage.removeItem('yt_channels_v3');
+                        localStorage.removeItem('yt_videos_v3');
+                        localStorage.removeItem('yt_watched_v3');
+                        localStorage.removeItem('yt_favorites_v3');
+                        localStorage.removeItem('yt_new_v3');
+
+                        alert(this.t('appResetAlert'));
+                        this.showSettingsModal = false;
+                    }
+                },
+
+                deleteWatchedVideos() {
+                    if (confirm(this.locale === 'es' ? '¿Borrar videos vistos para liberar espacio?' : 'Delete watched videos to free up space?')) {
+                        // Se queda con los videos que NO están vistos, o los que sí son Favoritos
+                        this.videos = this.videos.filter(v => !this.isWatched(v.id) || this.isFavorite(v.id));
+                        localStorage.setItem('yt_videos_v3', JSON.stringify(this.videos));
+                        alert(this.locale === 'es' ? 'Memoria liberada' : 'Space cleared');
+                    }
+                },
+
+                async refreshAllChannels() {
+                    if (!this.apiKey) return;
+                    this.isLoading = true;
+                    let updatedVideos = [];
+                    
+                    for (let ch of this.channels) {
+                        try {
+                            if (!ch.logo) {
+                                const channelUrl = `https://www.googleapis.com/youtube/v3/channels?part=snippet&id=${ch.id}&key=${this.apiKey}`;
+                                const channelRes = await fetch(channelUrl);
+                                const channelData = await channelRes.json();
+                                if (channelData.items && channelData.items[0]) {
+                                    ch.logo = channelData.items[0].snippet.thumbnails?.default?.url || '';
+                                }
+                            }
+
+                            const vids = await this.fetchPlaylistVideos(ch.playlistId, ch.name, ch.id);
+                            updatedVideos = [...updatedVideos, ...vids];
+                        } catch (e) {
+                            console.error("Error al actualizar canal: " + ch.name, e);
+                        }
+                    }
+
+                    if (updatedVideos.length > 0) {
+                        const currentIds = new Set(this.videos.map(v => v.id));
+                        const channelsWithExistingVideos = new Set(this.videos.map(v => v.channelId));
+                        const newlyDiscoveredIds = [];
+
+                        updatedVideos.forEach(v => {
+                            if (!currentIds.has(v.id) && !this.isWatched(v.id) && channelsWithExistingVideos.has(v.channelId)) {
+                                newlyDiscoveredIds.push(v.id);
+                            }
+                        });
+
+                        if (newlyDiscoveredIds.length > 0) {
+                            this.newVideoIds = [...new Set([...this.newVideoIds, ...newlyDiscoveredIds])];
+                            localStorage.setItem('yt_new_v3', JSON.stringify(this.newVideoIds));
+                        }
+
+                        localStorage.setItem('yt_channels_v3', JSON.stringify(this.channels));
+
+                        const uniqueMap = {};
+                        
+                        // 1. Conservar los favoritos actuales (incluso de canales eliminados)
+                        this.videos.forEach(v => {
+                            if (this.isFavorite(v.id)) {
+                                uniqueMap[v.id] = v;
+                            }
+                        });
+
+                        // 2. Agregar los videos nuevos filtrando los que ya están vistos
+                        updatedVideos.forEach(v => {
+                            if (!this.isWatched(v.id) || this.isFavorite(v.id)) {
+                                uniqueMap[v.id] = v;
+                            }
+                        });
+
+                        this.videos = Object.values(uniqueMap);
+                        localStorage.setItem('yt_videos_v3', JSON.stringify(this.videos));
+                    }
+                    this.isLoading = false;
+                },
+
+                async autoSyncChannel() {
+                    let input = this.autoInput.trim();
+                    if (!input) return;
+                    if (!this.apiKey) {
+                        this.errorMessage = this.locale === 'es' ? "Debes ingresar y guardar una clave de API de YouTube primero." : "You must provide an API Key first.";
+                        return;
+                    }
+
+                    const isPremium = false;
+                    if (!isPremium && this.channels.length >= 12) {
+                        this.errorMessage = this.locale === 'es' 
+                            ? "Límite de 12 canales en versión gratuita. Consigue la app nativa en appjava.dev para ilimitados." 
+                            : "12 channels limit on the free version. Get the native app at appjava.dev for unlimited channels.";
+                        this.isLoading = false;
+                        return;
+                    }
+
+                    this.isLoading = true;
+                    this.errorMessage = '';
+
+                    try {
+                        let handle = input;
+                        if (input.includes('youtube.com/')) {
+                            handle = '@' + input.split('/').pop().replace('@', '');
+                        } else if (!input.startsWith('@') && !/^UC[a-zA-Z0-9_-]{22}$/.test(input)) {
+                            handle = '@' + input;
+                        }
+
+                        let channelUrl = `https://www.googleapis.com/youtube/v3/channels?part=snippet,contentDetails&key=${this.apiKey}`;
+                        if (/^UC[a-zA-Z0-9_-]{22}$/.test(input)) {
+                            channelUrl += `&id=${input}`;
+                        } else {
+                            channelUrl += `&forHandle=${encodeURIComponent(handle)}`;
+                        }
+
+                        const channelRes = await fetch(channelUrl);
+                        const channelData = await channelRes.json();
+
+                        if (channelData.error) {
+                            throw new Error(channelData.error.message || "Error al conectar con la API.");
+                        }
+
+                        if (!channelData.items || channelData.items.length === 0) {
+                            throw new Error("No se encontró el canal. Verifica el usuario.");
+                        }
+
+                        const channel = channelData.items[0];
+                        const channelId = channel.id;
+                        const channelName = channel.snippet.title;
+                        const playlistId = channel.contentDetails.relatedPlaylists.uploads;
+                        const channelLogo = channel.snippet.thumbnails?.default?.url || '';
+
+                        if (this.channels.some(c => c.id === channelId)) {
+                            throw new Error("Este canal ya forma parte de tu parrilla.");
+                        }
+
+                        const fetchedVideos = await this.fetchPlaylistVideos(playlistId, channelName, channelId);
+
+                        // Asignación manual a la categoría 'General' por defecto (sin llamadas extra)
+                        this.channels.push({ id: channelId, name: channelName, playlistId: playlistId, category: 'General', logo: channelLogo });
+                        localStorage.setItem('yt_channels_v3', JSON.stringify(this.channels));
+
+                        const newIds = new Set(fetchedVideos.map(v => v.id));
+
+                        const uniqueMap = {};
+            
+                        this.videos.forEach(v => {
+                            // Mantener si es de otro canal, O si es un favorito
+                            if (v.channelName !== channelName || this.isFavorite(v.id)) {
+                                uniqueMap[v.id] = v;
+                            }
+                        });
+
+                        fetchedVideos.forEach(v => {
+                            // Ignorar si está visto (a menos que sea favorito)
+                            if (!this.isWatched(v.id) || this.isFavorite(v.id)) {
+                                uniqueMap[v.id] = v;
+                            }
+                        });
+
+                        this.videos = Object.values(uniqueMap);
+                        localStorage.setItem('yt_videos_v3', JSON.stringify(this.videos));
+
+                        this.autoInput = '';
+                    } catch (err) {
+                        console.error(err);
+                        const apiError = err.message || "";
+                        
+                        if (apiError.includes("match") || apiError.includes("undefined")) {
+                            this.errorMessage = this.locale === 'es'
+                                ? "Este canal tiene transmisiones activas en vivo o videos restringidos que impiden la lectura de duraciones. Inténtalo de nuevo en unos minutos o sincroniza otro canal."
+                                : "This channel has active livestreams or restricted videos preventing duration parsing. Try again in a few minutes or sync another channel.";
+                        } else {
+                            this.errorMessage = apiError || "Ocurrió un error al procesar la API.";
+                        }
+                    } finally {
+                        this.isLoading = false;
+                    }
+                },
+
+                async fetchPlaylistVideos(playlistId, channelName, channelId) {
+                    let allItems = [];
+                    let nextPageToken = '';
+                    
+                    // 1. Bucle para pedir 2 páginas (aprox 100 videos)
+                    for (let i = 0; i < 2; i++) {
+                        const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${this.apiKey}${nextPageToken ? '&pageToken=' + nextPageToken : ''}`;
+                        const res = await fetch(url);
+                        const data = await res.json();
+                        
+                        if (data.items) {
+                            allItems = [...allItems, ...data.items];
+                        }
+                        
+                        nextPageToken = data.nextPageToken;
+                        if (!nextPageToken) break; // Si no hay más videos, romper el bucle
+                    }
+
+                    // 2. Cortar la lista a exactamente 96 videos
+                    allItems = allItems.slice(0, 96);
+                    if (allItems.length === 0) return [];
+
+                    const durationMap = {};
+                    
+                    // 3. Procesar los detalles en lotes de 50 (para no colapsar el endpoint /videos)
+                    for (let i = 0; i < allItems.length; i += 50) {
+                        const batch = allItems.slice(i, i + 50);
+                        const videoIds = batch.map(item => item.snippet.resourceId.videoId).join(',');
+                        const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet,statistics&id=${videoIds}&key=${this.apiKey}`;
+                        
+                        const detailsRes = await fetch(detailsUrl);
+                        const detailsData = await detailsRes.json();
+                        
+                        if (detailsData.items) {
+                            detailsData.items.forEach(item => {
+                                const durationStr = item.contentDetails?.duration || '';
+                                const secs = this.parseDurationToSeconds(durationStr);
+                                const rawViews = parseInt(item.statistics?.viewCount || 0, 10);
+                                durationMap[item.id] = {
+                                    seconds: secs,
+                                    label: this.formatSecondsToLabel(secs),
+                                    views: rawViews,
+                                    viewsLabel: this.formatNumberLabel(rawViews)
+                                };
+                            });
+                        }
+                    }
+
+                    // 4. Mapear y devolver los datos finales
+                    return allItems.map(item => {
+                        const videoId = item.snippet.resourceId.videoId;
+                        const durationInfo = durationMap[videoId] || { seconds: 0, label: '0:00', views: 0, viewsLabel: '0' };
+                        const isShort = durationInfo.seconds > 0 && durationInfo.seconds <= 180;
+                        const publishedAt = item.snippet.publishedAt;
+                        
+                        return {
+                            id: videoId,
+                            title: item.snippet.title,
+                            thumbnail: item.snippet.thumbnails?.high?.url || `https://i3.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+                            channelId: channelId,
+                            channelName: channelName,
+                            publishedAt: publishedAt, 
+                            meta: new Date(publishedAt).toLocaleDateString(this.locale === 'es' ? 'es-ES' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+                            isShort: isShort,
+                            durationLabel: durationInfo.label,
+                            views: durationInfo.views, 
+                            viewsLabel: durationInfo.viewsLabel 
+                        };
+                    });
+                },
+
+                changeLanguage(newLocale) {
+                    this.locale = newLocale;
+                    localStorage.setItem('yt_locale', newLocale);
+                },
+
+                formatNumberLabel(num) {
+                    if (num >= 1000000) {
+                        return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+                    }
+                    if (num >= 1000) {
+                        return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+                    }
+                    return num.toString();
+                },
+
+                parseDurationToSeconds(duration) {
+                    if (!duration) return 0; 
+                    const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+                    if (!match) return 0;
+                    const hours = parseInt(match[1] || 0, 10);
+                    const minutes = parseInt(match[2] || 0, 10);
+                    const seconds = parseInt(match[3] || 0, 10);
+                    return (hours * 3600) + (minutes * 60) + seconds;
+                },
+
+                formatSecondsToLabel(totalSeconds) {
+                    const minutes = Math.floor(totalSeconds / 60);
+                    const seconds = totalSeconds % 60;
+                    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                },
+
+                exportData() {
+                    const backup = {
+                        channels: this.channels,
+                        videos: this.videos,
+                        watched: this.watchedVideoIds,
+                        favorites: this.favoriteVideoIds,
+                        newVideos: this.newVideoIds 
+                    };
+                    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `metvplay-shared-${new Date().toISOString().slice(0, 10)}.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                },
+
+                importData(event) {
+                    const file = event.target.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            let text = e.target.result.trim();
+                            if (text.charCodeAt(0) === 0xFEFF) {
+                                text = text.slice(1);
+                            }
+
+                            // 1. MODO JSON (meTVPlay Backup nativo)
+                            if (text.startsWith('{') || text.startsWith('[')) {
+                                const data = JSON.parse(text);
+                                if (data.channels) {
+                                    this.channels = data.channels;
+                                    this.sanitizeChannels();
+                                    localStorage.setItem('yt_channels_v3', JSON.stringify(this.channels));
+                                }
+                                if (data.videos) {
+                                    this.videos = data.videos;
+                                    localStorage.setItem('yt_videos_v3', JSON.stringify(this.videos));
+                                }
+                                if (data.watched) {
+                                    this.watchedVideoIds = data.watched;
+                                    localStorage.setItem('yt_watched_v3', JSON.stringify(this.watchedVideoIds));
+                                }
+                                if (data.favorites) {
+                                    this.favoriteVideoIds = data.favorites;
+                                    localStorage.setItem('yt_favorites_v3', JSON.stringify(this.favoriteVideoIds));
+                                }
+                                if (data.newVideos) {
+                                    this.newVideoIds = data.newVideos;
+                                    localStorage.setItem('yt_new_v3', JSON.stringify(this.newVideoIds));
+                                }
+                                alert(this.locale === 'es' ? "¡Copia de seguridad JSON restaurada con éxito!" : "JSON Backup imported successfully!");
+                                this.showSettingsModal = false;
+                                this.refreshAllChannels();
+                                return;
+                            }
+
+                            // 2. MODO CSV (Google Takeout: subscriptions.csv)
+                            if (text.includes('Channel Id') || file.name.toLowerCase().endsWith('.csv')) {
+                                const lines = text.split('\n');
+                                let importedCount = 0;
+                                const currentIds = new Set(this.channels.map(c => c.id));
+                                
+                                for (let i = 1; i < lines.length; i++) {
+                                    let line = lines[i].trim();
+                                    if (!line) continue;
+                                    
+                                    let row = [];
+                                    let insideQuotes = false;
+                                    let cell = '';
+                                    for (let char of line) {
+                                        if (char === '"') {
+                                            insideQuotes = !insideQuotes;
+                                        } else if (char === ',' && !insideQuotes) {
+                                            row.push(cell);
+                                            cell = '';
+                                        } else {
+                                            cell += char;
+                                        }
+                                    }
+                                    row.push(cell);
+                                    
+                                    if (row.length >= 3) {
+                                        const channelId = row[0].trim();
+                                        const channelName = row[2].trim();
+                                        
+                                        if (channelId.startsWith('UC') && !currentIds.has(channelId)) {
+                                            this.channels.push({
+                                                id: channelId,
+                                                name: channelName || 'Canal Importado',
+                                                playlistId: 'UU' + channelId.substring(2),
+                                                category: 'General',
+                                                logo: '' 
+                                            });
+                                            currentIds.add(channelId);
+                                            importedCount++;
+                                        }
+                                    }
+                                }
+                                
+                                if (importedCount > 0) {
+                                    localStorage.setItem('yt_channels_v3', JSON.stringify(this.channels));
+                                    alert(this.locale === 'es' ? `¡Se importaron ${importedCount} canales desde el CSV de Google Takeout! Sus logos y videos cargarán en breve.` : `Imported ${importedCount} channels from Google Takeout CSV!`);
+                                    this.showSettingsModal = false;
+                                    this.refreshAllChannels();
+                                } else {
+                                    alert(this.locale === 'es' ? "No se encontraron canales nuevos en el archivo CSV." : "No new channels found in CSV.");
+                                }
+                                return;
+                            }
+
+                            // 3. MODO XML / OPML (Suscripciones antiguas de YouTube)
+                            if (text.includes('<opml') || text.includes('<outline')) {
+                                const parser = new DOMParser();
+                                const xmlDoc = parser.parseFromString(text, "text/xml");
+                                const outlines = xmlDoc.getElementsByTagName("outline");
+                                
+                                let importedCount = 0;
+                                const currentIds = new Set(this.channels.map(c => c.id));
+
+                                for (let outline of outlines) {
+                                    const xmlUrl = outline.getAttribute("xmlUrl");
+                                    const title = outline.getAttribute("title");
+                                    if (xmlUrl && xmlUrl.includes("channel_id=")) {
+                                        const channelId = xmlUrl.split("channel_id=")[1];
+                                        if (channelId.startsWith('UC') && !currentIds.has(channelId)) {
+                                            this.channels.push({
+                                                id: channelId,
+                                                name: title || 'Canal OPML',
+                                                playlistId: 'UU' + channelId.substring(2),
+                                                category: 'General',
+                                                logo: ''
+                                            });
+                                            currentIds.add(channelId);
+                                            importedCount++;
+                                        }
+                                    }
+                                }
+
+                                if (importedCount > 0) {
+                                    localStorage.setItem('yt_channels_v3', JSON.stringify(this.channels));
+                                    alert(this.locale === 'es' ? `¡Se importaron ${importedCount} canales desde el XML!` : `Imported ${importedCount} channels from XML!`);
+                                    this.showSettingsModal = false;
+                                    this.refreshAllChannels();
+                                } else {
+                                    alert(this.locale === 'es' ? "No se encontraron canales nuevos en el archivo XML." : "No new channels found in XML.");
+                                }
+                                return;
+                            }
+
+                            throw new Error(this.locale === 'es' ? "Formato no válido. Sube un JSON de meTVPlay o un CSV de Google Takeout." : "Invalid format. Upload a meTVPlay JSON or a Google Takeout CSV.");
+
+                        } catch (err) {
+                            alert("Error: " + err.message);
+                        }
+                        
+                        event.target.value = '';
+                    };
+                    reader.readAsText(file);
+                },
+
+                openLegalTab(tab) {
+                    this.settingsTab = 'legal';
+                    this.activeLegalTab = tab;
+                    this.showSettingsModal = true;
+                },
+
+                openLegalModal(tab) {
+                    this.settingsTab = 'legal';
+                    this.activeLegalTab = tab;
+                    this.showSettingsModal = true;
+                },
+
+                removeChannel(id) {
+                    this.channels = this.channels.filter(c => c.id !== id);
+                    this.videos = this.videos.filter(v => v.channelId !== id || this.isFavorite(v.id));
+                    localStorage.setItem('yt_channels_v3', JSON.stringify(this.channels));
+                    localStorage.setItem('yt_videos_v3', JSON.stringify(this.videos));
+                    this.selectedChannel = '';
+                },
+
+                isWatched(id) {
+                    return this.watchedVideoIds.includes(id);
+                },
+
+                toggleWatched(id) {
+                    if (this.isWatched(id)) {
+                        this.watchedVideoIds = this.watchedVideoIds.filter(vId => vId !== id);
+                    } else {
+                        this.watchedVideoIds.push(id);
+                        this.newVideoIds = this.newVideoIds.filter(vId => vId !== id);
+                    }
+                    localStorage.setItem('yt_watched_v3', JSON.stringify(this.watchedVideoIds));
+                    localStorage.setItem('yt_new_v3', JSON.stringify(this.newVideoIds));
+                },
+
+                isFavorite(id) {
+                    return this.favoriteVideoIds.includes(id);
+                },
+
+                toggleFavoriteVideo(id) {
+                    if (this.isFavorite(id)) {
+                        this.favoriteVideoIds = this.favoriteVideoIds.filter(vId => vId !== id);
+                    } else {
+                        this.favoriteVideoIds.push(id);
+                    }
+                    localStorage.setItem('yt_favorites_v3', JSON.stringify(this.favoriteVideoIds));
+                },
+
+                isNew(id) {
+                    return this.newVideoIds.includes(id) && !this.isWatched(id);
+                },
+
+                formatDate(video) {
+                    if (video.publishedAt) {
+                        try {
+                            return new Date(video.publishedAt).toLocaleDateString(this.locale === 'es' ? 'es-ES' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+                        } catch (e) {
+                            return video.meta || '';
+                        }
+                    }
+                    return video.meta || '';
+                },
+
+                playVideo(id) {
+                    this.activeVideoId = id;
+                    
+                    if (!this.isWatched(id)) {
+                        this.watchedVideoIds.push(id);
+                        localStorage.setItem('yt_watched_v3', JSON.stringify(this.watchedVideoIds));
+                    }
+                    
+                    this.newVideoIds = this.newVideoIds.filter(vId => vId !== id);
+                    localStorage.setItem('yt_new_v3', JSON.stringify(this.newVideoIds));
+
+                    this.$nextTick(() => {
+                        const iframe = document.getElementById('main-player');
+                        if (iframe) {
+                            iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1`;
+                        }
+                    });
+                },
+
+                closeVideo() {
+                    this.activeVideoId = null;
+                    const iframe = document.getElementById('main-player');
+                    if (iframe) {
+                        iframe.src = '';
+                    }
+                },
+
+                get activeCategories() {
+                    // Filtra y muestra solo las categorías que tienen al menos 1 canal guardado
+                    const usedCategories = new Set(this.channels.map(c => c.category).filter(Boolean));
+                    return this.categories.filter(cat => usedCategories.has(cat));
+                },
+
+                get filteredChannels() {
+                    if (this.selectedCategory === 'all') return this.channels;
+                    return this.channels.filter(c => c.category === this.selectedCategory);
+                },
+
+                get filteredVideos() {
+                    const validChannelNames = this.selectedCategory === 'all'
+                        ? null
+                        : this.channels.filter(c => c.category === this.selectedCategory).map(c => c.name);
+
+                    let list = this.videos.filter(v => {
+                        const matchSearch = v.title.toLowerCase().includes(this.searchQuery.toLowerCase());
+                        
+                        let matchChannel = true;
+                        if (this.selectedChannel) {
+                            matchChannel = v.channelName === this.selectedChannel;
+                        } else if (validChannelNames) {
+                            matchChannel = validChannelNames.includes(v.channelName);
+                        }
+                        
+                        let matchFormat = true;
+                        if (this.selectedFormat === 'video') {
+                            matchFormat = !v.isShort;
+                        } else if (this.selectedFormat === 'short') {
+                            matchFormat = v.isShort;
+                        } else if (this.selectedFormat === 'new') {
+                            matchFormat = this.isNew(v.id);
+                        }
+
+                        let matchFavorites = true;
+                        if (this.showOnlyFavorites) {
+                            matchFavorites = this.isFavorite(v.id);
+                        }
+
+                        return matchSearch && matchChannel && matchFormat && matchFavorites;
+                    });
+
+                    if (this.sortBy === 'views') {
+                        return list.sort((a, b) => (b.views || 0) - (a.views || 0));
+                    } else {
+                        return list.sort((a, b) => {
+                            const timeA = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
+                            const timeB = b.publishedAt ? new Date(b.publishedAt).getTime() : 0;
+                            return timeB - timeA;
+                        });
+                    }
+                }
+            }
+        }
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</body>
+</html>
