@@ -103,17 +103,63 @@
                             <span :class="theme === 'dark' ? 'text-zinc-500' : 'text-zinc-400'" class="absolute right-2.5 pointer-events-none text-[8px]">▼</span>
                         </div>
 
-                        <!-- Selector Desplegable de Canal -->
-                        <div class="relative flex items-center" x-show="filteredChannels.length > 0">
-                            <select x-model="selectedChannel"
-                                    :class="theme === 'dark' ? 'bg-zinc-900 border-zinc-800 text-zinc-300' : 'bg-white border-zinc-300 text-zinc-700 shadow-sm'"
-                                    class="text-xs rounded-full pl-3 pr-7 py-1.5 border appearance-none focus:outline-none cursor-pointer font-semibold max-w-[140px] truncate transition-colors">
-                                <option value="" x-text="t('allChannels')"></option>
-                                <template x-for="channel in filteredChannels" :key="channel.id">
-                                    <option :value="channel.name" x-text="channel.name"></option>
+                        <!-- Selector Desplegable de Canal (Personalizado y Teletransportado) -->
+                        <div class="relative flex items-center" x-show="filteredChannels.length > 0" x-data="{ 
+                            open: false,
+                            updatePosition() {
+                                if (!this.$refs.button || !this.$refs.menu) return;
+                                const rect = this.$refs.button.getBoundingClientRect();
+                                this.$refs.menu.style.top = (rect.bottom + 4) + 'px';
+                                this.$refs.menu.style.left = rect.left + 'px';
+                            }
+                        }">
+                            
+                            <!-- Botón que simula el select -->
+                            <button x-ref="button" 
+                                @click="open = !open; if(open) $nextTick(() => updatePosition())" 
+                                @click.outside="open = false" 
+                                @scroll.window="open = false"
+                                @resize.window="open = false"
+                                :class="theme === 'dark' ? 'bg-zinc-900 border-zinc-800 text-zinc-300' : 'bg-white border-zinc-300 text-zinc-700 shadow-sm'"
+                                class="text-xs rounded-full pl-3 pr-7 py-1.5 border focus:outline-none cursor-pointer font-semibold max-w-[170px] w-full flex items-center gap-2 transition-colors relative">
+                                
+                                <!-- Mostrar logo solo si hay canal seleccionado -->
+                                <template x-if="selectedChannel">
+                                    <img :src="getChannelLogo(selectedChannel)" class="w-4 h-4 rounded-full object-cover shrink-0 border border-zinc-500/30">
                                 </template>
-                            </select>
-                            <span :class="theme === 'dark' ? 'text-zinc-500' : 'text-zinc-400'" class="absolute right-2.5 pointer-events-none text-[8px]">▼</span>
+                                
+                                <!-- Nombre del canal (Si está vacío, muestra el texto con el TV que ya tienes en tus traducciones) -->
+                                <span class="truncate" x-text="selectedChannel ? selectedChannel : t('allChannels')"></span>
+                                
+                                <!-- Flechita derecha -->
+                                <span :class="theme === 'dark' ? 'text-zinc-500' : 'text-zinc-400'" class="absolute right-2.5 text-[8px] pointer-events-none">▼</span>
+                            </button>
+
+                            <!-- Menú desplegable Teletransportado (escapa del recorte de overflow) -->
+                            <template x-teleport="body">
+                                <div x-show="open" x-ref="menu" @click.outside="open = false" x-transition.opacity.duration.200ms
+                                    :class="theme === 'dark' ? 'bg-zinc-900 border-zinc-800 text-zinc-300 shadow-black' : 'bg-white border-zinc-200 text-zinc-700 shadow-xl'"
+                                    class="fixed w-52 border rounded-xl shadow-lg z-[9999] max-h-60 overflow-y-auto py-1 no-scrollbar"
+                                    style="display: none;">
+                                    
+                                    <!-- Opción: Todos los canales -->
+                                    <button @click="selectedChannel = ''; open = false"
+                                        :class="selectedChannel === '' ? (theme === 'dark' ? 'bg-zinc-800' : 'bg-zinc-100') : (theme === 'dark' ? 'hover:bg-zinc-800/50' : 'hover:bg-zinc-50')"
+                                        class="w-full text-left px-3 py-2 text-xs font-semibold flex items-center gap-2 transition-colors">
+                                        <span x-text="t('allChannels')"></span>
+                                    </button>
+
+                                    <!-- Opciones: Lista de canales con logo -->
+                                    <template x-for="channel in filteredChannels" :key="channel.id">
+                                        <button @click="selectedChannel = channel.name; open = false"
+                                            :class="selectedChannel === channel.name ? (theme === 'dark' ? 'bg-zinc-800' : 'bg-zinc-100') : (theme === 'dark' ? 'hover:bg-zinc-800/50' : 'hover:bg-zinc-50')"
+                                            class="w-full text-left px-3 py-2 text-xs font-semibold flex items-center gap-2 transition-colors">
+                                            <img :src="channel.logo" class="w-5 h-5 rounded-full object-cover shrink-0 border border-zinc-500/30">
+                                            <span class="truncate" x-text="channel.name"></span>
+                                        </button>
+                                    </template>
+                                </div>
+                            </template>
                         </div>
 
                         <!-- Selector Desplegable de Formato -->
@@ -515,7 +561,7 @@
                         relax: "Relax",
                         all: "Todos",
                         videos: "🎬 Videos Largos",
-                        shorts: "⚡ Shorts",
+                        shorts: "Shorts",
                         showFavs: "☆ Mostrar Favoritos",
                         onlyFavs: "★ Solo Videos Favoritos",
                         visto: "✓ Visto",
@@ -542,16 +588,16 @@
                         legalTermsTitle: "Términos de Servicio",
                         legalPrivacyTitle: "Política de Privacidad y Manejo de Datos",
                         legalDisclaimerTitle: "Descargo de Responsabilidad y Copyright",
-                        allCategories: "📂 Colección: Todas",
-                        allChannels: "📺 Canal: Todos",
-                        allFormats: "⚡ Formato: Todos",
-                        videosShortLabel: "Videos Largos",
+                        allCategories: "Colección: Todas",
+                        allChannels: "Canal: Todos",
+                        allFormats: "Formato: Todos",
+                        videosShortLabel: "Videos",
                         new: "Nuevo",
-                        newFormatLabel: "✨ Nuevos",
+                        newFormatLabel: "Nuevos",
                         refreshTooltip: "Actualizar toda la parrilla",
                         vistasLabel: "vistas",
                         sortDate: "⏱️ Recientes",
-                        sortViews: "🔥 Más Vistos",
+                        sortViews: "Más Vistos",
                         tutorialLink: "¿Cómo obtener tu clave API gratis?",
                         tutorialTitle: "🔑 Cómo obtener tu Clave API en 2 minutos",
                         tutorialIntro: "Google te regala 10,000 unidades de consumo diario, ¡suficiente para sincronizar canales ilimitados gratis! Sigue estos pasos:",
@@ -595,7 +641,7 @@
                         relax: "Relax",
                         all: "All",
                         videos: "🎬 Long Videos",
-                        shorts: "⚡ Shorts",
+                        shorts: "Shorts",
                         showFavs: "☆ Show Favorites",
                         onlyFavs: "★ Favorite Videos Only",
                         visto: "✓ Watched",
@@ -622,16 +668,16 @@
                         legalTermsTitle: "Terms of Service",
                         legalPrivacyTitle: "Privacy Policy & Data Handling",
                         legalDisclaimerTitle: "Disclaimer & Copyright",
-                        allCategories: "📂 Collection: All",
-                        allChannels: "📺 Channel: All",
-                        allFormats: "⚡ Format: All",
-                        videosShortLabel: "Long Videos",
+                        allCategories: "Collection: All",
+                        allChannels: "Channel: All",
+                        allFormats: "Format: All",
+                        videosShortLabel: "Videos",
                         new: "New",
-                        newFormatLabel: "✨ New Videos",
+                        newFormatLabel: "New",
                         refreshTooltip: "Refresh all grid",
                         vistasLabel: "views",
                         sortDate: "⏱️ Recent",
-                        sortViews: "🔥 Most Viewed",
+                        sortViews: "Most Viewed",
                         tutorialLink: "How to get your free API key?",
                         tutorialTitle: "🔑 How to get your API Key in 2 minutes",
                         tutorialIntro: "Google gives you 10,000 daily quota units, enough to sync unlimited channels for free! Follow these steps:",
