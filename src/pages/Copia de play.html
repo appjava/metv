@@ -901,10 +901,10 @@
                     }
 
                     const isPremium = false;
-                    if (!isPremium && this.channels.length >= 24) {
+                    if (!isPremium && this.channels.length >= 12) {
                         this.errorMessage = this.locale === 'es' 
-                            ? "Límite de 24 canales en versión gratuita. Consigue la app nativa en appjava.dev para ilimitados." 
-                            : "24 channels limit on the free version. Get the native app at appjava.dev for unlimited channels.";
+                            ? "Límite de 12 canales en versión gratuita. Consigue la app nativa en appjava.dev para ilimitados." 
+                            : "12 channels limit on the free version. Get the native app at appjava.dev for unlimited channels.";
                         this.syncProgressText = '';
                         this.isLoading = false;
                         return;
