@@ -222,7 +222,9 @@
             </div>
 
             <!-- Estado de carga de red -->
-            <div x-show="isLoading" class="text-center py-4 text-xs text-zinc-500" x-text="t('loading')"></div>
+            <div x-show="isLoading" class="text-center py-6 text-sm font-medium animate-pulse" :class="theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'">
+                <span x-text="syncProgressText ? syncProgressText : t('loading')"></span>
+            </div>
 
             <!-- Dashboard Activo -->
             <div x-show="apiKey">
@@ -234,7 +236,7 @@
 
                 <!-- Rejilla de Videos -->
                 <div class="grid grid-cols-1 min-[480px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-                    <template x-for="video in filteredVideos" :key="video.id">
+                    <template x-for="video in paginatedVideos" :key="video.id">
                         <div :class="theme === 'dark' ? 'bg-zinc-900/40 border-zinc-900 hover:border-zinc-800' : 'bg-white border-zinc-200 hover:border-zinc-300 shadow-sm'"
                              class="group cursor-pointer border rounded-xl overflow-hidden transition-all flex flex-col relative"
                              @click="playVideo(video.id)">
@@ -299,7 +301,14 @@
                         </div>
                     </template>
                 </div>
-                
+                <!-- Botón Cargar Más -->
+                <div x-show="displayLimit < filteredVideos.length" class="flex justify-center mt-10 mb-6 w-full">
+                    <button @click="displayLimit += 48" 
+                        :class="theme === 'dark' ? 'bg-zinc-900 border-zinc-800 text-zinc-300 hover:text-white' : 'bg-white border-zinc-200 text-zinc-700 hover:text-zinc-900 shadow-sm'"
+                        class="px-8 py-3 rounded-full border text-sm font-bold transition-all hover:scale-105 active:scale-95">
+                        <span x-text="locale === 'es' ? 'Cargar más videos' : 'Load more videos'"></span>
+                    </button>
+                </div>
                 <div x-show="filteredVideos.length === 0" class="text-center py-20 text-zinc-500" x-text="t('notFound')"></div>
             </div>
         </div>
@@ -513,6 +522,8 @@
             try { savedVideos = JSON.parse(localStorage.getItem('yt_videos_v3')) || []; } catch(e) { savedVideos = []; }
 
             return {
+                displayLimit: 48,
+                syncProgressText: '',
                 searchQuery: '',
                 selectedChannel: '',
                 selectedFormat: 'all', 
@@ -708,7 +719,12 @@
                 },
 
                 init() {
-                    this.sanitizeChannels(); 
+                    this.sanitizeChannels();
+                    this.$watch('searchQuery', () => this.displayLimit = 48);
+                    this.$watch('selectedChannel', () => this.displayLimit = 48);
+                    this.$watch('selectedCategory', () => this.displayLimit = 48);
+                    this.$watch('selectedFormat', () => this.displayLimit = 48);
+                    this.$watch('sortBy', () => this.displayLimit = 48);
                     if (this.apiKey) {
                         this.tempApiKey = this.apiKey;
                         if (this.channels.length > 0) {
@@ -791,8 +807,13 @@
                     if (!this.apiKey) return;
                     this.isLoading = true;
                     let updatedVideos = [];
+
+                    let count = 0;
+                    const total = this.channels.length;
                     
                     for (let ch of this.channels) {
+                        count++;
+                        this.syncProgressText = this.locale === 'es' ? `Sincronizando: ${count}/${total} - ${ch.name}` : `Syncing: ${count}/${total} - ${ch.name}`;
                         try {
                             if (!ch.logo) {
                                 const channelUrl = `https://www.googleapis.com/youtube/v3/channels?part=snippet&id=${ch.id}&key=${this.apiKey}`;
@@ -844,10 +865,22 @@
                             }
                         });
 
-                        this.videos = Object.values(uniqueMap);
+                        let finalVideosArray = Object.values(uniqueMap);
+                        finalVideosArray.sort((a, b) => {
+                            const timeA = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
+                            const timeB = b.publishedAt ? new Date(b.publishedAt).getTime() : 0;
+                            return timeB - timeA;
+                        });
+                        const favoriteVids = finalVideosArray.filter(v => this.isFavorite(v.id));
+                        const normalVids = finalVideosArray.filter(v => !this.isFavorite(v.id));
+
+                        this.videos = [...favoriteVids, ...normalVids.slice(0, 3500)];
                         localStorage.setItem('yt_videos_v3', JSON.stringify(this.videos));
                     }
+                    this.syncProgressText = '';
                     this.isLoading = false;
+
+
                 },
 
                 async autoSyncChannel() {
@@ -863,6 +896,7 @@
                         this.errorMessage = this.locale === 'es' 
                             ? "Límite de 12 canales en versión gratuita. Consigue la app nativa en appjava.dev para ilimitados." 
                             : "12 channels limit on the free version. Get the native app at appjava.dev for unlimited channels.";
+                        this.syncProgressText = '';
                         this.isLoading = false;
                         return;
                     }
@@ -930,7 +964,16 @@
                             }
                         });
 
-                        this.videos = Object.values(uniqueMap);
+                        let finalVideosArray = Object.values(uniqueMap);
+                        finalVideosArray.sort((a, b) => {
+                            const timeA = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
+                            const timeB = b.publishedAt ? new Date(b.publishedAt).getTime() : 0;
+                            return timeB - timeA;
+                        });
+                        const favoriteVids = finalVideosArray.filter(v => this.isFavorite(v.id));
+                        const normalVids = finalVideosArray.filter(v => !this.isFavorite(v.id));
+
+                        this.videos = [...favoriteVids, ...normalVids.slice(0, 3500)];
                         localStorage.setItem('yt_videos_v3', JSON.stringify(this.videos));
 
                         this.autoInput = '';
@@ -946,6 +989,7 @@
                             this.errorMessage = apiError || "Ocurrió un error al procesar la API.";
                         }
                     } finally {
+                        this.syncProgressText = '';
                         this.isLoading = false;
                     }
                 },
@@ -1356,7 +1400,10 @@
                             return timeB - timeA;
                         });
                     }
-                }
+                },
+                get paginatedVideos() {
+                    return this.filteredVideos.slice(0, this.displayLimit);
+                },
             }
         }
     </script>
