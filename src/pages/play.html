@@ -70,10 +70,11 @@
                     <div class="hidden sm:flex items-center gap-3.5 shrink-0">
                         <div class="hidden lg:flex items-center gap-1.5 px-3 py-1 rounded-full border text-[11px] font-mono font-semibold"
                             :class="theme === 'dark' ? 'bg-zinc-900/60 border-zinc-800 text-zinc-300' : 'bg-zinc-100 border-zinc-300 text-zinc-700'"
-                            :title="locale === 'es' ? 'Cuota de API consumida hoy (Se reinicia a medianoche)' : 'API Quota used today (Resets at midnight)'">
-                            <span class="w-2 h-2 rounded-full" :class="quotaUsedToday > 8000 ? 'bg-red-500 animate-ping' : (quotaUsedToday > 5000 ? 'bg-amber-500' : 'bg-green-500')"></span>
+                            :title="locale === 'es' ? 'Cuota diaria de uso personal (Se reinicia a medianoche)' : 'Daily personal quota budget (Resets at midnight)'">
+                            <span class="w-2 h-2 rounded-full" 
+                                :class="quotaUsedToday > (maxQuotaLimit * 0.8) ? 'bg-red-500 animate-ping' : (quotaUsedToday > (maxQuotaLimit * 0.5) ? 'bg-amber-500' : 'bg-green-500')"></span>
                             <span x-text="quotaUsedToday.toLocaleString()"></span>
-                            <span class="text-zinc-500 font-normal">/ 10,000</span>
+                            <span class="text-zinc-500 font-normal" x-text="'/ ' + maxQuotaLimit.toLocaleString()"></span>
                         </div>
                         <button @click="changeLanguage(locale === 'es' ? 'en' : 'es')" 
                                 :class="theme === 'dark' ? 'text-zinc-400 hover:text-white border-zinc-800' : 'text-zinc-500 hover:text-zinc-950 border-zinc-300'"
@@ -422,14 +423,14 @@
                                 <div class="flex justify-between items-center text-xs font-bold">
                                     <span class="flex items-center gap-1.5">
                                         <span>📊</span>
-                                        <span x-text="locale === 'es' ? 'Consumo de API Hoy' : 'API Usage Today'"></span>
+                                        <span x-text="locale === 'es' ? 'Uso de Cuota Diario' : 'Daily Quota Usage'"></span>
                                     </span>
-                                    <span class="font-mono text-[11px]" x-text="quotaUsedToday.toLocaleString() + ' / 10,000 (' + Math.min(100, ((quotaUsedToday/10000)*100)).toFixed(1) + '%)'"></span>
+                                    <span class="font-mono text-[11px]" x-text="quotaUsedToday.toLocaleString() + ' / ' + maxQuotaLimit.toLocaleString() + ' (' + Math.min(100, ((quotaUsedToday/maxQuotaLimit)*100)).toFixed(1) + '%)'"></span>
                                 </div>
                                 <div class="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
                                     <div class="h-full transition-all duration-500 rounded-full"
-                                         :style="'width: ' + Math.min(100, (quotaUsedToday/10000)*100) + '%'"
-                                         :class="quotaUsedToday > 8000 ? 'bg-red-500' : (quotaUsedToday > 5000 ? 'bg-amber-500' : 'bg-green-500')">
+                                         :style="'width: ' + Math.min(100, (quotaUsedToday/maxQuotaLimit)*100) + '%'"
+                                         :class="quotaUsedToday > (maxQuotaLimit * 0.8) ? 'bg-red-500' : (quotaUsedToday > (maxQuotaLimit * 0.5) ? 'bg-amber-500' : 'bg-green-500')">
                                     </div>
                                 </div>
                             </div>
@@ -745,6 +746,7 @@
                 catalogList: CATALOG_CHANNELS, 
                 isFetchingOlder: false,
                 quotaUsedToday: 0,
+                maxQuotaLimit: 200,
 
                 translations: {
                     es: {
@@ -1633,7 +1635,7 @@
                     });
                 },
                 getTodayString() {
-                    return new Date().toISOString().slice(0, 10);
+                    return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Los_Angeles' }).format(new Date());
                 },
                 getQuotaUsage() {
                     try {
