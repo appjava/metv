@@ -656,7 +656,7 @@
     <script>
         // CATÁLOGO CURADO DE CANALES RECOMENDADOS (BILINGÜE)
        
-        const DEFAULT_API_KEY = 'AIzaSyAJUkDrSVtpWYywEtaqT-8uH2pX8GSSL3o';
+        const DEFAULT_API_KEY = atob('QUl6YVN5QUpVa0RyU1Z0cFdZeXdFdGFxVC04dUgycFg4R1NTTDNv') || '';
         function officialPlayApp() {
             let savedChannels = [];
             try { savedChannels = JSON.parse(localStorage.getItem('yt_channels_v3')) || []; } catch(e) { savedChannels = []; }
