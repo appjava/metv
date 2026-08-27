@@ -44,6 +44,11 @@
                                 :class="theme === 'dark' ? 'text-zinc-400 hover:text-white' : 'text-zinc-500 hover:text-zinc-950'" class="p-1 transition-colors text-xs flex items-center justify-center">
                             <span :class="isLoading ? 'animate-spin' : ''" class="inline-block">🔄</span>
                         </button>
+                        <button @click="showCatalogModal = true" 
+                            :class="theme === 'dark' ? 'text-zinc-400 hover:text-white' : 'text-zinc-500 hover:text-zinc-950'" 
+                            class="p-1 text-xs flex items-center justify-center">
+                            <span class="text-xs">🧭</span>
+                        </button>
                         <button @click="showSettingsModal = true" :class="theme === 'dark' ? 'bg-zinc-900 border-zinc-800 text-zinc-400' : 'bg-zinc-200 border-zinc-300 text-zinc-600'" class="p-2 rounded-full border text-xs">
                             ⚙️
                         </button>
@@ -63,6 +68,13 @@
                     </div>
                     
                     <div class="hidden sm:flex items-center gap-3.5 shrink-0">
+                        <div class="hidden lg:flex items-center gap-1.5 px-3 py-1 rounded-full border text-[11px] font-mono font-semibold"
+                            :class="theme === 'dark' ? 'bg-zinc-900/60 border-zinc-800 text-zinc-300' : 'bg-zinc-100 border-zinc-300 text-zinc-700'"
+                            :title="locale === 'es' ? 'Cuota de API consumida hoy (Se reinicia a medianoche)' : 'API Quota used today (Resets at midnight)'">
+                            <span class="w-2 h-2 rounded-full" :class="quotaUsedToday > 8000 ? 'bg-red-500 animate-ping' : (quotaUsedToday > 5000 ? 'bg-amber-500' : 'bg-green-500')"></span>
+                            <span x-text="quotaUsedToday.toLocaleString()"></span>
+                            <span class="text-zinc-500 font-normal">/ 10,000</span>
+                        </div>
                         <button @click="changeLanguage(locale === 'es' ? 'en' : 'es')" 
                                 :class="theme === 'dark' ? 'text-zinc-400 hover:text-white border-zinc-800' : 'text-zinc-500 hover:text-zinc-950 border-zinc-300'"
                                 class="text-xs font-bold px-2 py-0.5 rounded transition-colors uppercase border">
@@ -77,6 +89,10 @@
                                 :class="theme === 'dark' ? 'text-zinc-400 hover:text-white' : 'text-zinc-500 hover:text-zinc-950'"
                                 class="p-1 hover:scale-110 transition-transform text-xs flex items-center justify-center" :title="t('refreshTooltip')">
                             <span :class="isLoading ? 'animate-spin' : ''" class="inline-block">🔄</span>
+                        </button>
+                        <button x-show="channels.length !== 0 && videos.length !== 0" @click="showCatalogModal = true" :class="theme === 'dark' ? 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white' : 'bg-zinc-200 border-zinc-300 text-zinc-600 hover:text-zinc-900'" class="p-2 rounded-full border transition-all text-xs flex items-center gap-1.5 hover:scale-105" :title="locale === 'es' ? 'Explorar Catálogo Curado' : 'Explore Curated Catalog'">
+                            <span>🧭</span>
+                            <span class="hidde md:inline font-bold text-[11px]" x-text="locale === 'es' ? 'Explorar' : 'Explore'"></span>
                         </button>
                         <button @click="showSettingsModal = true" :class="theme === 'dark' ? 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white' : 'bg-zinc-200 border-zinc-300 text-zinc-600 hover:text-zinc-900'" class="p-2 rounded-full border transition-all" :title="t('settingsTitle')">
                             ⚙️
@@ -161,6 +177,15 @@
                                 </div>
                             </template>
                         </div>
+                        <template x-if="selectedChannel">
+                            <a :href="'https://www.youtube.com/' + (channels.find(c => c.name === selectedChannel)?.id ? 'channel/' + channels.find(c => c.name === selectedChannel).id : 'results?search_query=' + encodeURIComponent(selectedChannel))" 
+                               target="_blank" 
+                               :class="theme === 'dark' ? 'text-zinc-500 hover:text-red-400' : 'text-zinc-400 hover:text-red-600'"
+                               class="p-1.5 text-xs transition-colors flex items-center gap-1 shrink-0 ml-1" 
+                               :title="locale === 'es' ? 'Abrir archivo completo en YouTube' : 'Open full archive on YouTube'">
+                                <span class="text-[11px] font-bold">YouTube ↗</span>
+                            </a>
+                        </template>
 
                         <!-- Selector Desplegable de Formato -->
                         <div class="relative flex items-center">
@@ -228,10 +253,26 @@
 
             <!-- Dashboard Activo -->
             <div x-show="apiKey">
-                <div x-show="channels.length === 0 && videos.length === 0" class="text-center py-20 max-w-xl mx-auto">
-                    <div class="text-4xl mb-4 justify-center flex "><img src="../img/meSignal.png" height="300" width="300"></div>
-                    <h2 class="text-lg font-bold text-zinc-300 mb-2" x-text="t('emptyTitle')"></h2>
-                    <p class="text-sm text-zinc-500 mb-6 leading-relaxed" x-text="t('emptyDesc')"></p>
+                <!-- Dashboard Activo / Pantalla Vacía Minimalista con Botón al Catálogo -->
+                <div x-show="channels.length === 0 && videos.length === 0" class="py-16 max-w-xl mx-auto text-center animate-fade-in flex flex-col items-center justify-center">
+                    
+                    <!-- Televisor Vintage -->
+                    <div class="mb-4 justify-center flex">
+                        <img src="../img/meSignal.png" height="240" width="240" class="hover:scale-105 transition-transform duration-300">
+                    </div>
+                    
+                    <!-- Título y Descripción -->
+                    <h2 class="text-xl font-bold text-zinc-200 mb-2" x-text="t('emptyTitle')"></h2>
+                    <p class="text-xs text-zinc-400 leading-relaxed mb-6 max-w-md" x-text="t('emptyDesc')"></p>
+                    
+                    <!-- Botón Principal de Exploración hacia el Modal -->
+                    <button @click="showCatalogModal = true" 
+                        class="px-6 py-3 rounded-full bg-red-600 hover:bg-red-700 text-white font-bold text-xs shadow-lg transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
+                        <span>🧭</span>
+                        <span x-text="locale === 'es' ? 'Explorar Canales Recomendados' : 'Explore Curated Channels'"></span>
+                        <span>✨</span>
+                    </button>
+                    
                 </div>
 
                 <!-- Rejilla de Videos -->
@@ -302,12 +343,36 @@
                     </template>
                 </div>
                 <!-- Botón Cargar Más -->
-                <div x-show="displayLimit < filteredVideos.length" class="flex justify-center mt-10 mb-6 w-full">
-                    <button @click="displayLimit += 24" 
-                        :class="theme === 'dark' ? 'bg-zinc-900 border-zinc-800 text-zinc-300 hover:text-white' : 'bg-white border-zinc-200 text-zinc-700 hover:text-zinc-900 shadow-sm'"
-                        class="px-8 py-3 rounded-full border text-sm font-bold transition-all hover:scale-105 active:scale-95">
+                <!-- Contenedor del Botón Progresivo de 3 Niveles -->
+                <div x-show="filteredVideos.length > 0" class="flex flex-col items-center justify-center mt-12 mb-8 gap-3 w-full animate-fade-in">
+                    
+                    <!-- NIVEL 1: Cargar más videos locales -->
+                    <button x-show="displayLimit < filteredVideos.length" @click="displayLimit += 48"
+                        :class="theme === 'dark' ? 'bg-zinc-900 border-zinc-800 text-zinc-300 hover:text-white hover:border-zinc-700' : 'bg-white border-zinc-200 text-zinc-700 hover:text-zinc-900 shadow-sm'"
+                        class="px-8 py-3 rounded-full border text-xs font-bold transition-all hover:scale-105 active:scale-95 shadow-md">
                         <span x-text="locale === 'es' ? 'Cargar más videos' : 'Load more videos'"></span>
                     </button>
+
+                    <!-- NIVEL 2: Petición On-Demand (+50 videos más antiguos) -->
+                    <button x-show="displayLimit >= filteredVideos.length && activeChannelObj && canFetchOlder(activeChannelObj)"
+                        @click="fetchOlderVideos()" :disabled="isFetchingOlder"
+                        class="px-8 py-3 rounded-full bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-all hover:scale-105 active:scale-95 shadow-lg flex items-center gap-2">
+                        <span x-show="isFetchingOlder" class="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                        <span x-text="isFetchingOlder ? (locale === 'es' ? 'Descargando 50 videos más...' : 'Fetching 50 older videos...') : (locale === 'es' ? '⚡ Cargar 50 videos más antiguos de ' + (activeChannelObj?.name || '') : '⚡ Load 50 older videos from ' + (activeChannelObj?.name || ''))"></span>
+                    </button>
+
+                    <!-- NIVEL 3: Fin de videos recientes -> Enlace directo a la pestaña /videos de YouTube -->
+                    <div x-show="displayLimit >= filteredVideos.length && (!activeChannelObj || !canFetchOlder(activeChannelObj))"
+                        class="flex flex-col sm:flex-row items-center gap-3 text-xs text-zinc-500 py-2">
+                        <span x-text="locale === 'es' ? 'Has llegado al final de los videos recientes' : 'You have reached the end of recent videos'"></span>
+                        <a :href="activeChannelObj?.id ? 'https://www.youtube.com/channel/' + activeChannelObj.id + '/videos' : 'https://www.youtube.com'"
+                            target="_blank"
+                            class="px-4 py-2 rounded-full border border-red-900/40 bg-red-950/20 text-red-400 hover:text-red-300 hover:bg-red-950/40 font-bold transition-colors flex items-center gap-1.5 shadow-sm">
+                            <span x-text="activeChannelObj ? (locale === 'es' ? 'Ver catálogo de ' + activeChannelObj.name + ' en YouTube' : 'View ' + activeChannelObj.name + ' on YouTube') : (locale === 'es' ? 'Explorar en YouTube' : 'Explore on YouTube')"></span>
+                            <span>↗</span>
+                        </a>
+                    </div>
+
                 </div>
                 <div x-show="filteredVideos.length === 0" class="text-center py-20 text-zinc-500" x-text="t('notFound')"></div>
             </div>
@@ -348,14 +413,30 @@
                         <div class="space-y-2">
                             <label class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block" x-text="t('apiKeyLabel')"></label>
                             <div class="flex gap-2">
-                                <input type="password" x-model="tempApiKey" placeholder="AIzaSy..." 
+                                <input type="password" x-model="tempApiKey" :placeholder="customApiKey ? 'Clave personalizada activa' : 'Usando clave oficial por defecto...'" 
                                        :class="theme === 'dark' ? 'bg-zinc-950 border-zinc-800 text-zinc-300' : 'bg-zinc-100 border-zinc-300 text-zinc-805'"
                                        class="flex-1 text-sm rounded-lg p-2.5 border focus:outline-none text-white font-mono">
                                 <button @click="saveApiKey()" class="bg-red-600 hover:bg-red-700 text-white font-bold px-4 rounded-lg text-xs transition-colors" x-text="t('saveButton')"></button>
                             </div>
+                            <div class="p-3.5 rounded-xl border space-y-2 mt-3" :class="theme === 'dark' ? 'bg-zinc-950/40 border-zinc-800' : 'bg-zinc-50 border-zinc-200'">
+                                <div class="flex justify-between items-center text-xs font-bold">
+                                    <span class="flex items-center gap-1.5">
+                                        <span>📊</span>
+                                        <span x-text="locale === 'es' ? 'Consumo de API Hoy' : 'API Usage Today'"></span>
+                                    </span>
+                                    <span class="font-mono text-[11px]" x-text="quotaUsedToday.toLocaleString() + ' / 10,000 (' + Math.min(100, ((quotaUsedToday/10000)*100)).toFixed(1) + '%)'"></span>
+                                </div>
+                                <div class="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                                    <div class="h-full transition-all duration-500 rounded-full"
+                                         :style="'width: ' + Math.min(100, (quotaUsedToday/10000)*100) + '%'"
+                                         :class="quotaUsedToday > 8000 ? 'bg-red-500' : (quotaUsedToday > 5000 ? 'bg-amber-500' : 'bg-green-500')">
+                                    </div>
+                                </div>
+                            </div>
                             <button @click="showTutorialModal = true" class="mt-2 text-[11px] text-red-400 hover:text-red-300 hover:underline flex items-center gap-1 transition-colors">
                                 ℹ️ <span x-text="t('tutorialLink')"></span>
                             </button>
+                        
                         </div>
                         <button @click="deleteWatchedVideos()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-bold py-2.5 px-3 rounded-lg border border-zinc-700 mt-4 transition-colors">
                             <span x-text="locale === 'es' ? '🧹 Limpiar videos vistos (Liberar RAM)' : '🧹 Clear watched videos (Free RAM)'"></span>
@@ -502,6 +583,64 @@
             </div>
         </div>
     </div>
+    <!-- Modal: Explorador de Catálogo de Canales -->
+    <div x-show="showCatalogModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4" style="display: none;" x-transition>
+        <div :class="theme === 'dark' ? 'bg-zinc-900 border-zinc-800 text-zinc-100' : 'bg-white border-zinc-200 text-zinc-900 shadow-2xl'" 
+            class="border w-full max-w-4xl rounded-2xl shadow-2xl flex flex-col max-h-[88vh] overflow-hidden" @click.away="showCatalogModal = false">
+            
+            <!-- Cabecera del Modal -->
+            <div class="p-5 border-b border-zinc-800/80 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">🧭</span>
+                    <div>
+                        <h3 class="font-bold text-base" x-text="locale === 'es' ? 'Explorador de Canales Curados' : 'Curated Channel Explorer'"></h3>
+                        <p class="text-[11px] text-zinc-500" x-text="locale === 'es' ? 'Descubre y agrega nuevo contenido de valor a tu parrilla' : 'Discover and add high-value content to your grid'"></p>
+                    </div>
+                </div>
+                <button @click="showCatalogModal = false" class="text-zinc-400 hover:text-white font-bold p-1 text-base">✕</button>
+            </div>
+
+            <!-- Barra de Filtros del Modal -->
+            <div class="px-5 py-3 border-b border-zinc-800/60 flex flex-wrap items-center justify-between gap-3 bg-zinc-950/20 shrink-0">
+                <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+                    <button @click="catalogCategory = 'all'" :class="catalogCategory === 'all' ? 'bg-red-600 text-white' : 'bg-zinc-800 text-zinc-400'" class="px-3 py-1 rounded-full text-xs font-semibold transition-colors">Todas</button>
+                    <button @click="catalogCategory = 'Ciencia'" :class="catalogCategory === 'Ciencia' ? 'bg-red-600 text-white' : 'bg-zinc-800 text-zinc-400'" class="px-3 py-1 rounded-full text-xs font-semibold transition-colors">🔬 Ciencia</button>
+                    <button @click="catalogCategory = 'Documentales'" :class="catalogCategory === 'Documentales' ? 'bg-red-600 text-white' : 'bg-zinc-800 text-zinc-400'" class="px-3 py-1 rounded-full text-xs font-semibold transition-colors">🏛️ Documentales</button>
+                    <button @click="catalogCategory = 'Naturaleza'" :class="catalogCategory === 'Naturaleza' ? 'bg-red-600 text-white' : 'bg-zinc-800 text-zinc-400'" class="px-3 py-1 rounded-full text-xs font-semibold transition-colors">🌍 Naturaleza</button>
+                    <button @click="catalogCategory = 'Relax'" :class="catalogCategory === 'Relax' ? 'bg-red-600 text-white' : 'bg-zinc-800 text-zinc-400'" class="px-3 py-1 rounded-full text-xs font-semibold transition-colors">🎵 Relax</button>
+                </div>
+                <input type="text" x-model="catalogSearch" :placeholder="locale === 'es' ? 'Buscar canal...' : 'Search channel...'" class="bg-zinc-800 border border-zinc-700 text-xs px-3 py-1.5 rounded-full text-white focus:outline-none w-44">
+            </div>
+
+            <!-- Contenido / Cuadrícula Scrollable -->
+            <div class="p-5 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <template x-for="item in activeCatalog" :key="item.handle">
+                    <div :class="theme === 'dark' ? 'bg-zinc-950/60 border-zinc-800' : 'bg-zinc-50 border-zinc-200'" class="p-4 rounded-xl border flex flex-col justify-between gap-3">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-zinc-800 text-zinc-300" x-text="item.category"></span>
+                                <span class="text-[10px] text-zinc-500 font-medium" x-text="'📅 Desde ' + item.founded"></span>
+                            </div>
+                            <h4 class="font-bold text-sm text-zinc-100" x-text="item.name"></h4>
+                            <p class="text-[11px] text-red-500 font-mono mb-2" x-text="item.handle"></p>
+                            <p class="text-xs text-zinc-400 leading-relaxed line-clamp-2" x-text="item.description"></p>
+                        </div>
+                        <div class="border-t border-zinc-800/60 pt-3 flex items-center justify-between">
+                            <span class="text-[10px] text-zinc-500 font-medium" x-text="item.stats"></span>
+                            <div class="flex items-center gap-2">
+                                <a :href="'https://www.youtube.com/' + item.handle" target="_blank" class="text-xs text-zinc-400 hover:text-white p-1" title="Ver en YouTube">↗</a>
+                                <button @click="subscribeFromCatalog(item)" :disabled="isSubscribed(item)"
+                                        :class="isSubscribed(item) ? 'bg-zinc-800 text-green-400 border border-green-500/30 cursor-default' : 'bg-red-600 hover:bg-red-700 text-white shadow-md'"
+                                        class="text-xs font-bold px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
+                                    <span x-text="isSubscribed(item) ? '✓ Siguiendo' : '+ Seguir'"></span>
+                                </button>
+                                                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal Teatro (Reproductor) -->
     <div x-show="activeVideoId" class="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-2 sm:p-4" style="display: none;" x-transition>
@@ -514,6 +653,55 @@
     </div>
 
     <script>
+        // CATÁLOGO CURADO DE CANALES RECOMENDADOS (BILINGÜE)
+        const CATALOG_CHANNELS = [
+            // --- ESPAÑOL (ES) ---
+            // Ciencia & Tecnología
+            { handle: '@QuantumFracture', name: 'QuantumFracture', category: 'Ciencia', founded: 2012, stats: '3.4M subs', description: 'El lado más loco del universo explicado con física rigurosa y animaciones espectaculares.', lang: 'es' },
+            { handle: '@Kurzgesagt_es', name: 'Kurzgesagt – En Pocas Palabras', category: 'Ciencia', founded: 2019, stats: '2.5M subs', description: 'Explicaciones visuales y optimistas sobre ciencia, evolución, espacio y la existencia humana.', lang: 'es' },
+            { handle: '@DotCSV', name: 'Dot CSV', category: 'Ciencia', founded: 2016, stats: '850K subs', description: 'Inteligencia Artificial, Machine Learning y el futuro de la tecnología explicado para todos.', lang: 'es' },
+            { handle: '@DateunVlog', name: 'Date un Vlog', category: 'Ciencia', founded: 2015, stats: '1.4M subs', description: 'Física fundamental, relatividad, divulgación científica y debates por Javier Santaolalla.', lang: 'es' },
+            { handle: '@CuriosaMente', name: 'CuriosaMente', category: 'Ciencia', founded: 2014, stats: '3.1M subs', description: 'Preguntas científicas y filosóficas animadas que despiertan la curiosidad de grandes y chicos.', lang: 'es' },
+
+            // Documentales & Historia
+            { handle: '@DWDocumental', name: 'DW Documental', category: 'Documentales', founded: 2018, stats: '4.8M subs', description: 'Documentales profundos sobre geopolítica, sociedad, medio ambiente y culturas globales.', lang: 'es' },
+            { handle: '@NationalGeographicEs', name: 'National Geographic España', category: 'Documentales', founded: 2011, stats: '1.2M subs', description: 'Exploración, ciencia de vanguardia, arqueología e historias extraordinarias del planeta.', lang: 'es' },
+            { handle: '@HistoryLatinoamerica', name: 'History Latinoamérica', category: 'Documentales', founded: 2012, stats: '5.2M subs', description: 'Misterios de la historia, civilizaciones antiguas, ciencia aplicada y conspiraciones.', lang: 'es' },
+            { handle: '@MemoriasdePez', name: 'Memorias de Pez', category: 'Documentales', founded: 2017, stats: '1.6M subs', description: 'Historia universal, conflictos bélicos y geopolítica explicada con mapas e ilustraciones claras.', lang: 'es' },
+            { handle: '@VisualPolitik', name: 'VisualPolitik', category: 'Documentales', founded: 2016, stats: '3.3M subs', description: 'Análisis geopolítico y económico de los acontecimientos más importantes del panorama global.', lang: 'es' },
+
+            // Naturaleza & Viajes
+            { handle: '@UnMundoInmenso', name: 'Un Mundo Inmenso', category: 'Naturaleza', founded: 2018, stats: '1.7M subs', description: 'Los rincones más extraños, fronteras insólitas y curiosidades geográficas del planeta.', lang: 'es' },
+            { handle: '@LethalCrysis', name: 'Lethal Crysis', category: 'Naturaleza', founded: 2015, stats: '5.1M subs', description: 'Expediciones inmersivas y periodismo de aventura en las culturas más remotas y extremas.', lang: 'es' },
+            { handle: '@LaHuertadeIvan', name: 'La Huerta de Iván', category: 'Naturaleza', founded: 2014, stats: '2.8M subs', description: 'Guías prácticas de agricultura orgánica, cultivo en casa, botánica y respeto a la tierra.', lang: 'es' },
+
+            // Relax & Música
+            { handle: '@LofiGirl', name: 'Lofi Girl', category: 'Relax', founded: 2015, stats: '14.5M subs', description: 'Transmisiones y pistas de Lofi Hip Hop ideales para concentrarse, estudiar o relajarse.', lang: 'es' },
+            { handle: '@NatureRelaxationPhotos', name: 'Nature Relaxation Films', category: 'Relax', founded: 2011, stats: '1.9M subs', description: 'Paisajes del mundo en 4K UHD acompañados de sonidos puros de la naturaleza.', lang: 'es' },
+
+            // --- INGLÉS (EN) ---
+            // Science & Tech
+            { handle: '@veritasium', name: 'Veritasium', category: 'Ciencia', founded: 2010, stats: '16.5M subs', description: 'An element of truth: fascinating physics experiments, science mysteries and engineering marvels.', lang: 'en' },
+            { handle: '@markrober', name: 'Mark Rober', category: 'Ciencia', founded: 2011, stats: '55M subs', description: 'Former NASA engineer creating wildly entertaining physics, technology and engineering builds.', lang: 'en' },
+            { handle: '@3blue1brown', name: '3Blue1Brown', category: 'Ciencia', founded: 2015, stats: '6.2M subs', description: 'Higher mathematics, neural networks and linear algebra visualized through animated beauty.', lang: 'en' },
+            { handle: '@mkbhd', name: 'Marques Brownlee', category: 'Ciencia', founded: 2008, stats: '18.5M subs', description: 'Crisp, high-production reviews of consumer technology, gadgets, and the future of hardware.', lang: 'en' },
+            { handle: '@fireship', name: 'Fireship', category: 'Ciencia', founded: 2017, stats: '3.2M subs', description: 'High-intensity, witty and ultra-fast programming tutorials and software industry news.', lang: 'en' },
+
+            // Documentaries & History
+            { handle: '@DWDocumentary', name: 'DW Documentary', category: 'Documentales', founded: 2017, stats: '5.8M subs', description: 'In-depth global investigative documentaries focusing on geopolitics, human stories and science.', lang: 'en' },
+            { handle: '@TimelineChannel', name: 'Timeline - World History', category: 'Documentales', founded: 2014, stats: '4.9M subs', description: 'Epic world history documentaries detailing ancient empires, world wars and forgotten civilizations.', lang: 'en' },
+            { handle: '@johnnyharris', name: 'Johnny Harris', category: 'Documentales', founded: 2019, stats: '5.1M subs', description: 'Visual journalism, maps, and investigative storytelling explaining how the world works.', lang: 'en' },
+            { handle: '@Wendoverproductions', name: 'Wendover Productions', category: 'Documentales', founded: 2015, stats: '4.4M subs', description: 'Deep analysis of logistics, aviation, global economics and modern infrastructure.', lang: 'en' },
+
+            // Nature & Exploration
+            { handle: '@BBCEarth', name: 'BBC Earth', category: 'Naturaleza', founded: 2009, stats: '13.2M subs', description: 'Mind-blowing natural history, wildlife behavior and planetary wonders from BBC studios.', lang: 'en' },
+            { handle: '@GeoWizard', name: 'GeoWizard', category: 'Naturaleza', founded: 2015, stats: '1.5M subs', description: 'Straight-line adventures across countries, geography mastery and outdoor missions.', lang: 'en' },
+
+            // Relax & Music
+            { handle: '@NPRMusic', name: 'NPR Music', category: 'Relax', founded: 2007, stats: '9.2M subs', description: 'Intimate Tiny Desk Concerts from the world’s most talented musicians across all genres.', lang: 'en' },
+            { handle: '@ChillhopMusic', name: 'Chillhop Music', category: 'Relax', founded: 2013, stats: '3.4M subs', description: 'Smooth jazzhop, chill instrumental beats and ambient vibes for focus and daydreaming.', lang: 'en' }
+        ];
+        const DEFAULT_API_KEY = 'AIzaSyAJUkDrSVtpWYywEtaqT-8uH2pX8GSSL3o';
         function officialPlayApp() {
             let savedChannels = [];
             try { savedChannels = JSON.parse(localStorage.getItem('yt_channels_v3')) || []; } catch(e) { savedChannels = []; }
@@ -522,7 +710,7 @@
             try { savedVideos = JSON.parse(localStorage.getItem('yt_videos_v3')) || []; } catch(e) { savedVideos = []; }
 
             return {
-                displayLimit: 24,
+                displayLimit: 48,
                 syncProgressText: '',
                 searchQuery: '',
                 selectedChannel: '',
@@ -541,7 +729,8 @@
                 errorMessage: '',
                 tempApiKey: '',
                 isLoading: false,
-                apiKey: localStorage.getItem('yt_api_key_v3') || '',
+                customApiKey: localStorage.getItem('yt_api_key_v3') || '',
+                get apiKey() { return this.customApiKey.trim() || DEFAULT_API_KEY; },
                 theme: localStorage.getItem('yt_theme') || 'dark',
                 locale: localStorage.getItem('yt_locale') || 'es',
                 channels: savedChannels,
@@ -549,7 +738,13 @@
                 categories: ['General', 'Documentales', 'Ciencia', 'Relax'],
                 watchedVideoIds: JSON.parse(localStorage.getItem('yt_watched_v3')) || [],
                 favoriteVideoIds: JSON.parse(localStorage.getItem('yt_favorites_v3')) || [],
-                newVideoIds: JSON.parse(localStorage.getItem('yt_new_v3')) || [], 
+                newVideoIds: JSON.parse(localStorage.getItem('yt_new_v3')) || [],
+                showCatalogModal: false,
+                catalogCategory: 'all',
+                catalogSearch: '',
+                catalogList: CATALOG_CHANNELS, 
+                isFetchingOlder: false,
+                quotaUsedToday: 0,
 
                 translations: {
                     es: {
@@ -720,16 +915,14 @@
 
                 init() {
                     this.sanitizeChannels();
-                    this.$watch('searchQuery', () => this.displayLimit = 24);
-                    this.$watch('selectedChannel', () => this.displayLimit = 24);
-                    this.$watch('selectedCategory', () => this.displayLimit = 24);
-                    this.$watch('selectedFormat', () => this.displayLimit = 24);
-                    this.$watch('sortBy', () => this.displayLimit = 24);
-                    if (this.apiKey) {
-                        this.tempApiKey = this.apiKey;
-                        //if (this.channels.length > 0) {
-                        //    this.refreshAllChannels();
-                        //}
+                    this.quotaUsedToday = this.getQuotaUsage();
+                    this.$watch('searchQuery', () => this.displayLimit = 48);
+                    this.$watch('selectedChannel', () => this.displayLimit = 48);
+                    this.$watch('selectedCategory', () => this.displayLimit = 48);
+                    this.$watch('selectedFormat', () => this.displayLimit = 48);
+                    this.$watch('sortBy', () => this.displayLimit = 48);
+                    if (this.customApiKey) {
+                        this.tempApiKey = this.customApiKey;
                     }
                 },
 
@@ -749,12 +942,14 @@
                 },
 
                 saveApiKey() {
-                    if (this.tempApiKey.trim()) {
-                        this.apiKey = this.tempApiKey.trim();
-                        localStorage.setItem('yt_api_key_v3', this.apiKey);
-                        this.showSettingsModal = false;
-                        this.refreshAllChannels();
+                    this.customApiKey = this.tempApiKey.trim();
+                    if (this.customApiKey) {
+                        localStorage.setItem('yt_api_key_v3', this.customApiKey);
+                    } else {
+                        localStorage.removeItem('yt_api_key_v3');
                     }
+                    this.showSettingsModal = false;
+                    this.refreshAllChannels();
                 },
 
                 saveChannels() {
@@ -763,7 +958,7 @@
 
                 resetApiKey() {
                     if (confirm("Are you sure? / ¿Estás seguro?")) {
-                        this.apiKey = '';
+                        this.customApiKey = '';
                         this.tempApiKey = '';
                         localStorage.removeItem('yt_api_key_v3');
                         this.showSettingsModal = false;
@@ -831,8 +1026,13 @@
                                     ch.logo = channelData.items[0].snippet.thumbnails?.default?.url || '';
                                 }
                             }
-                            const vids = await this.fetchPlaylistVideos(ch.playlistId, ch.name, ch.id);
-                            updatedVideos = [...updatedVideos, ...vids];
+                            const pId = ch.playlistId || ('UU' + ch.id.substring(2));
+                            const fetchRes = await this.fetchPlaylistVideos(pId, ch.name, ch.id);
+                            ch.nextPageToken = fetchRes.nextPageToken;
+                            ch.deepDived = false;
+                            ch.noMoreVideos = !fetchRes.nextPageToken;
+                            updatedVideos = [...updatedVideos, ...fetchRes.videos];
+                            this.addQuotaUsage(4);
                         } catch (e) {
                             console.error("Error al actualizar canal: " + ch.name, e);
                             this.errorMessage = e.message || "Error de cuota o conexión con la API de YouTube.";
@@ -899,7 +1099,6 @@
                         this.errorMessage = this.locale === 'es' ? "Debes ingresar y guardar una clave de API de YouTube primero." : "You must provide an API Key first.";
                         return;
                     }
-
                     const isPremium = false;
                     if (!isPremium && this.channels.length >= 24) {
                         this.errorMessage = this.locale === 'es' 
@@ -909,10 +1108,8 @@
                         this.isLoading = false;
                         return;
                     }
-
                     this.isLoading = true;
                     this.errorMessage = '';
-
                     try {
                         let handle = input;
                         if (input.includes('youtube.com/')) {
@@ -920,73 +1117,80 @@
                         } else if (!input.startsWith('@') && !/^UC[a-zA-Z0-9_-]{22}$/.test(input)) {
                             handle = '@' + input;
                         }
-
                         let channelUrl = `https://www.googleapis.com/youtube/v3/channels?part=snippet,contentDetails&key=${this.apiKey}`;
                         if (/^UC[a-zA-Z0-9_-]{22}$/.test(input)) {
                             channelUrl += `&id=${input}`;
                         } else {
                             channelUrl += `&forHandle=${encodeURIComponent(handle)}`;
                         }
-
                         const channelRes = await fetch(channelUrl);
                         const channelData = await channelRes.json();
-
                         if (channelData.error) {
                             throw new Error(channelData.error.message || "Error al conectar con la API.");
                         }
-
                         if (!channelData.items || channelData.items.length === 0) {
                             throw new Error("No se encontró el canal. Verifica el usuario.");
                         }
-
                         const channel = channelData.items[0];
                         const channelId = channel.id;
                         const channelName = channel.snippet.title;
                         const playlistId = channel.contentDetails.relatedPlaylists.uploads;
                         const channelLogo = channel.snippet.thumbnails?.default?.url || '';
-
+                        
                         if (this.channels.some(c => c.id === channelId)) {
                             throw new Error("Este canal ya forma parte de tu parrilla.");
                         }
 
-                        const fetchedVideos = await this.fetchPlaylistVideos(playlistId, channelName, channelId);
+                        // 1. DESCARGA DE VIDEOS Y CAPTURA DEL TOKEN (BLINDADO)
+                        const fetchRes = await this.fetchPlaylistVideos(playlistId, channelName, channelId);
+                        const fetchedVideos = Array.isArray(fetchRes) ? fetchRes : (fetchRes.videos || []);
+                        const nextToken = Array.isArray(fetchRes) ? null : (fetchRes.nextPageToken || null);
 
-                        // Asignación manual a la categoría 'General' por defecto (sin llamadas extra)
-                        this.channels.push({ id: channelId, name: channelName, playlistId: playlistId, category: 'General', logo: channelLogo });
+                        // 2. GUARDAMOS EL CANAL CON SU TOKEN CORRESPONDIENTE
+                        this.channels.push({ 
+                            id: channelId, 
+                            name: channelName, 
+                            playlistId: playlistId, 
+                            category: 'General', 
+                            logo: channelLogo,
+                            nextPageToken: nextToken,
+                            deepDived: false,
+                            noMoreVideos: !nextToken
+                        });
+                        this.selectedChannel = channelName;
+                        this.displayLimit = 48;
                         localStorage.setItem('yt_channels_v3', JSON.stringify(this.channels));
 
-                        const newIds = new Set(fetchedVideos.map(v => v.id));
-
+                        // 3. UNIÓN DE VIDEOS EN MEMORIA
                         const uniqueMap = {};
-            
                         this.videos.forEach(v => {
-                            // Mantener si es de otro canal, O si es un favorito
                             if (v.channelName !== channelName || this.isFavorite(v.id)) {
                                 uniqueMap[v.id] = v;
                             }
                         });
-
                         fetchedVideos.forEach(v => {
                             uniqueMap[v.id] = v;
                         });
-
+                        
                         let finalVideosArray = Object.values(uniqueMap);
                         finalVideosArray.sort((a, b) => {
                             const timeA = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
                             const timeB = b.publishedAt ? new Date(b.publishedAt).getTime() : 0;
                             return timeB - timeA;
                         });
+                        
                         const favoriteVids = finalVideosArray.filter(v => this.isFavorite(v.id));
                         const normalVids = finalVideosArray.filter(v => !this.isFavorite(v.id));
-
                         this.videos = [...favoriteVids, ...normalVids.slice(0, 6000)];
                         localStorage.setItem('yt_videos_v3', JSON.stringify(this.videos));
+
+                        // 4. REGISTRAR CONSUMO DE CUOTA (+5 unidades)
+                        this.addQuotaUsage(5);
 
                         this.autoInput = '';
                     } catch (err) {
                         console.error(err);
                         const apiError = err.message || "";
-                        
                         if (apiError.includes("match") || apiError.includes("undefined")) {
                             this.errorMessage = this.locale === 'es'
                                 ? "Este canal tiene transmisiones activas en vivo o videos restringidos que impiden la lectura de duraciones. Inténtalo de nuevo en unos minutos o sincroniza otro canal."
@@ -1004,42 +1208,30 @@
                     let allItems = [];
                     let nextPageToken = '';
                     
-                    // 1. Bucle para pedir 2 páginas (aprox 100 videos)
                     for (let i = 0; i < 2; i++) {
                         const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${this.apiKey}${nextPageToken ? '&pageToken=' + nextPageToken : ''}`;
                         const res = await fetch(url);
                         const data = await res.json();
                         
-                        if (data.error) {
-                            throw new Error(data.error.message || "Error en la API de YouTube");
-                        }
-                        if (data.items) {
-                            allItems = [...allItems, ...data.items];
-                        }
-                        
+                        if (data.error) throw new Error(data.error.message || "Error en la API de YouTube");
+                        if (data.items) allItems = [...allItems, ...data.items];
                         nextPageToken = data.nextPageToken;
-                        if (!nextPageToken) break; // Si no hay más videos, romper el bucle
+                        if (!nextPageToken) break;
                     }
 
-                    // 2. Cortar la lista a exactamente 96 videos
                     allItems = allItems.slice(0, 100);
-                    if (allItems.length === 0) return [];
+                    if (allItems.length === 0) return { videos: [], nextPageToken: null };
 
                     const durationMap = {};
-                    
-                    // 3. Procesar los detalles en lotes de 50 (para no colapsar el endpoint /videos)
                     for (let i = 0; i < allItems.length; i += 50) {
                         const batch = allItems.slice(i, i + 50);
                         const videoIds = batch.map(item => item.snippet.resourceId.videoId).join(',');
                         const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet,statistics&id=${videoIds}&key=${this.apiKey}`;
-                        
                         const detailsRes = await fetch(detailsUrl);
                         const detailsData = await detailsRes.json();
-
-                        if (detailsData.error) {
-                            throw new Error(detailsData.error.message || "Error al obtener detalles");
-                        }
-                                    
+                        
+                        if (detailsData.error) throw new Error(detailsData.error.message || "Error al obtener detalles");
+                        
                         if (detailsData.items) {
                             detailsData.items.forEach(item => {
                                 const durationStr = item.contentDetails?.duration || '';
@@ -1055,27 +1247,31 @@
                         }
                     }
 
-                    // 4. Mapear y devolver los datos finales
-                    return allItems.map(item => {
+                    const mappedVideos = allItems.map(item => {
                         const videoId = item.snippet.resourceId.videoId;
                         const durationInfo = durationMap[videoId] || { seconds: 0, label: '0:00', views: 0, viewsLabel: '0' };
                         const isShort = durationInfo.seconds > 0 && durationInfo.seconds <= 180;
                         const publishedAt = item.snippet.publishedAt;
-                        
                         return {
                             id: videoId,
                             title: item.snippet.title,
                             thumbnail: item.snippet.thumbnails?.high?.url || `https://i3.ytimg.com/vi/${videoId}/hqdefault.jpg`,
                             channelId: channelId,
                             channelName: channelName,
-                            publishedAt: publishedAt, 
+                            publishedAt: publishedAt,
                             meta: new Date(publishedAt).toLocaleDateString(this.locale === 'es' ? 'es-ES' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
                             isShort: isShort,
                             durationLabel: durationInfo.label,
-                            views: durationInfo.views, 
-                            viewsLabel: durationInfo.viewsLabel 
+                            views: durationInfo.views,
+                            viewsLabel: durationInfo.viewsLabel
                         };
                     });
+
+                    // DEVOLVEMOS TANTO LOS VIDEOS COMO EL TOKEN DE LA PÁGINA 3
+                    return {
+                        videos: mappedVideos,
+                        nextPageToken: nextPageToken || null
+                    };
                 },
 
                 changeLanguage(newLocale) {
@@ -1366,6 +1562,16 @@
                     const usedCategories = new Set(this.channels.map(c => c.category).filter(Boolean));
                     return this.categories.filter(cat => usedCategories.has(cat));
                 },
+                get activeChannelObj() {
+                    if (this.selectedChannel) {
+                        return this.channels.find(c => c.name === this.selectedChannel) || null;
+                    }
+                    // Si el usuario solo tiene 1 canal en toda la app, lo toma como activo por defecto
+                    if (this.channels.length === 1) {
+                        return this.channels[0];
+                    }
+                    return null;
+                },
 
                 get filteredChannels() {
                     if (this.selectedCategory === 'all') return this.channels;
@@ -1416,6 +1622,199 @@
                 },
                 get paginatedVideos() {
                     return this.filteredVideos.slice(0, this.displayLimit);
+                },
+                // Filtra los canales del catálogo según el idioma y la categoría seleccionada
+                get activeCatalog() {
+                    return this.catalogList.filter(item => {
+                        const matchLang = item.lang === this.locale;
+                        const matchCat = this.catalogCategory === 'all' || item.category === this.catalogCategory;
+                        const matchSearch = !this.catalogSearch || item.name.toLowerCase().includes(this.catalogSearch.toLowerCase()) || item.description.toLowerCase().includes(this.catalogSearch.toLowerCase());
+                        return matchLang && matchCat && matchSearch;
+                    });
+                },
+                getTodayString() {
+                    return new Date().toISOString().slice(0, 10);
+                },
+                getQuotaUsage() {
+                    try {
+                        const data = JSON.parse(localStorage.getItem('yt_quota_v3')) || {};
+                        if (data.date === this.getTodayString()) {
+                            return data.units || 0;
+                        }
+                    } catch (e) {}
+                    return 0;
+                },
+                addQuotaUsage(units) {
+                    const today = this.getTodayString();
+                    let current = this.getQuotaUsage() + units;
+                    localStorage.setItem('yt_quota_v3', JSON.stringify({ date: today, units: current }));
+                    this.quotaUsedToday = current;
+                },
+                canFetchOlder(ch) {
+                    if (!ch) return false;
+                    // Contamos cuántos videos tiene este canal en memoria
+                    const count = this.videos.filter(v => v.channelName === ch.name).length;
+                    
+                    // Si ya alcanzó los 140+ videos, o ya se hizo la recarga extra, NO permitir más
+                    if (count >= 140 || ch.olderVideosFetched || ch.noMoreVideos) {
+                        return false;
+                    }
+                    
+                    // Solo califica si ya vio los primeros 80+ videos locales
+                    return count >= 80;
+                },
+
+                // Verifica si un canal del catálogo ya fue suscrito
+                isSubscribed(itemOrHandle) {
+                    if (!itemOrHandle) return false;
+                    
+                    let targetHandle = '';
+                    let targetName = '';
+
+                    // Si le pasamos el objeto completo { name, handle, ... }
+                    if (typeof itemOrHandle === 'object') {
+                        targetName = (itemOrHandle.name || '').toLowerCase().trim();
+                        targetHandle = (itemOrHandle.handle || '').replace('@', '').toLowerCase().trim();
+                    } 
+                    // Si le pasamos solo el string '@handle'
+                    else if (typeof itemOrHandle === 'string') {
+                        targetHandle = itemOrHandle.replace('@', '').toLowerCase().trim();
+                        targetName = targetHandle;
+                    }
+                    
+                    // Si se está sincronizando en este instante
+                    if (this.autoInput && this.autoInput.toLowerCase().replace('@', '') === targetHandle) {
+                        return true;
+                    }
+
+                    // Compara con los canales existentes
+                    return this.channels.some(c => {
+                        const cName = (c.name || '').toLowerCase().trim();
+                        const cNameClean = cName.replace(/\s+/g, '');
+                        return (targetName && cName === targetName) || 
+                            cNameClean === targetHandle ||
+                            (targetName && cName.includes(targetName)) ||
+                            (targetName && targetName.includes(cName));
+                    });
+                },
+
+                // Sincroniza un canal desde el catálogo con 1 clic
+                async subscribeFromCatalog(item) {
+                    this.autoInput = item.handle;
+                    await this.autoSyncChannel();
+                    // Asigna la categoría temática curada
+                    const added = this.channels.find(c => c.name.toLowerCase() === item.name.toLowerCase() || c.name.toLowerCase().includes(item.handle.replace('@', '').toLowerCase()));
+                    if (added) {
+                        added.category = item.category;
+                        this.saveChannels();
+                    }
+                },
+                // Descarga 50 videos más antiguos exclusivamente para el canal seleccionado
+                // BUSCA Y REEMPLAZA fetchOlderVideos EN TU JAVASCRIPT:
+                async fetchOlderVideos() {
+                    if (!this.activeChannelObj || this.isFetchingOlder) return;
+                    const ch = this.activeChannelObj;
+                    this.isFetchingOlder = true;
+
+                    try {
+                        const pId = ch.playlistId || ('UU' + ch.id.substring(2));
+                        let token = ch.nextPageToken;
+
+                        // Si no tenía token, lo buscamos en las páginas iniciales
+                        if (!token) {
+                            let tempToken = '';
+                            for (let i = 0; i < 2; i++) {
+                                const u = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${pId}&key=${this.apiKey}${tempToken ? '&pageToken=' + tempToken : ''}`;
+                                const r = await fetch(u);
+                                const d = await r.json();
+                                if (d.error) throw new Error(d.error.message || "Error al conectar con YouTube");
+                                tempToken = d.nextPageToken;
+                                if (!tempToken) break;
+                            }
+                            token = tempToken;
+                        }
+
+                        if (!token) {
+                            ch.noMoreVideos = true;
+                            ch.olderVideosFetched = true;
+                            this.channels = [...this.channels];
+                            this.saveChannels();
+                            return;
+                        }
+
+                        // 1. Descargamos la página 3 (videos 101 al 150)
+                        const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${pId}&key=${this.apiKey}&pageToken=${token}`;
+                        const res = await fetch(url);
+                        const data = await res.json();
+                        if (data.error) throw new Error(data.error.message || "Error al cargar videos antiguos");
+
+                        // 2. Marcamos el canal como completado y forzamos la reactividad de Alpine
+                        ch.nextPageToken = data.nextPageToken || null;
+                        ch.olderVideosFetched = true; // <-- BLOQUEO ESTRICTO: Solo 1 recarga
+                        this.channels = [...this.channels]; // <-- Fuerza a Alpine a redibujar el botón
+                        this.saveChannels();
+
+                        if (data.items && data.items.length > 0) {
+                            // 3. Descargamos duraciones y vistas
+                            const videoIds = data.items.map(item => item.snippet.resourceId.videoId).join(',');
+                            const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet,statistics&id=${videoIds}&key=${this.apiKey}`;
+                            const detailsRes = await fetch(detailsUrl);
+                            const detailsData = await detailsRes.json();
+                            if (detailsData.error) throw new Error(detailsData.error.message || "Error al obtener detalles");
+
+                            const durationMap = {};
+                            if (detailsData.items) {
+                                detailsData.items.forEach(item => {
+                                    const durationStr = item.contentDetails?.duration || '';
+                                    const secs = this.parseDurationToSeconds(durationStr);
+                                    const rawViews = parseInt(item.statistics?.viewCount || 0, 10);
+                                    durationMap[item.id] = {
+                                        seconds: secs,
+                                        label: this.formatSecondsToLabel(secs),
+                                        views: rawViews,
+                                        viewsLabel: this.formatNumberLabel(rawViews)
+                                    };
+                                });
+                            }
+
+                            const olderVideos = data.items.map(item => {
+                                const videoId = item.snippet.resourceId.videoId;
+                                const durationInfo = durationMap[videoId] || { seconds: 0, label: '0:00', views: 0, viewsLabel: '0' };
+                                const isShort = durationInfo.seconds > 0 && durationInfo.seconds <= 180;
+                                const publishedAt = item.snippet.publishedAt;
+                                return {
+                                    id: videoId,
+                                    title: item.snippet.title,
+                                    thumbnail: item.snippet.thumbnails?.high?.url || `https://i3.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+                                    channelId: ch.id,
+                                    channelName: ch.name,
+                                    publishedAt: publishedAt,
+                                    meta: new Date(publishedAt).toLocaleDateString(this.locale === 'es' ? 'es-ES' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+                                    isShort: isShort,
+                                    durationLabel: durationInfo.label,
+                                    views: durationInfo.views,
+                                    viewsLabel: durationInfo.viewsLabel
+                                };
+                            });
+
+                            // Registramos exactamente +2 unidades de cuota
+                            this.addQuotaUsage(2);
+
+                            // Unimos a memoria y extendemos la persiana
+                            const uniqueMap = {};
+                            this.videos.forEach(v => uniqueMap[v.id] = v);
+                            olderVideos.forEach(v => uniqueMap[v.id] = v);
+                            this.videos = Object.values(uniqueMap);
+                            localStorage.setItem('yt_videos_v3', JSON.stringify(this.videos));
+
+                            this.displayLimit = this.videos.filter(v => v.channelName === ch.name).length;
+                        }
+                    } catch (e) {
+                        console.error("Error al cargar videos antiguos:", e);
+                        this.errorMessage = e.message || "Error al cargar videos antiguos";
+                    } finally {
+                        this.isFetchingOlder = false;
+                    }
                 },
             }
         }
