@@ -1,0 +1,1244 @@
+[
+  {
+    "handle": "@veritasium",
+    "name": "Veritasium",
+    "category": "Ciencia",
+    "founded": 2010,
+    "stats": "21.1M subs",
+    "description": "An element of truth - videos about science, education, and anything else we find interesting.",
+    "lang": "en"
+  },
+  {
+    "handle": "@markrober",
+    "name": "Mark Rober",
+    "category": "Ciencia",
+    "founded": 2011,
+    "stats": "81.5M subs",
+    "description": "Former NASA engineer.",
+    "lang": "en"
+  },
+  {
+    "handle": "@3blue1brown",
+    "name": "3Blue1Brown",
+    "category": "Ciencia",
+    "founded": 2015,
+    "stats": "8.6M subs",
+    "description": "My name is Grant Sanderson.",
+    "lang": "en"
+  },
+  {
+    "handle": "@mkbhd",
+    "name": "Marques Brownlee",
+    "category": "Ciencia",
+    "founded": 2008,
+    "stats": "21.2M subs",
+    "description": "MKBHD: Quality Tech Videos | YouTuber | Geek | Consumer Electronics | Tech Head | Internet Personality.",
+    "lang": "en"
+  },
+  {
+    "handle": "@fireship",
+    "name": "Fireship",
+    "category": "Ciencia",
+    "founded": 2017,
+    "stats": "4.2M subs",
+    "description": "High-intensity ⚡ code tutorials and tech news to help you ship your app faster.",
+    "lang": "en"
+  },
+  {
+    "handle": "@TwoMinutePapers",
+    "name": "Two Minute Papers",
+    "category": "Ciencia",
+    "founded": 2006,
+    "stats": "1.8M subs",
+    "description": "What a time to be alive.",
+    "lang": "en"
+  },
+  {
+    "handle": "@lexfridman",
+    "name": "Lex Fridman",
+    "category": "Ciencia",
+    "founded": 2006,
+    "stats": "5M subs",
+    "description": "Lex Fridman Podcast and other videos.",
+    "lang": "en"
+  },
+  {
+    "handle": "@minutephysics",
+    "name": "minutephysics",
+    "category": "Ciencia",
+    "founded": 2011,
+    "stats": "6M subs",
+    "description": "Simply put: cool physics and other sweet science.",
+    "lang": "en"
+  },
+  {
+    "handle": "@kurzgesagt",
+    "name": "Kurzgesagt – In a Nutshell",
+    "category": "Ciencia",
+    "founded": 2013,
+    "stats": "25.5M subs",
+    "description": "Animation videos explaining things with optimistic nihilism since 12,013.",
+    "lang": "en"
+  },
+  {
+    "handle": "@SmarterEveryDay",
+    "name": "SmarterEveryDay",
+    "category": "Ciencia",
+    "founded": 2006,
+    "stats": "11.9M subs",
+    "description": "I explore the world using science.",
+    "lang": "en"
+  },
+  {
+    "handle": "@Computerphile",
+    "name": "Computerphile",
+    "category": "Ciencia",
+    "founded": 2009,
+    "stats": "2.6M subs",
+    "description": "Videos about computers & computer stuff.",
+    "lang": "en"
+  },
+  {
+    "handle": "@Numberphile",
+    "name": "Numberphile",
+    "category": "Ciencia",
+    "founded": 2011,
+    "stats": "4.8M subs",
+    "description": "Videos about numbers and mathematics.",
+    "lang": "en"
+  },
+  {
+    "handle": "@Techquickie",
+    "name": "Techquickie",
+    "category": "Ciencia",
+    "founded": 2012,
+    "stats": "4.3M subs",
+    "description": "It's time to dive a little deeper into your favorite gadgets or trending tech topics.",
+    "lang": "en"
+  },
+  {
+    "handle": "@LinusTechTips",
+    "name": "Linus Tech Tips",
+    "category": "Ciencia",
+    "founded": 2008,
+    "stats": "16.9M subs",
+    "description": "Linus Tech Tips is a passionate team of \"professionally curious\" experts in consumer technology and video production who aim to...",
+    "lang": "en"
+  },
+  {
+    "handle": "@RealEngineering",
+    "name": "Real Engineering",
+    "category": "Ciencia",
+    "founded": 2013,
+    "stats": "5.1M subs",
+    "description": "The home of innovation.",
+    "lang": "en"
+  },
+  {
+    "handle": "@PracticalEngineering",
+    "name": "Practical Engineering Australia",
+    "category": "Ciencia",
+    "founded": 2014,
+    "stats": "209 subs",
+    "description": "Practical Engineering Australia specialises in mechanical, structural, and process engineering with extensive capabilities in d...",
+    "lang": "en"
+  },
+  {
+    "handle": "@AppliedScience",
+    "name": "Applied Science",
+    "category": "Ciencia",
+    "founded": 2006,
+    "stats": "888K subs",
+    "description": "Hosted by Ben Krasnow    appliedsciencevideos@gmail.",
+    "lang": "en"
+  },
+  {
+    "handle": "@Vsauce",
+    "name": "Vsauce",
+    "category": "Ciencia",
+    "founded": 2007,
+    "stats": "25.1M subs",
+    "description": "Our World is Amazing.",
+    "lang": "en"
+  },
+  {
+    "handle": "@ElectroBOOM",
+    "name": "ElectroBOOM",
+    "category": "Ciencia",
+    "founded": 2007,
+    "stats": "8.8M subs",
+    "description": "Want to subconsciously learn while being entertained.",
+    "lang": "en"
+  },
+  {
+    "handle": "@TomScottGo",
+    "name": "Tom Scott",
+    "category": "Ciencia",
+    "founded": 2006,
+    "stats": "6.7M subs",
+    "description": "Hi, I'm Tom Scott.",
+    "lang": "en"
+  },
+  {
+    "handle": "@DWDocumentary",
+    "name": "DW Documentary",
+    "category": "Documentales",
+    "founded": 2016,
+    "stats": "6.5M subs",
+    "description": "DW Documentary gives you information beyond the headlines.",
+    "lang": "en"
+  },
+  {
+    "handle": "@TimelineChannel",
+    "name": "Timeline - World History Documentaries",
+    "category": "Documentales",
+    "founded": 2017,
+    "stats": "5.9M subs",
+    "description": "Welcome to Timeline - the home of world history.",
+    "lang": "en"
+  },
+  {
+    "handle": "@johnnyharris",
+    "name": "Johnny Harris",
+    "category": "Documentales",
+    "founded": 2011,
+    "stats": "7.9M subs",
+    "description": "Independent Filmmaker helping you better understand the world Join our community: newpress.",
+    "lang": "en"
+  },
+  {
+    "handle": "@Wendoverproductions",
+    "name": "Wendover Productions",
+    "category": "Documentales",
+    "founded": 2010,
+    "stats": "4.9M subs",
+    "description": "Wendover Productions is all about explaining how our world works.",
+    "lang": "en"
+  },
+  {
+    "handle": "@ColdFusion",
+    "name": "ColdFusion",
+    "category": "Documentales",
+    "founded": 2007,
+    "stats": "5.2M subs",
+    "description": "Hi, my name is Dagogo Altraide and I create and narrate all the videos on here.",
+    "lang": "en"
+  },
+  {
+    "handle": "@RealLifeLore",
+    "name": "RealLifeLore",
+    "category": "Documentales",
+    "founded": 2016,
+    "stats": "7.9M subs",
+    "description": "Answers to questions that you've never asked.",
+    "lang": "en"
+  },
+  {
+    "handle": "@MagnatesMedia",
+    "name": "MagnatesMedia",
+    "category": "Documentales",
+    "founded": 2018,
+    "stats": "1.9M subs",
+    "description": "🎥 Mini movies about business & money.",
+    "lang": "en"
+  },
+  {
+    "handle": "@RealStories",
+    "name": "Real Stories",
+    "category": "Documentales",
+    "founded": 2015,
+    "stats": "6.7M subs",
+    "description": "For immersive documentaries that delve into the depths of human experiences, Real Stories is your ultimate destination.",
+    "lang": "en"
+  },
+  {
+    "handle": "@Vox",
+    "name": "Vox",
+    "category": "Documentales",
+    "founded": 2014,
+    "stats": "12.7M subs",
+    "description": "Making sense of it all.",
+    "lang": "en"
+  },
+  {
+    "handle": "@PolyMatter",
+    "name": "PolyMatter",
+    "category": "Documentales",
+    "founded": 2015,
+    "stats": "1.9M subs",
+    "description": "How do I make my videos.",
+    "lang": "en"
+  },
+  {
+    "handle": "@CaspianReport",
+    "name": "CaspianReport",
+    "category": "Documentales",
+    "founded": 2010,
+    "stats": "1.9M subs",
+    "description": "We try to make sense of an increasingly complicated world by cutting through the noise and analysing geopolitical trends.",
+    "lang": "en"
+  },
+  {
+    "handle": "@EpicHistoryTV",
+    "name": "Epic History",
+    "category": "Documentales",
+    "founded": 2015,
+    "stats": "3.1M subs",
+    "description": "Epic History makes videos about the most dramatic and important stories from our past, from the rise and fall of empires to glo...",
+    "lang": "en"
+  },
+  {
+    "handle": "@KingsandGenerals",
+    "name": "Kings and Generals",
+    "category": "Documentales",
+    "founded": 2016,
+    "stats": "4.2M subs",
+    "description": "Sponsorship email: info@kingsandgenerals.",
+    "lang": "en"
+  },
+  {
+    "handle": "@SimpleHistory",
+    "name": "Simple History",
+    "category": "Documentales",
+    "founded": 2014,
+    "stats": "5.1M subs",
+    "description": "Welcome to the Official Simple History Channel.",
+    "lang": "en"
+  },
+  {
+    "handle": "@TheArmchairHistorian",
+    "name": "The Armchair Historian",
+    "category": "Documentales",
+    "founded": 2016,
+    "stats": "2.5M subs",
+    "description": "Hi, I'm Griffin Johnsen, founder of The Armchair Historian LLC and Armchair Historian channel.",
+    "lang": "en"
+  },
+  {
+    "handle": "@TheInfographicsShow",
+    "name": "The Infographics Show",
+    "category": "Documentales",
+    "founded": 2011,
+    "stats": "15.5M subs",
+    "description": "Facts are fun, but most are presented in boring and badly edited videos.",
+    "lang": "en"
+  },
+  {
+    "handle": "@Biographics",
+    "name": "Biographics",
+    "category": "Documentales",
+    "founded": 2017,
+    "stats": "2.4M subs",
+    "description": "Biographics publishes three videos every week, providing biographic profiles of the men and women who -- for better or for wors...",
+    "lang": "en"
+  },
+  {
+    "handle": "@WorldWarTwo",
+    "name": "World War Two",
+    "category": "Documentales",
+    "founded": 2018,
+    "stats": "1.2M subs",
+    "description": "FAN MAIL: Community@timeghost.",
+    "lang": "en"
+  },
+  {
+    "handle": "@BBCEarth",
+    "name": "BBC Earth",
+    "category": "Naturaleza",
+    "founded": 2009,
+    "stats": "14.5M subs",
+    "description": "Bringing you face-to-face with heart-pounding action, mind-blowing ideas and the sheer wonder of being part of this amazing pla...",
+    "lang": "en"
+  },
+  {
+    "handle": "@GeoWizard",
+    "name": "GeoWizard",
+    "category": "Naturaleza",
+    "founded": 2015,
+    "stats": "1.5M subs",
+    "description": "Adventure & Geography.",
+    "lang": "en"
+  },
+  {
+    "handle": "@BraveWilderness",
+    "name": "Brave Wilderness",
+    "category": "Naturaleza",
+    "founded": 2014,
+    "stats": "21.8M subs",
+    "description": "Brave Wilderness is your one stop connection to a wild world of adventure and amazing up close animal encounters.",
+    "lang": "en"
+  },
+  {
+    "handle": "@NatGeo",
+    "name": "National Geographic",
+    "category": "Naturaleza",
+    "founded": 2006,
+    "stats": "26.4M subs",
+    "description": "Step into wonder and find your inner explorer with National Geographic.",
+    "lang": "en"
+  },
+  {
+    "handle": "@FreeHighQualityDocumentaries",
+    "name": "Free High-Quality Documentaries",
+    "category": "Naturaleza",
+    "founded": 2017,
+    "stats": "1.5M subs",
+    "description": "🌍Welcome to the Wild Side of Nature🌍  On this channel, we bring you face to face with the fiercest creatures and untamed landsc...",
+    "lang": "en"
+  },
+  {
+    "handle": "@GreatBigStory",
+    "name": "Great Big Story",
+    "category": "Naturaleza",
+    "founded": 2015,
+    "stats": "6.3M subs",
+    "description": "Welcome to Great Big Story, where the extraordinary hides in plain sight.",
+    "lang": "en"
+  },
+  {
+    "handle": "@GeographyNow",
+    "name": "Geography Now",
+    "category": "Naturaleza",
+    "founded": 2014,
+    "stats": "3.9M subs",
+    "description": "Hey geograpeeps.",
+    "lang": "en"
+  },
+  {
+    "handle": "@AtlasObscura",
+    "name": "Atlas Obscura",
+    "category": "Naturaleza",
+    "founded": 2009,
+    "stats": "146K subs",
+    "description": "Here at Atlas Obscura, we believe in asking curious questions to learn about the world's most unique places and foods.",
+    "lang": "en"
+  },
+  {
+    "handle": "@OutdoorBoys",
+    "name": "Outdoor Boys",
+    "category": "Naturaleza",
+    "founded": 2015,
+    "stats": "20.5M subs",
+    "description": "Me and my boys, Tommy, Nate and Jacob are the Outdoor Boys.",
+    "lang": "en"
+  },
+  {
+    "handle": "@WildEarth",
+    "name": "WildEarth",
+    "category": "Naturaleza",
+    "founded": 2015,
+    "stats": "716K subs",
+    "description": "Our LIVE SAFARIS with expert guides give you an intimate African safari experience from various gorgeous locations - animals, l...",
+    "lang": "en"
+  },
+  {
+    "handle": "@AnimalPlanet",
+    "name": "Animal Planet",
+    "category": "Naturaleza",
+    "founded": 2007,
+    "stats": "5.7M subs",
+    "description": "Animal Planet is the world's only entertainment brand that immerses viewers in the full range of life in the animal kingdom wit...",
+    "lang": "en"
+  },
+  {
+    "handle": "@DiscoveryUK",
+    "name": "Brien Charles",
+    "category": "Naturaleza",
+    "founded": 2009,
+    "stats": "61 subs",
+    "description": "O刀乇 ｲ￦O ｲけ尺乇乇 √ﾉ√ﾑ し'ﾑしE乇尺ﾉ乇.",
+    "lang": "en"
+  },
+  {
+    "handle": "@WildernessOutdoors",
+    "name": "Wilderness Outdoors",
+    "category": "Naturaleza",
+    "founded": 2022,
+    "stats": "0 subs",
+    "description": "Wilderness Outdoors ⛺ Sounds of Nature  Wilderness Outdoors is your escape to nature’s calming sounds—rustling leaves, flowing ...",
+    "lang": "en"
+  },
+  {
+    "handle": "@BushcraftSurvival",
+    "name": "Bushcraft Survival",
+    "category": "Naturaleza",
+    "founded": 2019,
+    "stats": "192 subs",
+    "description": "Hi, welcome to BUSHCRAFT SURVIVAL Here I'll teach you survival skills, simple DIYs , techniques and how to survive.",
+    "lang": "en"
+  },
+  {
+    "handle": "@OceanExplorers",
+    "name": "Immersea Ocean Explorers",
+    "category": "Naturaleza",
+    "founded": 2018,
+    "stats": "1K subs",
+    "description": "Tailormade VR solutions for Underwater Cultural Heritage and Marine Environnement enhancement Immersive Edutainment Let's open ...",
+    "lang": "en"
+  },
+  {
+    "handle": "@JungleLife",
+    "name": "Yukie Ex",
+    "category": "Naturaleza",
+    "founded": 2006,
+    "stats": "4 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "en"
+  },
+  {
+    "handle": "@ExtremeHabitats",
+    "name": "Extreme Habitats",
+    "category": "Naturaleza",
+    "founded": 2024,
+    "stats": "1 subs",
+    "description": "Modular and self-supporting structures designed for extreme or harsh environments.",
+    "lang": "en"
+  },
+  {
+    "handle": "@DailyStoic",
+    "name": "Daily Stoic",
+    "category": "Filosofia",
+    "founded": 2016,
+    "stats": "2M subs",
+    "description": "Stoicism for everyday life.",
+    "lang": "en"
+  },
+  {
+    "handle": "@AcademyofIdeas",
+    "name": "Academy of Ideas",
+    "category": "Filosofia",
+    "founded": 2012,
+    "stats": "2M subs",
+    "description": "Become a Supporting Member and access all our membership videos - academyofideas.",
+    "lang": "en"
+  },
+  {
+    "handle": "@Einzelganger",
+    "name": "Einzelgänger",
+    "category": "Filosofia",
+    "founded": 2018,
+    "stats": "2.4M subs",
+    "description": "Video essays exploring philosophy and modern life  ***  Email: info(@)einzelganger.",
+    "lang": "en"
+  },
+  {
+    "handle": "@PursuitofWonder",
+    "name": "Pursuit of Wonder",
+    "category": "Filosofia",
+    "founded": 2017,
+    "stats": "3.5M subs",
+    "description": "Fostering reflection through powerful ideas and stories.",
+    "lang": "en"
+  },
+  {
+    "handle": "@PhilosophiesforLife",
+    "name": "Philosophies for Life",
+    "category": "Filosofia",
+    "founded": 2018,
+    "stats": "1.3M subs",
+    "description": "Philosophies for Life is all about giving ancient wisdom for modern living.",
+    "lang": "en"
+  },
+  {
+    "handle": "@AliAbdaal",
+    "name": "Ali Abdaal",
+    "category": "Filosofia",
+    "founded": 2007,
+    "stats": "6.7M subs",
+    "description": "I'm Ali - doctor turned entrepreneur, YouTuber, and author of the New York Times bestseller Feel-Good Productivity.",
+    "lang": "en"
+  },
+  {
+    "handle": "@MattDAvella",
+    "name": "Matt D'Avella",
+    "category": "Filosofia",
+    "founded": 2011,
+    "stats": "4M subs",
+    "description": "Hi my name is Matt.",
+    "lang": "en"
+  },
+  {
+    "handle": "@BetterThanYesterday",
+    "name": "Better Than Yesterday",
+    "category": "Filosofia",
+    "founded": 2016,
+    "stats": "2.6M subs",
+    "description": "Welcome to my channel.",
+    "lang": "en"
+  },
+  {
+    "handle": "@ProductiveGrowth",
+    "name": "Productive Growth",
+    "category": "Filosofia",
+    "founded": 2023,
+    "stats": "0 subs",
+    "description": "We're here to make everyone achieve productive growth in life and live a life full of enthusiasm and riches to the sky.",
+    "lang": "en"
+  },
+  {
+    "handle": "@ThinkingMind",
+    "name": "Thinking Mind Social",
+    "category": "Filosofia",
+    "founded": 2017,
+    "stats": "512 subs",
+    "description": "En Thinking Mind ofrecemos vacaciones inteligentes estudiando, viajando y conociendo nuevos lugares y amigos.",
+    "lang": "en"
+  },
+  {
+    "handle": "@TheStoicMindset",
+    "name": "StoicMindset",
+    "category": "Filosofia",
+    "founded": 2012,
+    "stats": "10 subs",
+    "description": "A sanctuary for the journeyed weary soul.",
+    "lang": "en"
+  },
+  {
+    "handle": "@LivingWisely",
+    "name": "LivingWisely",
+    "category": "Filosofia",
+    "founded": 2008,
+    "stats": "1K subs",
+    "description": "Living Wisely is a dynamic talk show where the host Lady A interviews exciting guests to help viewers live a more healthy, weal...",
+    "lang": "en"
+  },
+  {
+    "handle": "@SelfImprovementDaily",
+    "name": "self improvement daily",
+    "category": "Filosofia",
+    "founded": 2022,
+    "stats": "0 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "en"
+  },
+  {
+    "handle": "@MindfulnessLab",
+    "name": "Mindfulness Lab",
+    "category": "Filosofia",
+    "founded": 2022,
+    "stats": "0 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "en"
+  },
+  {
+    "handle": "@BookSummariesHQ",
+    "name": "BookSummariesHQ",
+    "category": "Filosofia",
+    "founded": 2023,
+    "stats": "15 subs",
+    "description": "BookSummariesHQ offers concise book summaries for busy individuals, saving you time while delivering key insights.",
+    "lang": "en"
+  },
+  {
+    "handle": "@PsychologyInAction",
+    "name": "Psychology in Action",
+    "category": "Filosofia",
+    "founded": 2023,
+    "stats": "0 subs",
+    "description": "\"Psychology in Action\" is a captivating YouTube channel dedicated to showcasing the practical applications of psychology in our...",
+    "lang": "en"
+  },
+  {
+    "handle": "@DeepReflections",
+    "name": "Deep Reflections",
+    "category": "Filosofia",
+    "founded": 2026,
+    "stats": "0 subs",
+    "description": "Welcome to Deep Reflections – Your sanctuary for inner peace and timeless wisdom.",
+    "lang": "en"
+  },
+  {
+    "handle": "@FocusAndClarity",
+    "name": "FocusClarityGoals isSuccess",
+    "category": "Filosofia",
+    "founded": 2012,
+    "stats": "0 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "en"
+  },
+  {
+    "handle": "@Nerdwriter1",
+    "name": "Nerdwriter1",
+    "category": "Arte",
+    "founded": 2011,
+    "stats": "3.2M subs",
+    "description": "The Nerdwriter is a video series about art and culture.",
+    "lang": "en"
+  },
+  {
+    "handle": "@EveryFrameaPainting",
+    "name": "Every Frame a Painting",
+    "category": "Arte",
+    "founded": 2014,
+    "stats": "2.3M subs",
+    "description": "Taylor & Tony are brewing up something new.",
+    "lang": "en"
+  },
+  {
+    "handle": "@LessonsfromtheScreenplay",
+    "name": "Lessons from the Screenplay",
+    "category": "Arte",
+    "founded": 2016,
+    "stats": "1.5M subs",
+    "description": "I believe that a more informed audience raises the bar for storytelling.",
+    "lang": "en"
+  },
+  {
+    "handle": "@ThomasFlight",
+    "name": "Thomas Flight",
+    "category": "Arte",
+    "founded": 2011,
+    "stats": "1.3M subs",
+    "description": "Exploring the artistry behind cinema, TV, and the visual media landscape that surround us.",
+    "lang": "en"
+  },
+  {
+    "handle": "@StudioBinder",
+    "name": "StudioBinder",
+    "category": "Arte",
+    "founded": 2015,
+    "stats": "2.2M subs",
+    "description": "StudioBinder is a production management solution that helps video and photo productions create call sheets, shot lists, shootin...",
+    "lang": "en"
+  },
+  {
+    "handle": "@NowYouSeeIt",
+    "name": "Now You See It",
+    "category": "Arte",
+    "founded": 2015,
+    "stats": "948K subs",
+    "description": "Now You See It is a media analysis channel that searches for meaning in unexpected places.",
+    "lang": "en"
+  },
+  {
+    "handle": "@LikeStoriesofOld",
+    "name": "Like Stories of Old",
+    "category": "Arte",
+    "founded": 2017,
+    "stats": "1M subs",
+    "description": "Making video essays that explore the boundary between media analysis, philosophy and personal development in an empathic, emoti...",
+    "lang": "en"
+  },
+  {
+    "handle": "@KaptainKristian",
+    "name": "kaptainkristian",
+    "category": "Arte",
+    "founded": 2016,
+    "stats": "570K subs",
+    "description": "visual love letters.",
+    "lang": "en"
+  },
+  {
+    "handle": "@DesignDoc",
+    "name": "Design Doc",
+    "category": "Arte",
+    "founded": 2008,
+    "stats": "370K subs",
+    "description": "We're Dan and Mike, and we're Design Doc.",
+    "lang": "en"
+  },
+  {
+    "handle": "@FilmmakerIQ",
+    "name": "Filmmaker IQ",
+    "category": "Arte",
+    "founded": 2008,
+    "stats": "419K subs",
+    "description": "Filmmaker IQ (which also goes by the aliases Who.",
+    "lang": "en"
+  },
+  {
+    "handle": "@StoryTellingArts",
+    "name": "Storytelling Arts of Indiana",
+    "category": "Arte",
+    "founded": 2011,
+    "stats": "303 subs",
+    "description": "In 1988, three friends set out to host a storytelling festival in Central Indiana, so they founded Stories, Inc.",
+    "lang": "en"
+  },
+  {
+    "handle": "@VisualCraft",
+    "name": "visualcraft",
+    "category": "Arte",
+    "founded": 2009,
+    "stats": "56 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "en"
+  },
+  {
+    "handle": "@AnimationMastery",
+    "name": "Animation Mastery",
+    "category": "Arte",
+    "founded": 2015,
+    "stats": "1K subs",
+    "description": "educational channel How to create animation and how to create characters on MOHO PRO 14 and lear blender.",
+    "lang": "en"
+  },
+  {
+    "handle": "@BehindTheMasterpiece",
+    "name": "Behind the Masterpiece",
+    "category": "Arte",
+    "founded": 2021,
+    "stats": "106K subs",
+    "description": "Behind the Masterpiece is an effort to discuss art without intimidation, narrating captivating stories and offering insights in...",
+    "lang": "en"
+  },
+  {
+    "handle": "@GreatArtExplained",
+    "name": "Great Art Explained",
+    "category": "Arte",
+    "founded": 2020,
+    "stats": "1.9M subs",
+    "description": "I'm James Payne, a curator, gallerist, and a passionate art lover.",
+    "lang": "en"
+  },
+  {
+    "handle": "@TheArtAssignment",
+    "name": "The Art Assignment",
+    "category": "Arte",
+    "founded": 2013,
+    "stats": "716K subs",
+    "description": "The Art Assignment is an educational video series hosted by curator Sarah Urist Green.",
+    "lang": "en"
+  },
+  {
+    "handle": "@GordonRamsay",
+    "name": "Gordon Ramsay",
+    "category": "Salud",
+    "founded": 2006,
+    "stats": "22M subs",
+    "description": "The home of Gordon Ramsay on YouTube.",
+    "lang": "en"
+  },
+  {
+    "handle": "@JamieOliver",
+    "name": "Jamie Oliver",
+    "category": "Salud",
+    "founded": 2006,
+    "stats": "6.2M subs",
+    "description": "Welcome to the official Jamie Oliver YouTube channel for all your delicious daily food inspiration.",
+    "lang": "en"
+  },
+  {
+    "handle": "@JoshuaWeissman",
+    "name": "Joshua Weissman",
+    "category": "Salud",
+    "founded": 2014,
+    "stats": "10.7M subs",
+    "description": "Hi, I'm Josh and I make entertaining, exciting, and inspirational videos about food and cooking.",
+    "lang": "en"
+  },
+  {
+    "handle": "@YouSuckAtCooking",
+    "name": "You Suck At Cooking",
+    "category": "Salud",
+    "founded": 2014,
+    "stats": "3.7M subs",
+    "description": "No bullshit.",
+    "lang": "en"
+  },
+  {
+    "handle": "@HubermanLab",
+    "name": "Andrew Huberman",
+    "category": "Salud",
+    "founded": 2013,
+    "stats": "7.6M subs",
+    "description": "The Huberman Lab podcast is hosted by Andrew Huberman, Ph.",
+    "lang": "en"
+  },
+  {
+    "handle": "@PeterAttiaMD",
+    "name": "Peter Attia MD",
+    "category": "Salud",
+    "founded": 2015,
+    "stats": "1M subs",
+    "description": "Peter Attia, MD, is the founder of Early Medical, a medical practice that applies the principles of Medicine 3.",
+    "lang": "en"
+  },
+  {
+    "handle": "@AthleanX",
+    "name": "ATHLEAN-X™",
+    "category": "Salud",
+    "founded": 2006,
+    "stats": "14.3M subs",
+    "description": "Welcome to ATHLEAN-X™ on YouTube.",
+    "lang": "en"
+  },
+  {
+    "handle": "@NatachaOceane",
+    "name": "Natacha Océane",
+    "category": "Salud",
+    "founded": 2015,
+    "stats": "1.6M subs",
+    "description": "Health is wealth 🤍.",
+    "lang": "en"
+  },
+  {
+    "handle": "@HealthyLivingHQ",
+    "name": "Healthy Living HQ",
+    "category": "Salud",
+    "founded": 2015,
+    "stats": "0 subs",
+    "description": "\"Welcome to Healthy Living HQ - your go-to destination for all things wellness.",
+    "lang": "en"
+  },
+  {
+    "handle": "@DailyWorkoutLab",
+    "name": "Daily Workout Lab ",
+    "category": "Salud",
+    "founded": 2026,
+    "stats": "1 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "en"
+  },
+  {
+    "handle": "@FitAndStrong",
+    "name": "Fit and Strong",
+    "category": "Salud",
+    "founded": 2018,
+    "stats": "628 subs",
+    "description": "Ние сме Дейвид и Спасимира.",
+    "lang": "en"
+  },
+  {
+    "handle": "@MindfulCooking",
+    "name": "Mindful Cooking",
+    "category": "Salud",
+    "founded": 2019,
+    "stats": "153 subs",
+    "description": "Whether you're chopping, slicing, whipping, marinating, or kneading, the art of mindful cooking presents the opportunity to anc...",
+    "lang": "en"
+  },
+  {
+    "handle": "@LongevityScience",
+    "name": "Longevity Science",
+    "category": "Salud",
+    "founded": 2023,
+    "stats": "10 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "en"
+  },
+  {
+    "handle": "@EverydayWellness",
+    "name": "Everyday wellness Melissa",
+    "category": "Salud",
+    "founded": 2016,
+    "stats": "6 subs",
+    "description": "Subscribe for videos on Saturdays  my content is all about Christian wife, cooking and baking and organization, getting your ho...",
+    "lang": "en"
+  },
+  {
+    "handle": "@PureMovement",
+    "name": "PureMovement",
+    "category": "Salud",
+    "founded": 2008,
+    "stats": "36 subs",
+    "description": "Hi i hope you like our videos there will be plenty more coming out soon\r \r if you would like to ask any questions then please s...",
+    "lang": "en"
+  },
+  {
+    "handle": "@DryBarComedy",
+    "name": "Dry Bar Comedy",
+    "category": "Comedia",
+    "founded": 2017,
+    "stats": "3.1M subs",
+    "description": "An Angel Original | Funny for Everyone Stand up comedy for everyone in the family.",
+    "lang": "en"
+  },
+  {
+    "handle": "@KillTony",
+    "name": "Kill Tony",
+    "category": "Comedia",
+    "founded": 2015,
+    "stats": "2.8M subs",
+    "description": "Kill Tony, a live podcast taped in Austin, Texas and all over the world.",
+    "lang": "en"
+  },
+  {
+    "handle": "@NetflixIsAJoke",
+    "name": "Netflix Is A Joke",
+    "category": "Comedia",
+    "founded": 2019,
+    "stats": "4.6M subs",
+    "description": "About Netflix: Netflix is one of the world’s leading entertainment services offering TV series, films, games and live programmi...",
+    "lang": "en"
+  },
+  {
+    "handle": "@ComedyCentral",
+    "name": "Comedy Central",
+    "category": "Comedia",
+    "founded": 2006,
+    "stats": "12.6M subs",
+    "description": "Finally, comedy on YouTube.",
+    "lang": "en"
+  },
+  {
+    "handle": "@KeyAndPeele",
+    "name": "Key & Peele",
+    "category": "Comedia",
+    "founded": 2019,
+    "stats": "7.3M subs",
+    "description": "The Key & Peele channel is the place to watch comedy sketches from Keegan-Michael Key and Jordan Peele, whose Comedy Central sh...",
+    "lang": "en"
+  },
+  {
+    "handle": "@TeamCoco",
+    "name": "Team Coco",
+    "category": "Comedia",
+    "founded": 2008,
+    "stats": "9.2M subs",
+    "description": "Team Coco is the YouTube home for Conan O’Brien Needs A Friend, Where Everybody Knows Your Name, The Three Questions with Andy ...",
+    "lang": "en"
+  },
+  {
+    "handle": "@SaturdayNightLive",
+    "name": "Saturday Night Live",
+    "category": "Comedia",
+    "founded": 2013,
+    "stats": "17.2M subs",
+    "description": "Welcome to the official Saturday Night Live YouTube channel.",
+    "lang": "en"
+  },
+  {
+    "handle": "@TrevorNoah",
+    "name": "Trevor Noah",
+    "category": "Comedia",
+    "founded": 2006,
+    "stats": "4.8M subs",
+    "description": "Welcome to the official YouTube channel of South African comedian Trevor Noah.",
+    "lang": "en"
+  },
+  {
+    "handle": "@GabrielIglesias",
+    "name": "gab iglesias",
+    "category": "Comedia",
+    "founded": 2006,
+    "stats": "18 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "en"
+  },
+  {
+    "handle": "@LaughFactory",
+    "name": "Abe",
+    "category": "Comedia",
+    "founded": 2006,
+    "stats": "25 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "en"
+  },
+  {
+    "handle": "@StandUpComedyDaily",
+    "name": "Stand Up Comedy Daily",
+    "category": "Comedia",
+    "founded": 2022,
+    "stats": "3 subs",
+    "description": "Hmm.",
+    "lang": "en"
+  },
+  {
+    "handle": "@ComedyLegends",
+    "name": "COMEDY LEGENDS",
+    "category": "Comedia",
+    "founded": 2021,
+    "stats": "2K subs",
+    "description": "Welcome to our channel 🤞     Thanks for coming to our channel 🤞😇    Need ur support guys👈❤️‍🔥      Keep supporting 🙌🙌     Comed...",
+    "lang": "en"
+  },
+  {
+    "handle": "@PunchlineCentral",
+    "name": "٦٠ ثانية جريمة",
+    "category": "Comedia",
+    "founded": 2023,
+    "stats": "0 subs",
+    "description": "أهلاً بك في ٦٠ ثانية جريمة، قناتك المشوّقة التي تروي قصص جرائم حقيقية من جميع أنحاء العالم بطريقة مثيرة ومعلوماتية.",
+    "lang": "en"
+  },
+  {
+    "handle": "@OpenMicComedy",
+    "name": "OpenMicComedy",
+    "category": "Comedia",
+    "founded": 2008,
+    "stats": "6 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "en"
+  },
+  {
+    "handle": "@ComedySpotlight",
+    "name": "ComedySpotlight",
+    "category": "Comedia",
+    "founded": 2010,
+    "stats": "5 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "en"
+  },
+  {
+    "handle": "@JokesOnYou",
+    "name": "StayPositive",
+    "category": "Comedia",
+    "founded": 2016,
+    "stats": "1 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "en"
+  },
+  {
+    "handle": "@ComedyHub",
+    "name": "Comedy Hub",
+    "category": "Comedia",
+    "founded": 2014,
+    "stats": "42 subs",
+    "description": "Comedy Hub Is A Community Channel Created By A Small Group Of Youtubers Who Want To Make People Who Deserve More Subscribers Ge...",
+    "lang": "en"
+  },
+  {
+    "handle": "@LofiGirl",
+    "name": "Lofi Girl",
+    "category": "Relax",
+    "founded": 2015,
+    "stats": "15.8M subs",
+    "description": "Connecting people through music 🌎.",
+    "lang": "en"
+  },
+  {
+    "handle": "@NPRMusic",
+    "name": "NPR Music",
+    "category": "Relax",
+    "founded": 2008,
+    "stats": "12.9M subs",
+    "description": "The official YouTube channel for NPR Music featuring Tiny Desk Concerts, live shows, documentaries and more.",
+    "lang": "en"
+  },
+  {
+    "handle": "@ChillhopMusic",
+    "name": "Chillhop Music",
+    "category": "Relax",
+    "founded": 2013,
+    "stats": "3.3M subs",
+    "description": "Laidback beats for a more relaxed everyday life.",
+    "lang": "en"
+  },
+  {
+    "handle": "@Cercle",
+    "name": "Cercle",
+    "category": "Relax",
+    "founded": 2015,
+    "stats": "3.6M subs",
+    "description": "Cercle is an artistic movement that hosts and curates experiences, events, festivals, a record label, and immersive musical jou...",
+    "lang": "en"
+  },
+  {
+    "handle": "@KEXP",
+    "name": "KEXP",
+    "category": "Relax",
+    "founded": 2006,
+    "stats": "4M subs",
+    "description": "KEXP is a nonprofit radio station and an international community of music lovers and music makers.",
+    "lang": "en"
+  },
+  {
+    "handle": "@TheBootlegBoy",
+    "name": "the bootleg boy",
+    "category": "Relax",
+    "founded": 2016,
+    "stats": "4.2M subs",
+    "description": "Lofi Hip Hop & Chill Beat Mixes every week 💜  Here to help you Sleep, Study & Relax 📚   Listen on Spotify - https://linktr.",
+    "lang": "en"
+  },
+  {
+    "handle": "@YellowBrickCinema",
+    "name": "Yellow Brick Cinema - Relaxing Music",
+    "category": "Relax",
+    "founded": 2013,
+    "stats": "6.5M subs",
+    "description": "Relaxing Music 24/7, Stress Relief Music, Sleeping Music For Deep Sleep, Meditation Music, Study, Calming Music  Yellow Brick C...",
+    "lang": "en"
+  },
+  {
+    "handle": "@ChilledCat",
+    "name": "ChilledCat",
+    "category": "Relax",
+    "founded": 2017,
+    "stats": "6K subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "en"
+  },
+  {
+    "handle": "@QuietQuest",
+    "name": "Quiet Quest - Study Music",
+    "category": "Relax",
+    "founded": 2018,
+    "stats": "522K subs",
+    "description": "Hello everyone.",
+    "lang": "en"
+  },
+  {
+    "handle": "@CalmSoundscapes",
+    "name": "Calm Relaxing Ambient Soundscapes",
+    "category": "Relax",
+    "founded": 2022,
+    "stats": "0 subs",
+    "description": "The goal of this channel is to provide you a calm soothing experience through soundscapes.",
+    "lang": "en"
+  },
+  {
+    "handle": "@RainyNightAmbience",
+    "name": "Rainy Night Ambience",
+    "category": "Relax",
+    "founded": 2023,
+    "stats": "0 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "en"
+  },
+  {
+    "handle": "@JazzMusicCafe",
+    "name": "jazzmusiccafe",
+    "category": "Relax",
+    "founded": 2012,
+    "stats": "0 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "en"
+  },
+  {
+    "handle": "@ClassicalFocus",
+    "name": "ClassicalFocus",
+    "category": "Relax",
+    "founded": 2010,
+    "stats": "0 subs",
+    "description": "Enjoy countless recordings of your favourite compositions.",
+    "lang": "en"
+  },
+  {
+    "handle": "@SleepWaveSounds",
+    "name": "SleepWaveSounds",
+    "category": "Relax",
+    "founded": 2023,
+    "stats": "0 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "en"
+  },
+  {
+    "handle": "@SoothingLofi",
+    "name": "Soothing Lofi",
+    "category": "Relax",
+    "founded": 2022,
+    "stats": "0 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "en"
+  },
+  {
+    "handle": "@ZenGardenMusic",
+    "name": "Zen Garden - Music",
+    "category": "Relax",
+    "founded": 2021,
+    "stats": "224 subs",
+    "description": "Welcome to Zen Garden - Music  The Go To Channel For Relaxation Music.",
+    "lang": "en"
+  },
+  {
+    "handle": "@PeacefulAmbient",
+    "name": "Peaceful Ambient",
+    "category": "Relax",
+    "founded": 2022,
+    "stats": "2 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "en"
+  }
+]

@@ -44,7 +44,7 @@
                                 :class="theme === 'dark' ? 'text-zinc-400 hover:text-white' : 'text-zinc-500 hover:text-zinc-950'" class="p-1 transition-colors text-xs flex items-center justify-center">
                             <span :class="isLoading ? 'animate-spin' : ''" class="inline-block">🔄</span>
                         </button>
-                        <button @click="showCatalogModal = true" 
+                        <button @click="openCatalog()" 
                             :class="theme === 'dark' ? 'text-zinc-400 hover:text-white' : 'text-zinc-500 hover:text-zinc-950'" 
                             class="p-1 text-xs flex items-center justify-center">
                             <span class="text-xs">🧭</span>
@@ -91,9 +91,9 @@
                                 class="p-1 hover:scale-110 transition-transform text-xs flex items-center justify-center" :title="t('refreshTooltip')">
                             <span :class="isLoading ? 'animate-spin' : ''" class="inline-block">🔄</span>
                         </button>
-                        <button x-show="channels.length !== 0 && videos.length !== 0" @click="showCatalogModal = true" :class="theme === 'dark' ? 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white' : 'bg-zinc-200 border-zinc-300 text-zinc-600 hover:text-zinc-900'" class="p-2 rounded-full border transition-all text-xs flex items-center gap-1.5 hover:scale-105" :title="locale === 'es' ? 'Explorar Catálogo Curado' : 'Explore Curated Catalog'">
+                        <button x-show="channels.length > 0 && videos.length > 0" @click="openCatalog()" :class="theme === 'dark' ? 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white' : 'bg-zinc-200 border-zinc-300 text-zinc-600 hover:text-zinc-900'" class="p-2 rounded-full border transition-all text-xs flex items-center gap-1.5 hover:scale-105" :title="locale === 'es' ? 'Explorar Catálogo Curado' : 'Explore Curated Catalog'">
                             <span>🧭</span>
-                            <span class="hidde md:inline font-bold text-[11px]" x-text="locale === 'es' ? 'Explorar' : 'Explore'"></span>
+                            <span class="hidden md:inline font-bold text-[11px]" x-text="locale === 'es' ? 'Explorar' : 'Explore'"></span>
                         </button>
                         <button @click="showSettingsModal = true" :class="theme === 'dark' ? 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white' : 'bg-zinc-200 border-zinc-300 text-zinc-600 hover:text-zinc-900'" class="p-2 rounded-full border transition-all" :title="t('settingsTitle')">
                             ⚙️
@@ -114,7 +114,7 @@
                                     class="text-xs rounded-full pl-3 pr-7 py-1.5 border appearance-none focus:outline-none cursor-pointer font-semibold transition-colors">
                                 <option value="all" x-text="t('allCategories')"></option>
                                 <template x-for="cat in activeCategories" :key="cat">
-                                    <option :value="cat" x-text="'📂 ' + t(cat.toLowerCase())"></option>
+                                    <option :value="cat" x-text="'📁 ' + (t(cat.toLowerCase()) !== cat.toLowerCase() ? t(cat.toLowerCase()) : (cat.charAt(0).toUpperCase() + cat.slice(1)))"></option>
                                 </template>
                             </select>
                             <span :class="theme === 'dark' ? 'text-zinc-500' : 'text-zinc-400'" class="absolute right-2.5 pointer-events-none text-[8px]">▼</span>
@@ -178,15 +178,7 @@
                                 </div>
                             </template>
                         </div>
-                        <template x-if="selectedChannel">
-                            <a :href="'https://www.youtube.com/' + (channels.find(c => c.name === selectedChannel)?.id ? 'channel/' + channels.find(c => c.name === selectedChannel).id : 'results?search_query=' + encodeURIComponent(selectedChannel))" 
-                               target="_blank" 
-                               :class="theme === 'dark' ? 'text-zinc-500 hover:text-red-400' : 'text-zinc-400 hover:text-red-600'"
-                               class="p-1.5 text-xs transition-colors flex items-center gap-1 shrink-0 ml-1" 
-                               :title="locale === 'es' ? 'Abrir archivo completo en YouTube' : 'Open full archive on YouTube'">
-                                <span class="text-[11px] font-bold">YouTube ↗</span>
-                            </a>
-                        </template>
+                        
 
                         <!-- Selector Desplegable de Formato -->
                         <div class="relative flex items-center">
@@ -267,7 +259,7 @@
                     <p class="text-xs text-zinc-400 leading-relaxed mb-6 max-w-md" x-text="t('emptyDesc')"></p>
                     
                     <!-- Botón Principal de Exploración hacia el Modal -->
-                    <button @click="showCatalogModal = true" 
+                    <button @click="openCatalog()" 
                         class="px-6 py-3 rounded-full bg-red-600 hover:bg-red-700 text-white font-bold text-xs shadow-lg transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
                         <span>🧭</span>
                         <span x-text="locale === 'es' ? 'Explorar Canales Recomendados' : 'Explore Curated Channels'"></span>
@@ -343,7 +335,7 @@
                         </div>
                     </template>
                 </div>
-                <!-- Botón Cargar Más -->
+                
                 <!-- Contenedor del Botón Progresivo de 3 Niveles -->
                 <div x-show="filteredVideos.length > 0" class="flex flex-col items-center justify-center mt-12 mb-8 gap-3 w-full animate-fade-in">
                     
@@ -369,13 +361,15 @@
                         <a :href="activeChannelObj?.id ? 'https://www.youtube.com/channel/' + activeChannelObj.id + '/videos' : 'https://www.youtube.com'"
                             target="_blank"
                             class="px-4 py-2 rounded-full border border-red-900/40 bg-red-950/20 text-red-400 hover:text-red-300 hover:bg-red-950/40 font-bold transition-colors flex items-center gap-1.5 shadow-sm">
-                            <span x-text="activeChannelObj ? (locale === 'es' ? 'Ver catálogo de ' + activeChannelObj.name + ' en YouTube' : 'View ' + activeChannelObj.name + ' on YouTube') : (locale === 'es' ? 'Explorar en YouTube' : 'Explore on YouTube')"></span>
+                            <span x-text="activeChannelObj ? (locale === 'es' ? 'Ver catálogo completo de ' + activeChannelObj.name + ' en YouTube' : 'View more of ' + activeChannelObj.name + ' on YouTube') : (locale === 'es' ? 'Explorar en YouTube' : 'Explore on YouTube')"></span>
                             <span>↗</span>
                         </a>
                     </div>
 
+                
                 </div>
-                <div x-show="filteredVideos.length === 0" class="text-center py-20 text-zinc-500" x-text="t('notFound')"></div>
+
+                <div x-show="filteredVideos.length === 0 && channels.length !== 0" class="text-center py-20 text-zinc-500" x-text="t('notFound')"></div>
             </div>
         </div>
     </main>
@@ -604,17 +598,23 @@
             <!-- Barra de Filtros del Modal -->
             <div class="px-5 py-3 border-b border-zinc-800/60 flex flex-wrap items-center justify-between gap-3 bg-zinc-950/20 shrink-0">
                 <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
-                    <button @click="catalogCategory = 'all'" :class="catalogCategory === 'all' ? 'bg-red-600 text-white' : 'bg-zinc-800 text-zinc-400'" class="px-3 py-1 rounded-full text-xs font-semibold transition-colors">Todas</button>
-                    <button @click="catalogCategory = 'Ciencia'" :class="catalogCategory === 'Ciencia' ? 'bg-red-600 text-white' : 'bg-zinc-800 text-zinc-400'" class="px-3 py-1 rounded-full text-xs font-semibold transition-colors">🔬 Ciencia</button>
-                    <button @click="catalogCategory = 'Documentales'" :class="catalogCategory === 'Documentales' ? 'bg-red-600 text-white' : 'bg-zinc-800 text-zinc-400'" class="px-3 py-1 rounded-full text-xs font-semibold transition-colors">🏛️ Documentales</button>
-                    <button @click="catalogCategory = 'Naturaleza'" :class="catalogCategory === 'Naturaleza' ? 'bg-red-600 text-white' : 'bg-zinc-800 text-zinc-400'" class="px-3 py-1 rounded-full text-xs font-semibold transition-colors">🌍 Naturaleza</button>
-                    <button @click="catalogCategory = 'Relax'" :class="catalogCategory === 'Relax' ? 'bg-red-600 text-white' : 'bg-zinc-800 text-zinc-400'" class="px-3 py-1 rounded-full text-xs font-semibold transition-colors">🎵 Relax</button>
+                    <template x-for="cat in modalCategories" :key="cat">
+                        <button @click="catalogCategory = cat" 
+                            :class="catalogCategory === cat ? 'bg-red-600 text-white' : 'bg-zinc-800 text-zinc-400 hover:text-white'" 
+                            class="px-3 py-1 rounded-full text-xs font-semibold transition-colors whitespace-nowrap capitalize">
+                            <span x-text="cat === 'all' ? (locale === 'es' ? 'Todas' : 'All') : cat"></span>
+                        </button>
+                    </template>
                 </div>
                 <input type="text" x-model="catalogSearch" :placeholder="locale === 'es' ? 'Buscar canal...' : 'Search channel...'" class="bg-zinc-800 border border-zinc-700 text-xs px-3 py-1.5 rounded-full text-white focus:outline-none w-44">
             </div>
 
             <!-- Contenido / Cuadrícula Scrollable -->
             <div class="p-5 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div x-show="isLoadingCatalog" class="col-span-full py-16 text-center text-zinc-500 text-xs flex flex-col items-center gap-2">
+                    <span class="w-6 h-6 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></span>
+                    <span x-text="locale === 'es' ? 'Cargando catálogo curado...' : 'Loading curated catalog...'"></span>
+                </div>
                 <template x-for="item in activeCatalog" :key="item.handle">
                     <div :class="theme === 'dark' ? 'bg-zinc-950/60 border-zinc-800' : 'bg-zinc-50 border-zinc-200'" class="p-4 rounded-xl border flex flex-col justify-between gap-3">
                         <div>
@@ -655,53 +655,7 @@
 
     <script>
         // CATÁLOGO CURADO DE CANALES RECOMENDADOS (BILINGÜE)
-        const CATALOG_CHANNELS = [
-            // --- ESPAÑOL (ES) ---
-            // Ciencia & Tecnología
-            { handle: '@QuantumFracture', name: 'QuantumFracture', category: 'Ciencia', founded: 2012, stats: '3.4M subs', description: 'El lado más loco del universo explicado con física rigurosa y animaciones espectaculares.', lang: 'es' },
-            { handle: '@Kurzgesagt_es', name: 'Kurzgesagt – En Pocas Palabras', category: 'Ciencia', founded: 2019, stats: '2.5M subs', description: 'Explicaciones visuales y optimistas sobre ciencia, evolución, espacio y la existencia humana.', lang: 'es' },
-            { handle: '@DotCSV', name: 'Dot CSV', category: 'Ciencia', founded: 2016, stats: '850K subs', description: 'Inteligencia Artificial, Machine Learning y el futuro de la tecnología explicado para todos.', lang: 'es' },
-            { handle: '@DateunVlog', name: 'Date un Vlog', category: 'Ciencia', founded: 2015, stats: '1.4M subs', description: 'Física fundamental, relatividad, divulgación científica y debates por Javier Santaolalla.', lang: 'es' },
-            { handle: '@CuriosaMente', name: 'CuriosaMente', category: 'Ciencia', founded: 2014, stats: '3.1M subs', description: 'Preguntas científicas y filosóficas animadas que despiertan la curiosidad de grandes y chicos.', lang: 'es' },
-
-            // Documentales & Historia
-            { handle: '@DWDocumental', name: 'DW Documental', category: 'Documentales', founded: 2018, stats: '4.8M subs', description: 'Documentales profundos sobre geopolítica, sociedad, medio ambiente y culturas globales.', lang: 'es' },
-            { handle: '@NationalGeographicEs', name: 'National Geographic España', category: 'Documentales', founded: 2011, stats: '1.2M subs', description: 'Exploración, ciencia de vanguardia, arqueología e historias extraordinarias del planeta.', lang: 'es' },
-            { handle: '@HistoryLatinoamerica', name: 'History Latinoamérica', category: 'Documentales', founded: 2012, stats: '5.2M subs', description: 'Misterios de la historia, civilizaciones antiguas, ciencia aplicada y conspiraciones.', lang: 'es' },
-            { handle: '@MemoriasdePez', name: 'Memorias de Pez', category: 'Documentales', founded: 2017, stats: '1.6M subs', description: 'Historia universal, conflictos bélicos y geopolítica explicada con mapas e ilustraciones claras.', lang: 'es' },
-            { handle: '@VisualPolitik', name: 'VisualPolitik', category: 'Documentales', founded: 2016, stats: '3.3M subs', description: 'Análisis geopolítico y económico de los acontecimientos más importantes del panorama global.', lang: 'es' },
-
-            // Naturaleza & Viajes
-            { handle: '@UnMundoInmenso', name: 'Un Mundo Inmenso', category: 'Naturaleza', founded: 2018, stats: '1.7M subs', description: 'Los rincones más extraños, fronteras insólitas y curiosidades geográficas del planeta.', lang: 'es' },
-            { handle: '@LethalCrysis', name: 'Lethal Crysis', category: 'Naturaleza', founded: 2015, stats: '5.1M subs', description: 'Expediciones inmersivas y periodismo de aventura en las culturas más remotas y extremas.', lang: 'es' },
-            { handle: '@LaHuertadeIvan', name: 'La Huerta de Iván', category: 'Naturaleza', founded: 2014, stats: '2.8M subs', description: 'Guías prácticas de agricultura orgánica, cultivo en casa, botánica y respeto a la tierra.', lang: 'es' },
-
-            // Relax & Música
-            { handle: '@LofiGirl', name: 'Lofi Girl', category: 'Relax', founded: 2015, stats: '14.5M subs', description: 'Transmisiones y pistas de Lofi Hip Hop ideales para concentrarse, estudiar o relajarse.', lang: 'es' },
-            { handle: '@NatureRelaxationPhotos', name: 'Nature Relaxation Films', category: 'Relax', founded: 2011, stats: '1.9M subs', description: 'Paisajes del mundo en 4K UHD acompañados de sonidos puros de la naturaleza.', lang: 'es' },
-
-            // --- INGLÉS (EN) ---
-            // Science & Tech
-            { handle: '@veritasium', name: 'Veritasium', category: 'Ciencia', founded: 2010, stats: '16.5M subs', description: 'An element of truth: fascinating physics experiments, science mysteries and engineering marvels.', lang: 'en' },
-            { handle: '@markrober', name: 'Mark Rober', category: 'Ciencia', founded: 2011, stats: '55M subs', description: 'Former NASA engineer creating wildly entertaining physics, technology and engineering builds.', lang: 'en' },
-            { handle: '@3blue1brown', name: '3Blue1Brown', category: 'Ciencia', founded: 2015, stats: '6.2M subs', description: 'Higher mathematics, neural networks and linear algebra visualized through animated beauty.', lang: 'en' },
-            { handle: '@mkbhd', name: 'Marques Brownlee', category: 'Ciencia', founded: 2008, stats: '18.5M subs', description: 'Crisp, high-production reviews of consumer technology, gadgets, and the future of hardware.', lang: 'en' },
-            { handle: '@fireship', name: 'Fireship', category: 'Ciencia', founded: 2017, stats: '3.2M subs', description: 'High-intensity, witty and ultra-fast programming tutorials and software industry news.', lang: 'en' },
-
-            // Documentaries & History
-            { handle: '@DWDocumentary', name: 'DW Documentary', category: 'Documentales', founded: 2017, stats: '5.8M subs', description: 'In-depth global investigative documentaries focusing on geopolitics, human stories and science.', lang: 'en' },
-            { handle: '@TimelineChannel', name: 'Timeline - World History', category: 'Documentales', founded: 2014, stats: '4.9M subs', description: 'Epic world history documentaries detailing ancient empires, world wars and forgotten civilizations.', lang: 'en' },
-            { handle: '@johnnyharris', name: 'Johnny Harris', category: 'Documentales', founded: 2019, stats: '5.1M subs', description: 'Visual journalism, maps, and investigative storytelling explaining how the world works.', lang: 'en' },
-            { handle: '@Wendoverproductions', name: 'Wendover Productions', category: 'Documentales', founded: 2015, stats: '4.4M subs', description: 'Deep analysis of logistics, aviation, global economics and modern infrastructure.', lang: 'en' },
-
-            // Nature & Exploration
-            { handle: '@BBCEarth', name: 'BBC Earth', category: 'Naturaleza', founded: 2009, stats: '13.2M subs', description: 'Mind-blowing natural history, wildlife behavior and planetary wonders from BBC studios.', lang: 'en' },
-            { handle: '@GeoWizard', name: 'GeoWizard', category: 'Naturaleza', founded: 2015, stats: '1.5M subs', description: 'Straight-line adventures across countries, geography mastery and outdoor missions.', lang: 'en' },
-
-            // Relax & Music
-            { handle: '@NPRMusic', name: 'NPR Music', category: 'Relax', founded: 2007, stats: '9.2M subs', description: 'Intimate Tiny Desk Concerts from the world’s most talented musicians across all genres.', lang: 'en' },
-            { handle: '@ChillhopMusic', name: 'Chillhop Music', category: 'Relax', founded: 2013, stats: '3.4M subs', description: 'Smooth jazzhop, chill instrumental beats and ambient vibes for focus and daydreaming.', lang: 'en' }
-        ];
+       
         const DEFAULT_API_KEY = 'AIzaSyAJUkDrSVtpWYywEtaqT-8uH2pX8GSSL3o';
         function officialPlayApp() {
             let savedChannels = [];
@@ -743,7 +697,9 @@
                 showCatalogModal: false,
                 catalogCategory: 'all',
                 catalogSearch: '',
-                catalogList: CATALOG_CHANNELS, 
+                catalogList: [],
+                isLoadingCatalog: false,
+                loadedCatalogLocale: '',
                 isFetchingOlder: false,
                 quotaUsedToday: 0,
                 maxQuotaLimit: 200,
@@ -1279,6 +1235,10 @@
                 changeLanguage(newLocale) {
                     this.locale = newLocale;
                     localStorage.setItem('yt_locale', newLocale);
+
+                    if (this.showCatalogModal) {
+                        this.openCatalog();
+                    }
                 },
 
                 formatNumberLabel(num) {
@@ -1400,7 +1360,10 @@
                                                 name: channelName || 'Canal Importado',
                                                 playlistId: 'UU' + channelId.substring(2),
                                                 category: 'General',
-                                                logo: '' 
+                                                logo: '',
+                                                nextPageToken: null,
+                                                deepDived: false,
+                                                noMoreVideos: false
                                             });
                                             currentIds.add(channelId);
                                             importedCount++;
@@ -1436,10 +1399,13 @@
                                         if (channelId.startsWith('UC') && !currentIds.has(channelId)) {
                                             this.channels.push({
                                                 id: channelId,
-                                                name: title || 'Canal OPML',
+                                                name: channelName || 'Canal Importado',
                                                 playlistId: 'UU' + channelId.substring(2),
                                                 category: 'General',
-                                                logo: ''
+                                                logo: '',
+                                                nextPageToken: null,
+                                                deepDived: false,
+                                                noMoreVideos: false
                                             });
                                             currentIds.add(channelId);
                                             importedCount++;
@@ -1560,9 +1526,13 @@
                 },
 
                 get activeCategories() {
-                    // Filtra y muestra solo las categorías que tienen al menos 1 canal guardado
-                    const usedCategories = new Set(this.channels.map(c => c.category).filter(Boolean));
-                    return this.categories.filter(cat => usedCategories.has(cat));
+                    const used = new Set(this.channels.map(c => c.category).filter(Boolean));
+                    return [...used]; // Devuelve automáticamente cualquier categoría que tenga canales
+                },
+                get modalCategories() {
+                    const currentLangChannels = this.catalogList.filter(item => item.lang === this.locale);
+                    const uniqueCats = [...new Set(currentLangChannels.map(item => item.category))];
+                    return ['all', ...uniqueCats];
                 },
                 get activeChannelObj() {
                     if (this.selectedChannel) {
@@ -1712,7 +1682,6 @@
                     }
                 },
                 // Descarga 50 videos más antiguos exclusivamente para el canal seleccionado
-                // BUSCA Y REEMPLAZA fetchOlderVideos EN TU JAVASCRIPT:
                 async fetchOlderVideos() {
                     if (!this.activeChannelObj || this.isFetchingOlder) return;
                     const ch = this.activeChannelObj;
@@ -1816,6 +1785,37 @@
                         this.errorMessage = e.message || "Error al cargar videos antiguos";
                     } finally {
                         this.isFetchingOlder = false;
+                    }
+                },
+
+                // Abre el catálogo y descarga el JSON bajo demanda solo la primera vez
+                async openCatalog() {
+                    this.showCatalogModal = true;
+                    
+                    // Si ya tenemos el catálogo descargado para el idioma actual, no gasta red
+                    if (this.catalogList.length > 0 && this.loadedCatalogLocale === this.locale) {
+                        return;
+                    }
+
+                    this.isLoadingCatalog = true;
+                    this.catalogCategory = 'all'; // Reinicia el filtro de categorías al cambiar de idioma
+                    
+                    try {
+                        const res = await fetch(`catalog_${this.locale}.json`);
+                        if (!res.ok) throw new Error('No se pudo cargar catalog_' + this.locale + '.json');
+                        this.catalogList = await res.json();
+                        this.loadedCatalogLocale = this.locale; // Memorizamos el idioma cargado
+                    } catch (e) {
+                        console.error("Error al cargar catálogo:", e);
+                        try {
+                            const fallbackRes = await fetch(`../catalog_${this.locale}.json`);
+                            this.catalogList = await fallbackRes.json();
+                            this.loadedCatalogLocale = this.locale;
+                        } catch (err) {
+                            console.error("Error fallback catálogo:", err);
+                        }
+                    } finally {
+                        this.isLoadingCatalog = false;
                     }
                 },
             }

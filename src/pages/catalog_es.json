@@ -1,0 +1,830 @@
+[
+  {
+    "handle": "@QuantumFracture",
+    "name": "QuantumFracture",
+    "category": "Ciencia",
+    "founded": 2012,
+    "stats": "4M subs",
+    "description": "¡Ciencia.",
+    "lang": "es"
+  },
+  {
+    "handle": "@Kurzgesagt_es",
+    "name": "En Pocas Palabras – Kurzgesagt",
+    "category": "Ciencia",
+    "founded": 2019,
+    "stats": "2.3M subs",
+    "description": "Videos de animación donde explicamos cosas con un punto de vista nihilista optimista desde 12 013.",
+    "lang": "es"
+  },
+  {
+    "handle": "@DotCSV",
+    "name": "Dot CSV",
+    "category": "Ciencia",
+    "founded": 2017,
+    "stats": "918K subs",
+    "description": "Divulgación sobre Inteligencia Artificial para que entiendas cómo funciona la próxima revolución industrial 🚀.",
+    "lang": "es"
+  },
+  {
+    "handle": "@DateunVlog",
+    "name": "Date un Vlog",
+    "category": "Ciencia",
+    "founded": 2016,
+    "stats": "4.7M subs",
+    "description": "Hago la siensia.",
+    "lang": "es"
+  },
+  {
+    "handle": "@CuriosaMente",
+    "name": "CuriosaMente",
+    "category": "Ciencia",
+    "founded": 2013,
+    "stats": "4.6M subs",
+    "description": "Un proyecto de comunicación pública del conocimiento producido por Estudio Haini.",
+    "lang": "es"
+  },
+  {
+    "handle": "@CdeCiencia",
+    "name": "CdeCiencia",
+    "category": "Ciencia",
+    "founded": 2014,
+    "stats": "5.2M subs",
+    "description": "Hola, ¡bienvenido a CdeCiencia.",
+    "lang": "es"
+  },
+  {
+    "handle": "@Derivando",
+    "name": "Derivando",
+    "category": "Ciencia",
+    "founded": 2015,
+    "stats": "1.6M subs",
+    "description": "Aprende matemáticas ¡de forma divertida.",
+    "lang": "es"
+  },
+  {
+    "handle": "@ElRobotdePlaton",
+    "name": "El Robot de Platón",
+    "category": "Ciencia",
+    "founded": 2013,
+    "stats": "3.1M subs",
+    "description": "Canal de Ciencia, canal de Ciencias, canal de Sapiencias.",
+    "lang": "es"
+  },
+  {
+    "handle": "@lagatadeschrodinger",
+    "name": "La gata de Schrödinger",
+    "category": "Ciencia",
+    "founded": 2018,
+    "stats": "983K subs",
+    "description": "Canal de divulgación de la ciencia desde una perspectiva escéptica y con un toque de humor.",
+    "lang": "es"
+  },
+  {
+    "handle": "@astrofisicosenaccion",
+    "name": "Astrofísicos en Acción",
+    "category": "Ciencia",
+    "founded": 2016,
+    "stats": "82K subs",
+    "description": "Astrofísicos profesionales, acercándote al conocimiento del Universo.",
+    "lang": "es"
+  },
+  {
+    "handle": "@mouredev",
+    "name": "MoureDev by Brais Moure",
+    "category": "Ciencia",
+    "founded": 2014,
+    "stats": "955K subs",
+    "description": "Aprende Python, JavaScript, SQL, Java y más desde cero con mis cursos de programación e inteligencia artificial gratis en español.",
+    "lang": "es"
+  },
+  {
+    "handle": "@midudev",
+    "name": "midudev",
+    "category": "Ciencia",
+    "founded": 2018,
+    "stats": "996K subs",
+    "description": "Aprende y domina Inteligencia Artificial, Programación y Desarrollo Web forma práctica y directa.",
+    "lang": "es"
+  },
+  {
+    "handle": "@FaztCode",
+    "name": "Fazt Code",
+    "category": "Ciencia",
+    "founded": 2017,
+    "stats": "317K subs",
+    "description": "FaztCode es un canal de programacion, tutoriales y proyectos web, en donde podras encontrar ejemplos prácticos de lenguajes y t...",
+    "lang": "es"
+  },
+  {
+    "handle": "@pildorasinformaticas",
+    "name": "pildorasinformaticas",
+    "category": "Ciencia",
+    "founded": 2012,
+    "stats": "840K subs",
+    "description": "Este canal pretende compartir conocimientos informáticos entre todos los integrantes de la comunidad Internet.",
+    "lang": "es"
+  },
+  {
+    "handle": "@EDteam",
+    "name": "EDteam",
+    "category": "Ciencia",
+    "founded": 2012,
+    "stats": "1M subs",
+    "description": "Aprende programación e inteligencia artificial porque en español, nadie explica mejor que EDteam.",
+    "lang": "es"
+  },
+  {
+    "handle": "@Platzi",
+    "name": "Platzi",
+    "category": "Ciencia",
+    "founded": 2010,
+    "stats": "1.9M subs",
+    "description": "Únete al Reto AI Academy de junio y crea proyectos completos de agentes, apps, automatizaciones y más 👇.",
+    "lang": "es"
+  },
+  {
+    "handle": "@Robotitus",
+    "name": "Noticias Robotitus ",
+    "category": "Ciencia",
+    "founded": 2013,
+    "stats": "708K subs",
+    "description": "Canal de Noticias Científicas y Tecnológicas con uno que otro chistorrete.",
+    "lang": "es"
+  },
+  {
+    "handle": "@DWDocumental",
+    "name": "DW Documental",
+    "category": "Documentales",
+    "founded": 2017,
+    "stats": "6.2M subs",
+    "description": "DW Documental le brinda información más allá de los titulares.",
+    "lang": "es"
+  },
+  {
+    "handle": "@MemoriasdePez",
+    "name": "Memorias de Pez",
+    "category": "Documentales",
+    "founded": 2017,
+    "stats": "3M subs",
+    "description": "Aprende de forma rápida y sencilla con Memorias de Pez.",
+    "lang": "es"
+  },
+  {
+    "handle": "@VisualPolitik",
+    "name": "VisualPolitik",
+    "category": "Documentales",
+    "founded": 2016,
+    "stats": "3.8M subs",
+    "description": "Apúntate a la presentación online y en directo del Máster Ejecutivo en Análisis Financiero y Gestión Patrimonial de VisualBusin...",
+    "lang": "es"
+  },
+  {
+    "handle": "@RTVEPlay",
+    "name": "RTVE Play",
+    "category": "Documentales",
+    "founded": 2006,
+    "stats": "2.7M subs",
+    "description": "Bienvenido al canal oficial de Radio Televisión Española en YouTube.",
+    "lang": "es"
+  },
+  {
+    "handle": "@AcademiaPlay",
+    "name": "Academia Play",
+    "category": "Documentales",
+    "founded": 2015,
+    "stats": "3.8M subs",
+    "description": "Academia Play es un innovador proyecto educativo fundado por Javier Rubio Donzé.",
+    "lang": "es"
+  },
+  {
+    "handle": "@Armapedia",
+    "name": "Armapedia",
+    "category": "Documentales",
+    "founded": 2014,
+    "stats": "4.6M subs",
+    "description": "Mi nombre es Jorge Rojas, bienvenido a Armapedia.",
+    "lang": "es"
+  },
+  {
+    "handle": "@DMAXEspana",
+    "name": "DMAX España",
+    "category": "Documentales",
+    "founded": 2008,
+    "stats": "2.4M subs",
+    "description": "Episodios completos de tus series DMAX favoritas  en https://dmax.",
+    "lang": "es"
+  },
+  {
+    "handle": "@LaCunadeHalicarnaso",
+    "name": "La cuna de Halicarnaso",
+    "category": "Documentales",
+    "founded": 2011,
+    "stats": "357K subs",
+    "description": "¡Bienvenido al canal donde la Historia no se estudia.",
+    "lang": "es"
+  },
+  {
+    "handle": "@PeroEsoEsOtraHistoria",
+    "name": "Pero eso es otra Historia",
+    "category": "Documentales",
+    "founded": 2015,
+    "stats": "2.1M subs",
+    "description": "Historia, mitología, arte, filosofía, ciencia y curiosidades explicadas de forma clara, entretenida y con humor.",
+    "lang": "es"
+  },
+  {
+    "handle": "@ElCubildePeter",
+    "name": "El Cubil de Peter",
+    "category": "Documentales",
+    "founded": 2014,
+    "stats": "345K subs",
+    "description": "Dicen que lo maravilloso de aprender, es que nadie puede arrebatárnoslo.",
+    "lang": "es"
+  },
+  {
+    "handle": "@BBCMundo",
+    "name": "BBC News Mundo",
+    "category": "Documentales",
+    "founded": 2008,
+    "stats": "4.8M subs",
+    "description": "¡Hola.",
+    "lang": "es"
+  },
+  {
+    "handle": "@EuronewsEs",
+    "name": "euronews (en español)",
+    "category": "Documentales",
+    "founded": 2007,
+    "stats": "2.3M subs",
+    "description": "¡Bienvenido al canal oficial de Euronews en YouTube.",
+    "lang": "es"
+  },
+  {
+    "handle": "@VozDeAmerica",
+    "name": "Voz de América",
+    "category": "Documentales",
+    "founded": 2007,
+    "stats": "640K subs",
+    "description": "La mayor organización internacional de noticias multimedia de EEUU.",
+    "lang": "es"
+  },
+  {
+    "handle": "@BullyMagnets",
+    "name": "Bully Magnets - Historia Documental",
+    "category": "Documentales",
+    "founded": 2010,
+    "stats": "709K subs",
+    "description": "En Bully Magnets te demostramos que la historia puede ser fácil y divertida ¡En serio.",
+    "lang": "es"
+  },
+  {
+    "handle": "@HuellasdelaHistoria",
+    "name": "Huellas de la Historia",
+    "category": "Documentales",
+    "founded": 2014,
+    "stats": "12K subs",
+    "description": "Este canal esta destinado a compartir videos relacionados con la Historia.",
+    "lang": "es"
+  },
+  {
+    "handle": "@UnMundoInmenso",
+    "name": "Un Mundo Inmenso",
+    "category": "Naturaleza",
+    "founded": 2018,
+    "stats": "1.8M subs",
+    "description": "En el mundo actual vivimos conectados con lo que pasa en rincones muy alejados de nuestra realidad.",
+    "lang": "es"
+  },
+  {
+    "handle": "@LethalCrysis",
+    "name": "Lethal Crysis",
+    "category": "Naturaleza",
+    "founded": 2012,
+    "stats": "5.9M subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "es"
+  },
+  {
+    "handle": "@alanxelmundo",
+    "name": "alanxelmundo",
+    "category": "Naturaleza",
+    "founded": 2010,
+    "stats": "3.9M subs",
+    "description": "Quiero conocer el mundo y lo comparto en video.",
+    "lang": "es"
+  },
+  {
+    "handle": "@PlanetaJuan",
+    "name": "PlanetaJuan",
+    "category": "Naturaleza",
+    "founded": 2017,
+    "stats": "3.4M subs",
+    "description": "Larga vida a la abuela.",
+    "lang": "es"
+  },
+  {
+    "handle": "@LaHuertadeIvan",
+    "name": "La Huerta de Iván",
+    "category": "Naturaleza",
+    "founded": 2014,
+    "stats": "1.2M subs",
+    "description": "¡Bienvenidos a La Huerta de Ivan.",
+    "lang": "es"
+  },
+  {
+    "handle": "@Clavero",
+    "name": "Clavero",
+    "category": "Naturaleza",
+    "founded": 2014,
+    "stats": "2.8M subs",
+    "description": "Mi nombre es Pau Clavero y aquí puedes encontrar mis aventuras.",
+    "lang": "es"
+  },
+  {
+    "handle": "@Portillo",
+    "name": "Portillo",
+    "category": "Naturaleza",
+    "founded": 2014,
+    "stats": "2.7M subs",
+    "description": "Grabo cosas y las subo a YouTube :).",
+    "lang": "es"
+  },
+  {
+    "handle": "@Misiasperoviajeras",
+    "name": "Misias pero viajeras",
+    "category": "Naturaleza",
+    "founded": 2016,
+    "stats": "1.3M subs",
+    "description": "Hola.",
+    "lang": "es"
+  },
+  {
+    "handle": "@EnriqueAlex",
+    "name": "Enrique Álex",
+    "category": "Naturaleza",
+    "founded": 2007,
+    "stats": "618K subs",
+    "description": "¡Hola.",
+    "lang": "es"
+  },
+  {
+    "handle": "@GuillermoGalan",
+    "name": "guillermogalan",
+    "category": "Naturaleza",
+    "founded": 2006,
+    "stats": "2 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "es"
+  },
+  {
+    "handle": "@LaGranjadelBorrego",
+    "name": "La Granja del Borrego",
+    "category": "Naturaleza",
+    "founded": 2020,
+    "stats": "30M subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "es"
+  },
+  {
+    "handle": "@AventurasNaturales",
+    "name": "Aventuras Naturales",
+    "category": "Naturaleza",
+    "founded": 2023,
+    "stats": "1 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "es"
+  },
+  {
+    "handle": "@AdictosalaFilosofia",
+    "name": "Adictos a la Filosofía",
+    "category": "Filosofia",
+    "founded": 2016,
+    "stats": "813K subs",
+    "description": "CUIDADO❌ Este Canal es para APRENDER FILOSOFÍA de Modo FÁCIL, DIVERTIDO y RIGUROSO.",
+    "lang": "es"
+  },
+  {
+    "handle": "@filosofiadebolsillo",
+    "name": "Filosofía de bolsillo",
+    "category": "Filosofia",
+    "founded": 2019,
+    "stats": "5K subs",
+    "description": "Un podcast para aprender filosofía en cualquier lugar.",
+    "lang": "es"
+  },
+  {
+    "handle": "@PildorasPsicologicas",
+    "name": "Píldoras Psicológicas",
+    "category": "Filosofia",
+    "founded": 2024,
+    "stats": "183 subs",
+    "description": "🧠 Bienvenidos a Píldoras Psicológicas 🎥 🌱 Descubre la psicología detrás de nuestros hábitos, emociones y decisiones.",
+    "lang": "es"
+  },
+  {
+    "handle": "@PsicologiaVisual",
+    "name": "PSICOLOGIA VISUAL",
+    "category": "Filosofia",
+    "founded": 2013,
+    "stats": "504K subs",
+    "description": "¿Sabías que tu cuerpo confiesa lo que tu boca intenta ocultar.",
+    "lang": "es"
+  },
+  {
+    "handle": "@ElArtedeVivirOficial",
+    "name": "El Arte de Vivir",
+    "category": "Filosofia",
+    "founded": 2011,
+    "stats": "208K subs",
+    "description": "Canal Oficial de la Fundación El Arte de Vivir en Youtube.",
+    "lang": "es"
+  },
+  {
+    "handle": "@SabiduriaEstoicaES",
+    "name": "Sabiduría Estoica",
+    "category": "Filosofia",
+    "founded": 2025,
+    "stats": "0 subs",
+    "description": "Bienvenido a nuestro canal de estoicismo, donde exploramos las enseñanzas de los grandes filósofos estoicos para encontrar sere...",
+    "lang": "es"
+  },
+  {
+    "handle": "@MenteEstoicaES",
+    "name": "MenteEstoica",
+    "category": "Filosofia",
+    "founded": 2025,
+    "stats": "169 subs",
+    "description": "Mente Estoica es tu espacio para descubrir cómo aplicar la sabiduría de los grandes filósofos estoicos en la vida moderna.",
+    "lang": "es"
+  },
+  {
+    "handle": "@CrecimientoPersonalOficial",
+    "name": "Crecimiento Personal",
+    "category": "Filosofia",
+    "founded": 2015,
+    "stats": "69 subs",
+    "description": "\"Bienvenidos a Crecimiento Personal, un espacio dedicado a tu transformación personal.",
+    "lang": "es"
+  },
+  {
+    "handle": "@FilosofandoCanal",
+    "name": "Filosofando",
+    "category": "Filosofia",
+    "founded": 2024,
+    "stats": "0 subs",
+    "description": "Este canal é a sua porta de entrada para explorar o fascinante mundo da filosofia.",
+    "lang": "es"
+  },
+  {
+    "handle": "@ReflexionesdeVidaES",
+    "name": "El Último Mensaje",
+    "category": "Filosofia",
+    "founded": 2020,
+    "stats": "0 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "es"
+  },
+  {
+    "handle": "@AprendeaPensar",
+    "name": "Aprendiendo a PENSAR",
+    "category": "Filosofia",
+    "founded": 2022,
+    "stats": "0 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "es"
+  },
+  {
+    "handle": "@SabiduriaMilenaria",
+    "name": "SABIDURÍA MILENARIA ",
+    "category": "Filosofia",
+    "founded": 2023,
+    "stats": "9 subs",
+    "description": "Hola, este es el canal Sabiduría Milenaria, y aquí encontrarás contenido sobre autoconocimiento, desarrollo personal y filosofí...",
+    "lang": "es"
+  },
+  {
+    "handle": "@MundoEstoico",
+    "name": "Mundo Estoico",
+    "category": "Filosofia",
+    "founded": 2023,
+    "stats": "67 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "es"
+  },
+  {
+    "handle": "@JaimeAltozano",
+    "name": "Jaime Altozano",
+    "category": "Arte",
+    "founded": 2016,
+    "stats": "3.5M subs",
+    "description": "Divulgador de música y tecnología musical, Youtuber, creador de musihacks.",
+    "lang": "es"
+  },
+  {
+    "handle": "@Alvsch",
+    "name": "Alvin",
+    "category": "Arte",
+    "founded": 2015,
+    "stats": "13 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "es"
+  },
+  {
+    "handle": "@Ter",
+    "name": "Ter",
+    "category": "Arte",
+    "founded": 2016,
+    "stats": "2M subs",
+    "description": "Youtuber, Arquitecta, creadora de Focusarte, hija de Internet.",
+    "lang": "es"
+  },
+  {
+    "handle": "@LaFilmotecaMaldita",
+    "name": "La filmoteca maldita",
+    "category": "Arte",
+    "founded": 2018,
+    "stats": "418K subs",
+    "description": "Bienvenidxs al canal que habla de cine y no de lo que estrenan en las salas  He pensado que la mejor manera de mantener vivo es...",
+    "lang": "es"
+  },
+  {
+    "handle": "@Zepfilms",
+    "name": "ZEPfilms",
+    "category": "Arte",
+    "founded": 2011,
+    "stats": "2.4M subs",
+    "description": "ZEPFILMS es el canal de YouTube sobre cine y entretenimiento más visto en Argentina, y uno de los más populares en Latinoamérica.",
+    "lang": "es"
+  },
+  {
+    "handle": "@SmokerWolf",
+    "name": "Smokerwolf",
+    "category": "Arte",
+    "founded": 2006,
+    "stats": "299K subs",
+    "description": "Videos sobre cine y televisión con periodicidad dudosa.",
+    "lang": "es"
+  },
+  {
+    "handle": "@ElAnalistadeBits",
+    "name": "ElAnalistaDeBits",
+    "category": "Arte",
+    "founded": 2012,
+    "stats": "732K subs",
+    "description": "Channel focused on technical, visual and performance comparisons on the different platforms of the video game industry.",
+    "lang": "es"
+  },
+  {
+    "handle": "@AprendeFotografiaDigital",
+    "name": "Aprende Fotografia Digital en G+",
+    "category": "Arte",
+    "founded": 2010,
+    "stats": "8K subs",
+    "description": "Aprende a usar tu cámara con nuestros consejos y tutoriales.",
+    "lang": "es"
+  },
+  {
+    "handle": "@DisenoyColor",
+    "name": "DISEÑO Y COLOR",
+    "category": "Arte",
+    "founded": 2013,
+    "stats": "3K subs",
+    "description": "Este canal fue creado para ver el otro lado de la vida.",
+    "lang": "es"
+  },
+  {
+    "handle": "@AnalisisCinematografico",
+    "name": "Análisis Cinematográfico ",
+    "category": "Arte",
+    "founded": 2025,
+    "stats": "71 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "es"
+  },
+  {
+    "handle": "@PaulinaCocina",
+    "name": "Paulina Cocina",
+    "category": "Salud",
+    "founded": 2009,
+    "stats": "4.7M subs",
+    "description": "Paulina Cocina es mi canal de YouTube.",
+    "lang": "es"
+  },
+  {
+    "handle": "@SergioPeinado",
+    "name": "Sergio Peinado",
+    "category": "Salud",
+    "founded": 2024,
+    "stats": "113 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "es"
+  },
+  {
+    "handle": "@CocinaParaTodos",
+    "name": "Mauricio Masajnik",
+    "category": "Salud",
+    "founded": 2008,
+    "stats": "18 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "es"
+  },
+  {
+    "handle": "@GymVirtual",
+    "name": "gymvirtual",
+    "category": "Salud",
+    "founded": 2010,
+    "stats": "13.7M subs",
+    "description": "En el canal de Gym Virtual encontrarás rutinas de ejercicio para trabajar todo el cuerpo sin necesidad de salir de casa ni de u...",
+    "lang": "es"
+  },
+  {
+    "handle": "@ViviendoFit",
+    "name": "Viviendo Fit",
+    "category": "Salud",
+    "founded": 2016,
+    "stats": "1.5M subs",
+    "description": "Un estilo de vida.",
+    "lang": "es"
+  },
+  {
+    "handle": "@RecetasdeCasa",
+    "name": "RECETAS DE CASA ",
+    "category": "Salud",
+    "founded": 2023,
+    "stats": "34 subs",
+    "description": "Recetas de casa.",
+    "lang": "es"
+  },
+  {
+    "handle": "@MedicinaClara",
+    "name": "Medicina Clara | Videos de medicina en Youtube",
+    "category": "Salud",
+    "founded": 2013,
+    "stats": "2M subs",
+    "description": "¡Bienvenidos a Medicina Clara con el Doctor Bueno, tu canal de salud y medicina de confianza en YouTube.",
+    "lang": "es"
+  },
+  {
+    "handle": "@FisioterapiaOnline",
+    "name": "Juanan Hernández",
+    "category": "Salud",
+    "founded": 2022,
+    "stats": "19 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "es"
+  },
+  {
+    "handle": "@CocinaFacilES",
+    "name": "CocinaFacilEs",
+    "category": "Salud",
+    "founded": 2013,
+    "stats": "2 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "es"
+  },
+  {
+    "handle": "@BienestarIntegralES",
+    "name": " Bienestar Integral.",
+    "category": "Salud",
+    "founded": 2014,
+    "stats": "1 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "es"
+  },
+  {
+    "handle": "@HabitosSaludablesOficial",
+    "name": "habitosaludable",
+    "category": "Salud",
+    "founded": 2025,
+    "stats": "9 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "es"
+  },
+  {
+    "handle": "@LuchoMellera",
+    "name": "LuchoMellera",
+    "category": "Comedia",
+    "founded": 2006,
+    "stats": "1.4M subs",
+    "description": "Tickets en luchomellera.",
+    "lang": "es"
+  },
+  {
+    "handle": "@FrancoEscamilla",
+    "name": "Franco Escamilla",
+    "category": "Comedia",
+    "founded": 2007,
+    "stats": "14.4M subs",
+    "description": "Canal oficial del comediante Franco Escamilla contacto  francoescamillainfo@gmail.",
+    "lang": "es"
+  },
+  {
+    "handle": "@ElShowdeComedia",
+    "name": "iShowVnzla",
+    "category": "Comedia",
+    "founded": 2015,
+    "stats": "345 subs",
+    "description": "este es un canal de solamente risa y mas risa y veses hacemos gameplays y suscribanse por favor.",
+    "lang": "es"
+  },
+  {
+    "handle": "@ClubdeComedia",
+    "name": "clubdecomedia",
+    "category": "Comedia",
+    "founded": 2009,
+    "stats": "34 subs",
+    "description": "En el año 2008 Dios los Cría casa productora crea ClubDeComedia.",
+    "lang": "es"
+  },
+  {
+    "handle": "@HumorStandUp",
+    "name": "HumorStandUp",
+    "category": "Comedia",
+    "founded": 2011,
+    "stats": "0 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "es"
+  },
+  {
+    "handle": "@ComediantesDeLaNoche",
+    "name": "comediantesdelanoche",
+    "category": "Comedia",
+    "founded": 2011,
+    "stats": "11 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "es"
+  },
+  {
+    "handle": "@HumorArgentino",
+    "name": "Humor Argentino",
+    "category": "Comedia",
+    "founded": 2023,
+    "stats": "0 subs",
+    "description": "Contenido de alta calidad curado para tu parrilla.",
+    "lang": "es"
+  },
+  {
+    "handle": "@HumorMexicano",
+    "name": "Humor Mexicano",
+    "category": "Comedia",
+    "founded": 2017,
+    "stats": "66K subs",
+    "description": "Bienvenidos.",
+    "lang": "es"
+  },
+  {
+    "handle": "@LofiGirl",
+    "name": "Lofi Girl",
+    "category": "Relax",
+    "founded": 2015,
+    "stats": "15.8M subs",
+    "description": "Connecting people through music 🌎.",
+    "lang": "es"
+  },
+  {
+    "handle": "@YellowBrickCinema",
+    "name": "Yellow Brick Cinema - Relaxing Music",
+    "category": "Relax",
+    "founded": 2013,
+    "stats": "6.5M subs",
+    "description": "Relaxing Music 24/7, Stress Relief Music, Sleeping Music For Deep Sleep, Meditation Music, Study, Calming Music  Yellow Brick C...",
+    "lang": "es"
+  },
+  {
+    "handle": "@AmbientWorlds",
+    "name": "Ambient Worlds",
+    "category": "Relax",
+    "founded": 2017,
+    "stats": "1.2M subs",
+    "description": "Ambient Worlds creates immersive cinematic ambience and peaceful music inspired by your favorite fantasy realms.",
+    "lang": "es"
+  },
+  {
+    "handle": "@SoothingRelaxation",
+    "name": "Soothing Relaxation",
+    "category": "Relax",
+    "founded": 2014,
+    "stats": "12.1M subs",
+    "description": "Soothing Relaxation is a passion project by the Norwegian composer Peder B.",
+    "lang": "es"
+  },
+  {
+    "handle": "@PianoRelaxingMusic",
+    "name": "pianorelaxingmusic",
+    "category": "Relax",
+    "founded": 2011,
+    "stats": "4 subs",
+    "description": "Moments of Peace \r Relax and feel the connection of Beautiful Nature and Calming Nature.",
+    "lang": "es"
+  },
+  {
+    "handle": "@MeditacionGuiadaES",
+    "name": "Meditación Guiada",
+    "category": "Relax",
+    "founded": 2024,
+    "stats": "0 subs",
+    "description": "Bienvenidos a mi canal, un espacio dedicado a la calma, la paz interior y el bienestar.",
+    "lang": "es"
+  }
+]
